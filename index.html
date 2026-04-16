@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hai Yen Pham - Portfolio</title>
+  <meta name="description" content="Bright strategies for brand acceleration. Portfolio of Hai Yen Pham, Senior Marketing Executive." />
+  <meta name="author" content="Hai Yen Pham" />
+
+  <!-- Preconnect to Google Fonts and Cloudinary -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+  <!-- Optimized Google Fonts loading: Removed unused families (Crimson Pro, Lato, Lora) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Instrument+Serif&family=Inter:wght@400;500;700&family=Newsreader:wght@400;700&family=Manrope:wght@400;500;700&family=Outfit:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Instrument+Serif&family=Inter:wght@400;500;700&family=Newsreader:wght@400;700&family=Manrope:wght@400;500;700&family=Outfit:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap">
+  </noscript>
+
+  <!-- Critical Styles for Early Rendering -->
+  <style>
+    :root {
+      --background: 30 20% 98%;
+      --foreground: 20 15% 15%;
+      --heading: 20 15% 12%;
+    }
+    body {
+      background-color: hsl(30 20% 98%);
+      margin: 0;
+      font-family: 'Manrope', -apple-system, sans-serif;
+    }
+    /* Logo styling for pre-render */
+    .initial-logo-container {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .font-artistic { font-family: 'Dancing Script', cursive; font-weight: 600; }
+    .nav-logo-text { font-size: 24px; color: #1c1c19; }
+    
+    @keyframes initial-shiny {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    .shiny-text-static {
+      background-image: linear-gradient(120deg, #b5b5b5 40%, #ffffff 50%, #b5b5b5 60%);
+      background-size: 200% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: initial-shiny 5s linear infinite;
+    }
+    
+    /* Hide the initial logo once React loads */
+    body.hydrated .initial-logo-container {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <!-- Static Pre-render for LCP: Hiển thị ngay lập tức khi tải trang -->
+    <div class="initial-logo-container">
+      <span class="font-artistic nav-logo-text shiny-text-static">
+        Pham Thi Hai Yen
+      </span>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    // Remove the initial logo as soon as the document is ready to prevent hydration lag
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('hydrated');
+    });
+    // Fallback: Force hydrated after load just in case
+    window.addEventListener('load', function() {
+      document.body.classList.add('hydrated');
+    });
+  </script>
+</body>
+
+</html>

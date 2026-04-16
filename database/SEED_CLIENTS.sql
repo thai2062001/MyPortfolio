@@ -1,0 +1,74 @@
+-- Insert Clients data into Supabase
+INSERT INTO clients (name, logo_url, website_url, order_index, is_published, created_at, updated_at) VALUES
+(
+  'Don Quijote',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728743877/z5923749441967_e6578208182cdf366f506e5f186d8f90_v4kdmi.jpg',
+  'https://www.donquijote.co.jp',
+  0,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'AirTrip',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728920707/z5930373801633_fbde43dcc22103b6aece5a7a1afb593e_i0aaye.jpg',
+  'https://www.airtrip.jp',
+  1,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'Ajinomoto',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1729481499/z5932248098405_4c698f099ce8f30f99d2867d2b78e086_vfg9kg.jpg',
+  'https://www.ajinomoto.com',
+  2,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'Phuong Nam',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728920707/z5930376173801_4836b573b1305bf26098a04b221ee829_itll5g.jpg',
+  '',
+  3,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'GreenTECCONS',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728743895/z5923749442042_1ccbb4457e7a57e47ef6d08cf5b544c6_teecfz.jpg',
+  '',
+  4,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'Ghien An',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728743893/z5923749442021_92159a02991d97d683d13846de3ad265_nzht47.jpg',
+  '',
+  5,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'Asahi',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1737976028/23-Asahi_sp55f3.png',
+  'https://www.asahi.com',
+  6,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  'Covermark',
+  'https://res.cloudinary.com/dpdzbuiml/image/upload/v1728916260/z5930106784094_912c8a1b48a3683a1ad8134ff15db1e0_lpdav8.jpg',
+  'https://www.covermark.co.jp',
+  7,
+  true,
+  NOW(),
+  NOW()
+);
