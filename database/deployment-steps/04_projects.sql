@@ -135,6 +135,41 @@ DO $$ BEGIN
   END IF;
 END $$;
 
+-- 4. Project Tags (Complete - Matched to Original Schema)
+CREATE TABLE IF NOT EXISTS public.project_tags (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT NOT NULL UNIQUE,
+  name_en TEXT NOT NULL,
+  name_ja TEXT,
+  name_vi TEXT,
+  description TEXT,
+  icon_url TEXT,
+  order_index INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.project_tag_relations (
+  project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE,
+  tag_id UUID REFERENCES public.project_tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (project_id, tag_id)
+);
+
+-- RLS for Tags
+ALTER TABLE public.project_tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.project_tag_relations ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public view tags" ON public.project_tags;
+CREATE POLICY "Public view tags" ON public.project_tags FOR SELECT USING (TRUE);
+DROP POLICY IF EXISTS "Admin manage tags" ON public.project_tags;
+CREATE POLICY "Admin manage tags" ON public.project_tags FOR ALL TO authenticated USING (public.is_admin());
+
+DROP POLICY IF EXISTS "Public view relations" ON public.project_tag_relations;
+CREATE POLICY "Public view relations" ON public.project_tag_relations FOR SELECT USING (TRUE);
+DROP POLICY IF EXISTS "Admin manage relations" ON public.project_tag_relations;
+CREATE POLICY "Admin manage relations" ON public.project_tag_relations FOR ALL TO authenticated USING (public.is_admin());
+
 -- 4. Section Settings for Projects
 CREATE TABLE IF NOT EXISTS public.projects_section_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),

@@ -1,0 +1,30 @@
+﻿395: INSERT INTO public.personal_info (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+452: INSERT INTO public.contact_purpose_options (value, label_en, label_ja, order_index) VALUES
+486: INSERT INTO public.contact_form_settings (id, is_purpose_enabled, is_purpose_required)
+519: INSERT INTO public.site_settings (id, site_name, default_language, global_font_family, global_font_import_url, global_font_import_css, global_font_fallback)
+570: INSERT INTO public.hero_sections (id, is_published, badge, title_line_1_en, title_line_2_en, description_en, primary_button_label_en, primary_button_url, secondary_button_label_en, secondary_button_url, hero_image_alt_en)
+616: INSERT INTO public.expertise_sections (id, is_published) VALUES (1, TRUE) ON CONFLICT (id) DO NOTHING;
+711: INSERT INTO public.timeline_section_settings (id, is_published) VALUES (1, TRUE) ON CONFLICT (id) DO NOTHING;
+926: INSERT INTO public.hero_layouts (
+1060: INSERT INTO public.contact_sections (
+1280:   INSERT INTO public.skill_categories (slug, name_en, name_ja, description, icon_url, order_index, is_published)
+1293:   INSERT INTO public.skill_categories (slug, name_en, name_ja, description, icon_url, order_index, is_published)
+1308:   INSERT INTO public.skills (
+1332:   INSERT INTO public.skills (
+1357:   INSERT INTO public.skills (
+1381:   INSERT INTO public.skills (
+1415:   INSERT INTO public.skill_highlights (skill_id, title, description, order_index)
+1421:   INSERT INTO public.skill_applications (skill_id, title, description, order_index)
+1427:   INSERT INTO public.skill_tools (skill_id, tool_name, description, icon_url, tool_url, order_index)
+1436:   INSERT INTO public.skill_steps (skill_id, step_title, step_description, order_index)
+2153: INSERT INTO public.page_sections (
+2294: INSERT INTO public.site_stats (
+2404: INSERT INTO public.site_stats (
+2512: INSERT INTO public.site_stats_section_settings (
+2531: INSERT INTO public.page_sections (
+2762: INSERT INTO public.about_tags (
+3077: INSERT INTO public.media_folders (
+3139: INSERT INTO public.themes (id, name, description)
+3443: INSERT INTO public.blog_categories (
+3453: INSERT INTO public.blog_tags (
+3471: INSERT INTO public.page_sections (

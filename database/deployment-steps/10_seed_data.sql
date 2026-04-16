@@ -12,17 +12,17 @@ VALUES (1, 'Pham Thi Hai Yen', 'contact@haiyen.me')
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Page Sections Layout (Home Page)
-INSERT INTO public.page_sections (page_type, section_type, section_name, order_index, data_source)
+INSERT INTO public.page_sections (page_type, section_key, section_type, section_name, order_index, data_source)
 VALUES 
-('home', 'hero', 'Hero Section', 0, 'fixed'),
-('home', 'about', 'About Section', 1, 'fixed'),
-('home', 'services', 'Services Section', 2, 'table'),
-('home', 'expertise', 'Expertise Section', 3, 'table'),
-('home', 'projects', 'Projects Section', 4, 'table'),
-('home', 'testimonials', 'Testimonials Section', 5, 'table'),
-('home', 'blog', 'Blog Section', 6, 'table'),
-('home', 'contact', 'Contact Section', 7, 'fixed')
-ON CONFLICT (page_type, section_name) DO NOTHING;
+('home', 'home_hero', 'hero', 'Hero Section', 0, 'fixed'),
+('home', 'home_about', 'about', 'About Section', 1, 'fixed'),
+('home', 'home_services', 'services', 'Services Section', 2, 'table'),
+('home', 'home_expertise', 'expertise', 'Expertise Section', 3, 'table'),
+('home', 'home_projects', 'projects', 'Projects Section', 4, 'table'),
+('home', 'home_testimonials', 'testimonials', 'Testimonials Section', 5, 'table'),
+('home', 'home_blog', 'blog', 'Blog Section', 6, 'table'),
+('home', 'home_contact', 'contact', 'Contact Section', 7, 'fixed')
+ON CONFLICT (page_type, section_key) DO UPDATE SET section_name = EXCLUDED.section_name;
 
 -- 3. About Section Tags & Content
 INSERT INTO public.about_tags (label_en, order_index)

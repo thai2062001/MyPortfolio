@@ -6,14 +6,18 @@
 CREATE TABLE IF NOT EXISTS public.page_sections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   page_type page_type_enum NOT NULL DEFAULT 'home',
+  section_key TEXT NOT NULL, -- Identifer for frontend logic
   section_type section_type_enum NOT NULL,
   section_name TEXT NOT NULL,
   order_index INTEGER DEFAULT 0,
   is_published BOOLEAN DEFAULT TRUE,
+  is_visible BOOLEAN DEFAULT TRUE,
+  is_fixed BOOLEAN DEFAULT FALSE,
   data_source section_data_source_enum DEFAULT 'table',
   settings JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(page_type, section_key),
   UNIQUE(page_type, section_name)
 );
 
