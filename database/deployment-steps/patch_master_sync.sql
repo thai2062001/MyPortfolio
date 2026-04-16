@@ -266,8 +266,14 @@ BEGIN
     ALTER TABLE public.project_categories ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
     ALTER TABLE public.project_tags ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT TRUE;
     ALTER TABLE public.project_tags ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
-    ALTER TABLE public.services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
-    ALTER TABLE public.services ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT TRUE;
+    
+    -- [8.5] STATUS COLUMNS SYNC & SERVICE RENAME
+    BEGIN
+        ALTER TABLE public.services RENAME TO service_items;
+    EXCEPTION WHEN undefined_table THEN NULL; WHEN duplicate_table THEN NULL; END;
+
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT TRUE;
     ALTER TABLE public.metrics ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
     ALTER TABLE public.metrics ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT TRUE;
     ALTER TABLE public.testimonials ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
@@ -317,7 +323,134 @@ BEGIN
     ALTER TABLE public.expertise_tool_items ADD COLUMN IF NOT EXISTS description_vi TEXT;
     ALTER TABLE public.expertise_tool_items ADD COLUMN IF NOT EXISTS icon_url TEXT;
 
-    -- [11] UNIQUE CONSTRAINTS SYNC
+    -- [12] PROJECTS & SKILLS FRONTEND ALIGNMENT
+    -- Projects
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS title TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS short_description TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS overview TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS challenge TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS solution TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS title_ja TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS short_description_ja TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS description_ja TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS title_vi TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS short_description_vi TEXT;
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS description_vi TEXT;
+
+    -- Skills
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS skill_name TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS short_description TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS overview TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS skill_name_ja TEXT;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS skill_name_vi TEXT;
+
+    -- [13] EXPERIENCE & TIMELINE ALIGNMENT
+    -- Experience Items
+    BEGIN
+        ALTER TABLE public.experience_items RENAME COLUMN "title" TO title_en;
+        ALTER TABLE public.experience_items RENAME COLUMN "company" TO company_en;
+        ALTER TABLE public.experience_items RENAME COLUMN "location" TO location_en;
+    EXCEPTION WHEN undefined_column THEN NULL; END;
+    ALTER TABLE public.experience_items ADD COLUMN IF NOT EXISTS title_en TEXT;
+    ALTER TABLE public.experience_items ADD COLUMN IF NOT EXISTS company_en TEXT;
+    ALTER TABLE public.experience_items ADD COLUMN IF NOT EXISTS title_ja TEXT;
+    ALTER TABLE public.experience_items ADD COLUMN IF NOT EXISTS company_ja TEXT;
+
+    -- Timeline Phases
+    BEGIN
+        ALTER TABLE public.timeline_phases RENAME COLUMN "title" TO title_en;
+        ALTER TABLE public.timeline_phases RENAME COLUMN "company" TO company_en;
+        ALTER TABLE public.timeline_phases RENAME COLUMN "location" TO location_en;
+    EXCEPTION WHEN undefined_column THEN NULL; END;
+    ALTER TABLE public.timeline_phases ADD COLUMN IF NOT EXISTS title_en TEXT;
+    ALTER TABLE public.timeline_phases ADD COLUMN IF NOT EXISTS company_en TEXT;
+    ALTER TABLE public.timeline_phases ADD COLUMN IF NOT EXISTS title_ja TEXT;
+    ALTER TABLE public.timeline_phases ADD COLUMN IF NOT EXISTS title_vi TEXT;
+
+    -- [14] SERVICE ITEMS SYNC (Additional Columns)
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS title_en TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS title_ja TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS title_vi TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS description_en TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS description_ja TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS description_vi TEXT;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.service_items ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+
+    -- [15] CONTACT MESSAGES ENHANCEMENT
+    ALTER TABLE public.contact_messages ADD COLUMN IF NOT EXISTS phone TEXT;
+    ALTER TABLE public.contact_messages ADD COLUMN IF NOT EXISTS purpose TEXT;
+    ALTER TABLE public.contact_messages ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT FALSE;
+    ALTER TABLE public.contact_messages ADD COLUMN IF NOT EXISTS is_replied BOOLEAN DEFAULT FALSE;
+
+    -- [16] PROJECT MEDIA & RESULTS SYNC
+    -- Project Images
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS alt_text TEXT;
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS caption TEXT;
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS alt_text_en TEXT;
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS caption_en TEXT;
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS alt_text_ja TEXT;
+    ALTER TABLE public.project_images ADD COLUMN IF NOT EXISTS caption_ja TEXT;
+
+    -- Project Results
+    ALTER TABLE public.project_results ADD COLUMN IF NOT EXISTS label_en TEXT;
+    ALTER TABLE public.project_results ADD COLUMN IF NOT EXISTS value_en TEXT;
+    ALTER TABLE public.project_results ADD COLUMN IF NOT EXISTS label_ja TEXT;
+    ALTER TABLE public.project_results ADD COLUMN IF NOT EXISTS value_ja TEXT;
+
+    -- [17] BLOG METADATA ALIGNMENT
+    -- Blog Metadata Alignment
+    ALTER TABLE public.blog_categories ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE public.blog_tags ADD COLUMN IF NOT EXISTS description TEXT;
+    
+    -- Blog Posts Enhancement (Fixes Status & SEO)
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_en TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_ja TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_vi TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS reading_time INTEGER DEFAULT 5;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS seo_title_en TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS seo_description_en TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS og_image_url TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS canonical_url TEXT;
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS noindex BOOLEAN DEFAULT FALSE;
+
+    -- [18] PREMIUM MASTER FEATURES
+    -- Skill Detail UI Toggles
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS show_highlights BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS show_applications BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS show_tools BOOLEAN DEFAULT TRUE;
+    ALTER TABLE public.skills ADD COLUMN IF NOT EXISTS show_steps BOOLEAN DEFAULT TRUE;
+
+    -- Testimonials Video Support
+    ALTER TABLE public.testimonials ADD COLUMN IF NOT EXISTS video_url TEXT;
+    ALTER TABLE public.project_testimonials ADD COLUMN IF NOT EXISTS video_url TEXT;
+
+    -- Project Ordering
+    ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS order_index INTEGER DEFAULT 0;
+
+    -- [19] PAGE SECTIONS CLEANUP (Final Fix for Duplication + Missing Timeline)
+    DELETE FROM public.page_sections 
+    WHERE section_key IN ('hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'expertise_section', 'timeline_section');
+
+    -- Insert/Update Radiant standard keys
+    INSERT INTO public.page_sections (section_key, section_name, page_type, order_index, is_published)
+    VALUES ('home_experience', 'Timeline & Experience', 'home', 3, TRUE)
+    ON CONFLICT (section_key) DO UPDATE SET section_name = 'Timeline & Experience';
+
+    -- Ensure correct names for standard keys
+    UPDATE public.page_sections SET section_name = 'Hero Section' WHERE section_key = 'home_hero';
+    UPDATE public.page_sections SET section_name = 'About Section' WHERE section_key = 'home_about';
+    UPDATE public.page_sections SET section_name = 'Services Section' WHERE section_key = 'home_services';
+    UPDATE public.page_sections SET section_name = 'Expertise Section' WHERE section_key = 'home_expertise';
+    UPDATE public.page_sections SET section_name = 'Projects Section' WHERE section_key = 'home_projects';
+    UPDATE public.page_sections SET section_name = 'Testimonials Section' WHERE section_key = 'home_testimonials';
+    UPDATE public.page_sections SET section_name = 'Blog Section' WHERE section_key = 'home_blog';
+    UPDATE public.page_sections SET section_name = 'Contact Section' WHERE section_key = 'home_contact';
+
+    -- [20] FINAL CONSTRAINT POLISH
     BEGIN
         ALTER TABLE public.page_sections ADD CONSTRAINT uq_page_sections_key UNIQUE (section_key);
     EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END;
