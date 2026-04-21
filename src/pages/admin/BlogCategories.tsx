@@ -79,6 +79,16 @@ const BlogCategories = () => {
     if (success) setIsDialogOpen(false);
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      slug: "sample-category-tech",
+      name_en: "Technology",
+      is_active: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   const handleDelete = async () => {
     if (deleteConfirm.itemId) {
       const success = await deleteData(deleteConfirm.itemId);
@@ -276,6 +286,7 @@ const BlogCategories = () => {
             activeSection={activeTab}
             setActiveSection={setActiveTab}
             editingId={editingId}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
             config={{
               hasI18n: true,
               statusField: "is_active"

@@ -147,6 +147,26 @@ export const SkillForm = ({ skillId, categories, onClose, onSave }: SkillFormPro
     }
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      slug: "sample-react-architecture",
+      skill_name: "React Advanced Architecture",
+      category_id: categories.length > 0 ? categories[0].id : "",
+      short_description: "Building scalable and maintainable React applications.",
+      overview: "Deep dive into component patterns, performance optimization, and global state management with Redux and Context API.",
+      difficulty_level: "Expert",
+      experience_level: "5+ Years",
+      estimated_time: "Continuous learning",
+      is_published: true,
+      show_highlights: true,
+      show_applications: true,
+      show_tools: true,
+      show_steps: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   const handleSubmit = async () => {
     if (!formData.skill_name || !formData.slug || !formData.category_id) {
       toast.error("Skill name, slug, and category are required");
@@ -180,6 +200,14 @@ export const SkillForm = ({ skillId, categories, onClose, onSave }: SkillFormPro
       icon: Settings2,
       content: (
         <div className="space-y-12 max-w-2xl">
+          {!skillId && (
+            <div className="flex justify-end mb-4">
+              <Button variant="outline" onClick={handleFillSampleData} className="px-6 rounded-xl font-black text-[10px] uppercase tracking-widest border-sage/10 bg-sage/5 hover:bg-sage/10 hover:text-sage transition-all">
+                <Wand2 size={16} className="mr-2" />
+                {t("FILL SAMPLE", "サンプルを入力", "ĐIỀN MẪU")}
+              </Button>
+            </div>
+          )}
           <AdminFormSection title={t("Core Metadata", "コアメタデータ", "Siêu dữ liệu cốt lõi")}>
             <AdminField label={t("Skill Nomenclature (EN)", "スキルの名称 (EN)", "Danh pháp kỹ năng (EN)")}>
               <Input

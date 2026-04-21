@@ -11,6 +11,7 @@ interface TestimonialFormProps {
   activeSection: string;
   isTranslating: boolean;
   onAutoTranslate: () => void;
+  onFillSampleData?: () => void;
 }
 
 export const TestimonialForm = ({
@@ -19,16 +20,29 @@ export const TestimonialForm = ({
   activeSection,
   isTranslating,
   onAutoTranslate,
+  onFillSampleData,
 }: TestimonialFormProps) => {
   return (
     <div className="space-y-10 text-left">
       {activeSection === "persona" && (
         <div className="space-y-8 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {onFillSampleData && (
+            <div className="flex justify-end mb-4 -mt-4">
+              <button 
+                type="button"
+                onClick={onFillSampleData} 
+                className="flex items-center px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border border-sage/10 bg-sage/5 hover:bg-sage/10 text-sage transition-all"
+              >
+                <Wand2 size={16} className="mr-2" />
+                FILL SAMPLE
+              </button>
+            </div>
+          )}
           <AdminFormSection title="Testimonial Details">
             <AdminField label="Full Name">
               <input
-                value={formData.name || ""}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.author_name || ""}
+                onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
                 placeholder="Dr. Sarah Mitchell"
                 className="w-full h-16 px-8 bg-muted/20 border-none rounded-2xl text-xl font-serif font-bold shadow-sm"
               />

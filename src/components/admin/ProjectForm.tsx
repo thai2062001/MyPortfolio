@@ -215,6 +215,27 @@ const ProjectForm = ({
     }
   };
 
+  const handleFillSampleData = () => {
+    setProject(prev => ({
+      ...prev,
+      slug: "sample-ai-platform",
+      title: "AI Synthesis Platform",
+      category_id: categories.length > 0 ? categories[0].id : "",
+      short_description: "A next-generation artificial intelligence interface.",
+      description: "Developing a cutting edge web platform that brings the power of AI to the masses with an intuitive, glassmorphic UI.",
+      overview: "We embarked on a journey to democratize AI tooling.",
+      challenge: "• Handling complex state management\n• Ensuring realtime performance",
+      solution: "• Adopted a decentralized architecture\n• Built custom React hooks for latency compensation",
+      client: "Acme Corp",
+      duration: "6 Months",
+      role: "Lead Frontend Engineer",
+      year: new Date().getFullYear().toString(),
+      cover_image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80",
+      is_published: false,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   const handleSubmit = async () => {
     if (!project.title || !project.slug || !project.category_id) {
       toast.error(t("Title, slug and category are mandatory", "タイトル、スラッグ、カテゴリーは必須です", "Tiêu đề, slug và danh mục là bắt buộc"));
@@ -256,6 +277,14 @@ const ProjectForm = ({
       icon: Settings,
       content: (
         <div className="space-y-12 max-w-2xl">
+          {!projectId && (
+            <div className="flex justify-end mb-4">
+              <Button variant="outline" onClick={handleFillSampleData} className="px-6 rounded-xl font-black text-[10px] uppercase tracking-widest border-sage/10 bg-sage/5 hover:bg-sage/10 hover:text-sage transition-all">
+                <Wand2 size={16} className="mr-2" />
+                {t("FILL SAMPLE", "サンプルを入力", "ĐIỀN MẪU")}
+              </Button>
+            </div>
+          )}
           <AdminFormSection title={t("General", "全般", "Cơ bản")}>
             <AdminField label={t("Project Title (EN)", "プロジェクトタイトル (EN)", "Tiêu đề dự án (EN)")}>
               <Input

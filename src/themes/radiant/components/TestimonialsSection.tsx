@@ -213,7 +213,7 @@ const TestimonialsSection = memo(() => {
                           {testimonial.portrait_url ? (
                             <img 
                               src={optimizeCloudinary(testimonial.portrait_url)} 
-                              alt={testimonial.name} 
+                              alt={testimonial.author_name} 
                               className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                             />
                           ) : (
@@ -221,7 +221,7 @@ const TestimonialsSection = memo(() => {
                           )}
                        </div>
                        <div className="flex flex-col">
-                          <span className="font-display text-lg text-heading leading-none mb-1 group-hover:text-white transition-colors duration-500">{testimonial.name}</span>
+                          <span className="font-display text-lg text-heading leading-none mb-1 group-hover:text-white transition-colors duration-500">{testimonial.author_name}</span>
                           <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30 group-hover:text-white/60 transition-colors duration-500">
                             {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : (testimonial as any).role_vi || testimonial.role_en}
                           </span>
@@ -249,7 +249,7 @@ const TestimonialsSection = memo(() => {
                               {testimonial.portrait_url ? (
                                 <img 
                                   src={optimizeCloudinary(testimonial.portrait_url)} 
-                                  alt={testimonial.name} 
+                                  alt={testimonial.author_name} 
                                   className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                                 />
                               ) : (
@@ -257,7 +257,7 @@ const TestimonialsSection = memo(() => {
                               )}
                            </div>
                            <div className="flex flex-col">
-                              <span className="font-display text-lg text-heading leading-none mb-1 group-hover:md:text-white transition-colors duration-500">{testimonial.name}</span>
+                              <span className="font-display text-lg text-heading leading-none mb-1 group-hover:md:text-white transition-colors duration-500">{testimonial.author_name}</span>
                               <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30 group-hover:md:text-white/60 transition-colors duration-500">
                                 {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : (testimonial as any).role_vi || testimonial.role_en}
                               </span>

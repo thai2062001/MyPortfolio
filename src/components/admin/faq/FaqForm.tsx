@@ -11,6 +11,7 @@ interface FaqFormProps {
   activeSection: string;
   isTranslating: boolean;
   onAutoTranslate: () => void;
+  onFillSampleData?: () => void;
 }
 
 export const FaqForm = ({
@@ -19,11 +20,24 @@ export const FaqForm = ({
   activeSection,
   isTranslating,
   onAutoTranslate,
+  onFillSampleData,
 }: FaqFormProps) => {
   return (
     <div className="space-y-10 text-left">
       {activeSection === "identity" && (
         <div className="space-y-8 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {onFillSampleData && (
+            <div className="flex justify-end mb-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onFillSampleData}
+                className="h-9 px-4 text-xs font-bold uppercase tracking-widest text-sage border-sage/30 hover:bg-sage/10 bg-sage/5"
+              >
+                Fill Sample
+              </Button>
+            </div>
+          )}
           <AdminField label="Cluster Category">
             <select
               value={formData.category}

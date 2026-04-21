@@ -21,6 +21,7 @@ interface TimelinePhaseFormProps {
   activeSection: string;
   isTranslating?: boolean;
   onAutoTranslate?: () => void;
+  onFillSampleData?: () => void;
 }
 
 export const TimelinePhaseForm = ({
@@ -29,11 +30,20 @@ export const TimelinePhaseForm = ({
   activeSection,
   isTranslating = false,
   onAutoTranslate,
+  onFillSampleData,
 }: TimelinePhaseFormProps) => {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
       {activeSection === "general" && (
         <div className="space-y-10 max-w-2xl text-left">
+          {onFillSampleData && (
+            <div className="flex justify-end mb-4 -mt-4">
+              <Button variant="outline" onClick={onFillSampleData} className="px-6 rounded-xl font-black text-[10px] uppercase tracking-widest border-sage/10 bg-sage/5 hover:bg-sage/10 hover:text-sage transition-all">
+                <Wand2 size={16} className="mr-2" />
+                FILL SAMPLE
+              </Button>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div className="space-y-4">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-3">

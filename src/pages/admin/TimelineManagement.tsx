@@ -431,6 +431,21 @@ const TimelineManagement = () => {
     }
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      period: "2024 — Present",
+      location: "San Francisco, CA",
+      title_en: "Senior Frontend Architect",
+      company_en: "TechNova Solutions",
+      description_en: "Led the migration of a legacy monolithic frontend to a module federated micro-frontend architecture using React and Webpack 5. Improved build times by 40% and team deployment velocity by 200%.",
+      tag_en: "Engineering Leadership",
+      is_published: true,
+      default_image_orientation: 'landscape',
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   const dialogTabs = [
     {
       id: "general",
@@ -442,6 +457,7 @@ const TimelineManagement = () => {
           formData={formData}
           setFormData={setFormData}
           activeSection="general"
+          onFillSampleData={!editingId ? handleFillSampleData : undefined}
         />
       ),
     },

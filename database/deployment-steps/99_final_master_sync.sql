@@ -406,6 +406,7 @@ BEGIN
     
     -- Blog Posts Enhancement (Fixes Status & SEO)
     ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';
+    ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE;
     ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_en TEXT;
     ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_ja TEXT;
     ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS excerpt_vi TEXT;

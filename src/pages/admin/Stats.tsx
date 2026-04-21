@@ -96,6 +96,19 @@ const StatsPage = () => {
     if (success) setIsDialogOpen(false);
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      stat_key: "sample_projects",
+      value_text: "50+",
+      label_en: "Projects Deployed",
+      description_en: "Global scale full stack projects successfully delivered to production.",
+      icon_url: "https://example.com/icon.svg",
+      is_published: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   // Bulk Actions
   const handleBulkStatus = async (published: boolean) => {
     if (!selectedIds.length) return;
@@ -383,6 +396,7 @@ const StatsPage = () => {
                 activeSection={activeFormTab}
                 setActiveSection={setActiveFormTab}
                 editingId={editingId}
+                onFillSampleData={!editingId ? handleFillSampleData : undefined}
               />
             </AdminDialogForm>
           </div>

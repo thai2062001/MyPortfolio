@@ -161,7 +161,7 @@ export interface Client {
 // Testimonials
 export interface Testimonial {
     id: string;
-    name: string;
+    author_name: string;
     role_en: string;
     role_ja: string;
     role_vi?: string;

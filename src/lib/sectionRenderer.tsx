@@ -68,7 +68,7 @@ const LazySection = ({ children, sectionKey }: { children: React.ReactNode, sect
     'home_timeline': 'timeline',
     'home_contact': 'contact',
     'home_faq': 'faq',
-    'home_blogs': 'blog',
+    'home_blog': 'blog',
     'stats': 'stats',
     'faq': 'faq',
     'blog': 'blog'
@@ -107,7 +107,7 @@ const sectionComponentMap: Record<string, React.ComponentType<any>> = {
   home_contact: ContactSection,
   home_stats: StatsSection,
   home_faq: FaqSection,
-  home_blogs: BlogSection,
+  home_blog: BlogSection,
 
   // Portfolio page sections
   portfolio_grid: PortfolioGrid,
@@ -116,7 +116,7 @@ const sectionComponentMap: Record<string, React.ComponentType<any>> = {
   portfolio_contact: ContactSection,
   portfolio_proficiencies: ProficienciesSection,
   portfolio_testimonials: TestimonialsSection,
-  portfolio_blogs: BlogSection,
+  portfolio_blog: BlogSection,
 
   // Generic/Initial
   stats: StatsSection,

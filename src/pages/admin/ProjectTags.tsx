@@ -78,6 +78,16 @@ const ProjectTags = () => {
     if (success) setIsDialogOpen(false);
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      slug: "sample-tag-react",
+      name_en: "React",
+      is_active: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   // ── Bulk Actions ────────────────────────────────────────────────────────────
 
   const handleBulkActivate = async () => {
@@ -319,6 +329,7 @@ const ProjectTags = () => {
             activeSection={activeTab}
             setActiveSection={setActiveTab}
             editingId={editingId}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
             config={{
               hasI18n: true,
               hasDescription: true,

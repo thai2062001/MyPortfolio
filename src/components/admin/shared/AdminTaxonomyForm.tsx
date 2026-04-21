@@ -18,6 +18,7 @@ interface AdminTaxonomyFormProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
   editingId?: string | null;
+  onFillSampleData?: () => void;
   config: {
     hasI18n?: boolean;
     hasDescription?: boolean;
@@ -33,6 +34,7 @@ export const AdminTaxonomyForm = ({
   activeSection,
   setActiveSection,
   editingId,
+  onFillSampleData,
   config
 }: AdminTaxonomyFormProps) => {
   const { t } = useLang();
@@ -84,6 +86,18 @@ export const AdminTaxonomyForm = ({
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
       {activeSection === "identity" && (
         <div className="space-y-10 max-w-xl">
+          {onFillSampleData && (
+            <div className="flex justify-end mb-4 -mt-4">
+              <button 
+                type="button"
+                onClick={onFillSampleData} 
+                className="flex items-center px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border border-sage/10 bg-sage/5 hover:bg-sage/10 text-sage transition-all"
+              >
+                <Wand2 size={16} className="mr-2" />
+                {t("FILL SAMPLE", "サンプルを入力", "ĐIỀN MẪU")}
+              </button>
+            </div>
+          )}
           <div className="space-y-4">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-3">
               {config.hasI18n ? t("English Nomenclature", "英語の名称", "Danh pháp tiếng Anh") : t("Vector Nomenclature", "ベクトルの名称", "Danh pháp Vector")}

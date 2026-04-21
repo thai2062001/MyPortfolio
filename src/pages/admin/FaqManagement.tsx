@@ -26,6 +26,8 @@ import { AdminDialogForm } from "@/components/admin/shared/AdminDialogForm";
 import { FaqForm } from "@/components/admin/faq/FaqForm";
 import { toast } from "sonner";
 import { translateFields } from "@/lib/translate";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -48,7 +50,9 @@ const FaqManagement = () => {
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
   const [isBulkPending, setIsBulkPending] = useState(false);
 
-  const { data: faqs, loading, saving, upsertData, deleteData } = useAdminCRUD<Faq>({
+  const deleteConfirm = useDeleteConfirm();
+
+  const { data: faqs, loading, saving, deleting, upsertData, deleteData } = useAdminCRUD<Faq>({
     tableName: "faqs",
     defaultOrderBy: { column: "order_index", ascending: true }
   });
@@ -160,6 +164,17 @@ const FaqManagement = () => {
         ? t("Enquiry refined successfully.", "お問い合わせ内容を更新しました。", "Cập nhật yêu cầu thành công.") 
         : t("Enquiry integrated successfully.", "新しいお問い合わせを追加しました。", "Thêm yêu cầu mới thành công."));
     }
+  };
+
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      question_en: "How do you ensure project success?",
+      answer_en: "Through rigorous strategic planning and continuous intelligence integration throughout the lifecycle.",
+      category: "general",
+      is_published: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
   };
 
   const handleMagicSync = async () => {
@@ -281,6 +296,13 @@ const FaqManagement = () => {
 
   return (
     <AdminLayout>
+      <DeleteConfirmDialog
+        open={deleteConfirm.isOpen}
+        onOpenChange={deleteConfirm.closeConfirm}
+        onConfirm={() => deleteData(deleteConfirm.itemId!)}
+        itemName={deleteConfirm.itemName}
+        isLoading={deleting}
+      />
       <div className="space-y-8 animate-in fade-in duration-700">
         <AdminPageHeader
           title={translations[lang].enquiryHub}
@@ -366,7 +388,7 @@ const FaqManagement = () => {
           searchTerm={searchTerm}
           searchFields={["question_en", "question_ja", "question_vi", "answer_en", "answer_ja", "answer_vi"]}
           onEdit={handleEdit}
-          onDelete={(item) => deleteData(item.id)}
+          onDelete={(item) => deleteConfirm.openConfirm(item.id, item.question_en)}
           selectable
           selectedIds={selectedIds}
           onSelectionChange={setSelectedIds}
@@ -397,6 +419,7 @@ const FaqManagement = () => {
             activeSection={activeTab}
             isTranslating={isTranslating}
             onAutoTranslate={handleMagicSync}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
           />
         </AdminDialogForm>
       </div>

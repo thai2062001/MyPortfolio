@@ -54,7 +54,7 @@ const Testimonials = () => {
   });
 
   const [formData, setFormData] = useState({
-    name: "",
+    author_name: "",
     role_en: "",
     role_ja: "",
     role_vi: "",
@@ -69,7 +69,7 @@ const Testimonials = () => {
 
   const handleOpenAdd = () => {
     setFormData({ 
-      name: "", 
+      author_name: "", 
       role_en: "", 
       role_ja: "", 
       role_vi: "",
@@ -88,7 +88,7 @@ const Testimonials = () => {
 
   const handleEdit = (testimonial: Testimonial) => {
     setFormData({
-      name: testimonial.name,
+      author_name: testimonial.author_name,
       role_en: testimonial.role_en,
       role_ja: testimonial.role_ja,
       role_vi: testimonial.role_vi || "",
@@ -130,12 +130,24 @@ const Testimonials = () => {
   };
 
   const handleSave = async () => {
-    if (!formData.name || !formData.quote_en || !formData.role_en) {
+    if (!formData.author_name || !formData.quote_en || !formData.role_en) {
       toast.error(t("Essential identity parameters (Name, Role, Quote) are required.", "基本的な身元パラメータ（名前、役割、引用）が必要です。", "Vui lòng nhập đầy đủ Tên, Chức vụ and Nội dung."));
       return;
     }
     const result = await upsertData(formData, editingId || undefined);
     if (result) setIsDialogOpen(false);
+  };
+
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      author_name: "Alex Rivera",
+      role_en: "Senior UI/UX Designer",
+      quote_en: "This has completely transformed the way we handle our frontend architecture. Unparalleled quality and attention to detail.",
+      portrait_url: "https://example.com/portrait.jpg",
+      is_published: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
   };
 
   // Bulk Actions
@@ -180,7 +192,7 @@ const Testimonials = () => {
   };
 
   const filteredTestimonials = testimonials.filter(
-    (t) => t.name.toLowerCase().includes(searchTerm.toLowerCase()) || t.quote_en.toLowerCase().includes(searchTerm.toLowerCase())
+    (t) => t.author_name.toLowerCase().includes(searchTerm.toLowerCase()) || t.quote_en.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const tabs: AdminTabConfig[] = [
@@ -270,7 +282,7 @@ const Testimonials = () => {
                 <button onClick={() => handleEdit(testimonial)} className="w-10 h-10 bg-white shadow-xl rounded-xl flex items-center justify-center text-heading hover:text-sage transition-all hover:scale-110 active:scale-95">
                   <Edit3 size={18} />
                 </button>
-                <button onClick={() => deleteConfirm.openConfirm(testimonial.id, testimonial.name)} className="w-10 h-10 bg-white shadow-xl rounded-xl flex items-center justify-center text-red-500 hover:bg-red-50 transition-all hover:scale-110 active:scale-95">
+                <button onClick={() => deleteConfirm.openConfirm(testimonial.id, testimonial.author_name)} className="w-10 h-10 bg-white shadow-xl rounded-xl flex items-center justify-center text-red-500 hover:bg-red-50 transition-all hover:scale-110 active:scale-95">
                   <Trash2 size={18} />
                 </button>
               </div>
@@ -282,7 +294,7 @@ const Testimonials = () => {
                   }
                 </div>
                 <div className="space-y-1 min-w-0">
-                  <h3 className="text-xl font-serif font-bold text-heading group-hover:text-sage transition-colors truncate">{testimonial.name}</h3>
+                  <h3 className="text-xl font-serif font-bold text-heading group-hover:text-sage transition-colors truncate">{testimonial.author_name}</h3>
                   <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground truncate">
                     {lang === 'ja' ? testimonial.role_ja || testimonial.role_en : lang === 'vi' ? testimonial.role_vi || testimonial.role_en : testimonial.role_en}
                   </p>
@@ -330,6 +342,7 @@ const Testimonials = () => {
             activeSection={activeTab}
             isTranslating={isTranslating}
             onAutoTranslate={handleAutoTranslate}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
           />
         </AdminDialogForm>
       </div>

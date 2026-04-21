@@ -118,6 +118,16 @@ const ProjectCategories = () => {
     if (success) setIsDialogOpen(false);
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      slug: "sample-project-cat",
+      name_en: "Web Development",
+      is_active: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   const handleDelete = async () => {
     if (deleteConfirm.itemId) {
       const success = await deleteData(deleteConfirm.itemId);
@@ -280,14 +290,14 @@ const ProjectCategories = () => {
         <AdminDialogForm
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
-          title={editingId ? t("Refine Vector", "ベクトルを洗練", "Tinh chỉnh Vector") : t("Integrate Vector", "ベクトルを統合", "Tích hợp Vector")}
-          description={t("Refine and architect the project taxonomy vector.", "プロジェクト分類のベクトルを洗練し、構築します。", "Tinh chỉnh và kiến tạo tập hợp phân loại dự án.")}
+          title={editingId ? t("Edit Domain", "ドメインを編集", "Chỉnh sửa Tên miền") : t("Register Domain", "ドメインを登録", "Đăng ký Tên miền")}
+          description={t("Set topological boundaries for optimal project classification.", "最適なプロジェクト分類のためのトポロジー境界を設定します。", "Thiết lập ranh giới cấu trúc để phân loại dự án tối ưu.")}
           tabs={taxonomyTabs}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onSave={handleSave}
           saving={saving}
-          saveLabel={translations[lang].save}
+          saveLabel={t("Synchronize", "同期する", "Đồng bộ hóa")}
         >
           <AdminTaxonomyForm
             formData={formData}
@@ -295,9 +305,13 @@ const ProjectCategories = () => {
             activeSection={activeTab}
             setActiveSection={setActiveTab}
             editingId={editingId}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
             config={{
               hasI18n: true,
-              statusField: "is_published"
+              hasDescription: true,
+              hasIcon: true,
+              statusField: "is_active",
+              slugLabel: "Domain Matrix ID"
             }}
           />
         </AdminDialogForm>

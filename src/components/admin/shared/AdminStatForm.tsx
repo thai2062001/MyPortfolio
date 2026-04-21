@@ -16,6 +16,7 @@ interface AdminStatFormProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
   editingId?: string | null;
+  onFillSampleData?: () => void;
 }
 
 export const AdminStatForm = ({
@@ -23,7 +24,8 @@ export const AdminStatForm = ({
   setFormData,
   activeSection,
   setActiveSection,
-  editingId
+  editingId,
+  onFillSampleData
 }: AdminStatFormProps) => {
   const { lang, t, translations } = useLang();
   const [isTranslating, setIsTranslating] = useState(false);
@@ -61,6 +63,18 @@ export const AdminStatForm = ({
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
       {activeSection === "config" && (
         <div className="space-y-10 max-w-xl">
+          {onFillSampleData && (
+            <div className="flex justify-end mb-4 -mt-4">
+              <button 
+                type="button"
+                onClick={onFillSampleData} 
+                className="flex items-center px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border border-sage/10 bg-sage/5 hover:bg-sage/10 text-sage transition-all"
+              >
+                <Wand2 size={16} className="mr-2" />
+                {t("FILL SAMPLE", "サンプルを入力", "ĐIỀN MẪU")}
+              </button>
+            </div>
+          )}
           <div className="space-y-4">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-3">
               {t("Metric Magnitude (Value)", "メトリックの大きさ（値）", "Giá trị số liệu (Value)")}

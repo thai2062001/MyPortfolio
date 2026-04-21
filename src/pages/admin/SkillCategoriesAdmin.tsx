@@ -87,6 +87,16 @@ const SkillCategoriesAdmin = () => {
     if (success) setIsDialogOpen(false);
   };
 
+  const handleFillSampleData = () => {
+    setFormData(prev => ({
+      ...prev,
+      slug: "sample-skill-category",
+      name_en: "Frontend Engineering",
+      is_published: true,
+    }));
+    toast.success(t("Sample data injected!", "サンプルデータが入力されました！", "Dữ liệu mẫu đã được điền!"));
+  };
+
   // Bulk Actions
   const handleBulkStatus = async (published: boolean) => {
     if (!selectedIds.length) return;
@@ -324,6 +334,7 @@ const SkillCategoriesAdmin = () => {
             activeSection={activeTab}
             setActiveSection={setActiveTab}
             editingId={editingId}
+            onFillSampleData={!editingId ? handleFillSampleData : undefined}
             config={{
               hasI18n: true,
               hasDescription: true,

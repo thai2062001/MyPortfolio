@@ -217,6 +217,21 @@ const BlogPostEditor = () => {
     }
   };
 
+  const handleFillSampleData = () => {
+    setPost(prev => ({
+      ...prev,
+      slug: "sample-blog-post",
+      title_en: "The Future of Web Development with AI",
+      excerpt_en: "Exploring how artificial intelligence is shaping the way we build web applications in 2026.",
+      content_en: "<h2>Introduction</h2><p>AI is no longer just a buzzword. It's an essential tool for creating modern, complex web applications quickly. From generating boilerplate to refining code structures, AI has changed the landscape entirely.</p><h2>The Next Steps</h2><p>Integrating AI naturally throughout our development process allows developers to focus on higher-level architectural decisions and user experience.</p>",
+      cover_image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80",
+      status: "draft",
+      seo_title_en: "AI Web Development Future",
+      seo_description_en: "Learn about the impact of AI on modern web development practices.",
+    }));
+    toast.success("Sample data injected!", { duration: 2000 });
+  };
+
   const handleSubmit = async () => {
     if (!post.title_en || !post.slug) {
       toast.error("Title and slug are mandatory for indexing.");
@@ -297,6 +312,12 @@ const BlogPostEditor = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
+            {id === "new" && (
+              <Button variant="outline" onClick={handleFillSampleData} className="h-12 md:h-14 px-6 md:px-8 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs uppercase tracking-widest border-sage/10 bg-white/50 hover:bg-sage/5 hover:text-sage transition-all">
+                <Wand2 size={18} className="mr-2" />
+                {t("FILL SAMPLE", "サンプルを入力", "ĐIỀN MẪU")}
+              </Button>
+            )}
             <Button variant="outline" onClick={() => setIsPreviewOpen(true)} className="h-12 md:h-14 px-6 md:px-8 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs uppercase tracking-widest border-sage/10 bg-white/50 hover:bg-sage/5 hover:text-sage transition-all">
               <Eye size={18} className="mr-2" />
               {t("PREVIEW", "プレビュー", "XEM TRƯỚC")}
