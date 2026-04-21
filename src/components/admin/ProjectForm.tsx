@@ -170,6 +170,17 @@ const ProjectForm = ({
     return title.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
   };
 
+  const getCategoryDisplayName = (category: ProjectCategory) => {
+    const legacyName = category.name || "";
+    const nameEn = category.name_en || legacyName;
+    const nameJa = category.name_ja || nameEn;
+    const nameVi = category.name_vi || nameEn;
+
+    if (lang === "ja") return nameJa;
+    if (lang === "vi") return nameVi;
+    return nameEn || legacyName || category.slug;
+  };
+
   const handleAutoTranslate = async () => {
     try {
       setIsTranslating(true);
@@ -308,7 +319,11 @@ const ProjectForm = ({
                   className="w-full h-14 px-6 bg-white/70 border border-sage/20 rounded-xl font-bold focus:outline-none"
                 >
                   <option value="">{t("Select Category", "カテゴリーを選択", "Chọn danh mục")}</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{lang === 'ja' ? (c.name_ja || c.name_en) : (lang === 'vi' ? (c.name_vi || c.name_en) : c.name_en)}</option>)}
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {getCategoryDisplayName(category)}
+                    </option>
+                  ))}
                 </select>
               </AdminField>
             </div>

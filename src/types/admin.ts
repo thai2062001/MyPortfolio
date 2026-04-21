@@ -2,6 +2,7 @@
 export interface ProjectCategory {
     id: string;
     slug: string;
+    name?: string;
     name_en: string;
     name_ja?: string;
     name_vi?: string;

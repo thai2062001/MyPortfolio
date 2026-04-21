@@ -31,7 +31,7 @@ const ProjectCategories = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("identity");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
   const queryClient = useQueryClient();
 
   const { data: categories, loading, saving, upsertData, deleteData, deleting } = useAdminCRUD<ProjectCategory>({
@@ -41,7 +41,7 @@ const ProjectCategories = () => {
 
   // Bulk status update
   const bulkStatusUpdateMutation = useMutation({
-    mutationFn: async ({ ids, isPublished }: { ids: string[], isPublished: boolean }) => {
+    mutationFn: async ({ ids, isPublished }: { ids: (string | number)[], isPublished: boolean }) => {
       const { error } = await supabase
         .from("project_categories")
         .update({ is_published: isPublished })
@@ -63,7 +63,7 @@ const ProjectCategories = () => {
 
   // Bulk delete
   const bulkDeleteMutation = useMutation({
-    mutationFn: async (ids: string[]) => {
+    mutationFn: async (ids: (string | number)[]) => {
       const { error } = await supabase
         .from("project_categories")
         .delete()
