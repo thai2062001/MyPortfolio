@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useTransform, useScroll, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight, Sparkles } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -320,6 +320,8 @@ const ProjectDetail = () => {
       .map((r: any) => ({ value: r.value, label: cleanNumbering(getLocalizedField(r, 'label', currentLang)) })) || [], 
   [project?.project_results, currentLang]);
 
+  const cn = (...classes: any[]) => classes.filter(Boolean).join(' ');
+
   const testimonial = useMemo(() => project?.project_testimonials?.[0] || null, [project?.project_testimonials]);
   const isActuallyLoading = isProjectLoading || !isReady;
 
@@ -465,16 +467,50 @@ const ProjectDetail = () => {
                   </div>
                 )}
                 {results.length > 0 && (
-                  <div className="lg:col-span-7 space-y-12 md:space-y-16">
-                     <div className="space-y-4 text-center md:text-right">
-                        <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-bold text-vibe-pink">The Yield</span>
-                        <h2 className="font-display text-5xl md:text-7xl text-heading tracking-tighter leading-none italic">{t("The Results", "結果", "Kết quả")}</h2>
+                  <div className="lg:col-span-7 space-y-16">
+                     <div className="space-y-6 text-center md:text-right">
+                        <div className="flex items-center gap-4 justify-center md:justify-end">
+                           <span className="w-12 h-px bg-vibe-pink/30" />
+                           <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-vibe-pink/60">{t("Outcome", "成果", "Thành quả")}</span>
+                        </div>
+                        <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
+                          {t("The", "その", "Những")} <br className="hidden md:block" />
+                          <span className="text-vibe-pink">Results.</span>
+                        </h2>
                      </div>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                     
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                         {results.map((r: any, i: number) => (
-                           <motion.div key={i} initial={isTabletOrMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className={`p-10 md:p-14 rounded-[2.5rem] md:rounded-[3.5rem] bg-[#f9f8f6] border border-heading/5 text-center ${i === 0 && results.length % 2 !== 0 ? 'sm:col-span-2' : ''}`}>
-                              <p className="font-display text-5xl md:text-7xl text-vibe-pink mb-4 tracking-tighter">{r.value}</p>
-                              <p className="font-sans text-[10px] md:text-[11px] tracking-[0.2em] md:tracking-[0.3em] uppercase font-black text-heading/40">{r.label}</p>
+                           <motion.div 
+                              key={i} 
+                              initial={isTabletOrMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} 
+                              whileInView={{ opacity: 1, y: 0 }} 
+                              viewport={{ once: true }} 
+                              transition={{ delay: i * 0.1, duration: 0.8 }}
+                              className={cn(
+                                "group relative p-12 md:p-16 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500",
+                                "bg-white/40 backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
+                                i === 0 && results.length % 2 !== 0 ? 'sm:col-span-2' : ''
+                              )}
+                           >
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-vibe-pink/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                              
+                              {r.value ? (
+                                <>
+                                  <p className="font-display text-6xl md:text-8xl text-vibe-pink mb-6 tracking-tighter group-hover:scale-105 transition-transform duration-500">{r.value}</p>
+                                  <div className="w-8 h-1 bg-vibe-pink/10 mb-6 group-hover:w-16 transition-all duration-500" />
+                                  <p className="font-sans text-[11px] md:text-[13px] tracking-[0.1em] uppercase font-bold text-heading px-4 leading-relaxed">{r.label}</p>
+                                </>
+                              ) : (
+                                <div className="space-y-6">
+                                  <div className="w-12 h-12 rounded-2xl bg-vibe-pink/5 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-500">
+                                    <Sparkles className="text-vibe-pink/60" size={24} />
+                                  </div>
+                                  <p className="font-serif text-xl md:text-2xl text-heading/80 leading-relaxed italic group-hover:text-heading transition-colors duration-500">
+                                    {r.label}
+                                  </p>
+                                </div>
+                              )}
                            </motion.div>
                         ))}
                      </div>

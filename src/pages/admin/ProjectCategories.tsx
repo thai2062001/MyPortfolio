@@ -197,7 +197,7 @@ const ProjectCategories = () => {
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           primaryAction={{
-            label: t("New Domain", "ドメイン追加", "Thêm tên miền"),
+            label: t("Add Category", "カテゴリーを追加", "Thêm danh mục mới"),
             onClick: handleAdd
           }}
           headerActions={

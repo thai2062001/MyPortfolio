@@ -132,7 +132,7 @@ export const AdminDialogForm = ({
           {/* ── Main Content Area ── */}
           <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden bg-white/40">
             {/* Header */}
-            <DialogHeader className={cn(
+            <div className={cn(
               "px-6 md:px-10 border-b border-sage/5 flex flex-row items-center justify-between shrink-0",
               tabs ? "pt-16 pb-5 md:pt-6 md:pb-6" : "py-6 md:py-8"
             )}>
@@ -147,12 +147,13 @@ export const AdminDialogForm = ({
                 )}
               </div>
               <button
+                type="button"
                 onClick={() => onOpenChange(false)}
-                className="w-10 h-10 rounded-xl hover:bg-heading hover:text-white flex items-center justify-center text-muted-foreground transition-all duration-300 group/close shrink-0"
+                className="w-10 h-10 rounded-xl hover:bg-heading hover:text-white flex items-center justify-center text-muted-foreground transition-all duration-300 group/close shrink-0 z-[60]"
               >
                 <X size={18} className="group-hover/close:rotate-90 transition-transform duration-300" />
               </button>
-            </DialogHeader>
+            </div>
 
             {/* Scrollable Content — THE KEY FIX: min-h-0 + overflow-y-auto */}
             <div className="flex-1 overflow-y-auto min-h-0 p-6 md:p-10">
