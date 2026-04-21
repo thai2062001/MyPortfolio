@@ -109,6 +109,14 @@ export const AboutContentForm = ({
                   className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
                 />
               </AdminField>
+              <AdminField label={t("Primary Button Label (JA)", "プライマリボタンラベル (JA)", "Nhãn nút chính (JA)")}>
+                <input
+                  value={formData.cta_primary_label_ja || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_primary_label_ja: e.target.value })}
+                  placeholder="プロジェクトを見る"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
               <AdminField label={t("Primary Button Label (VI)", "プライマリボタンラベル (VI)", "Nhãn nút chính (VI)")}>
                 <input
                   value={formData.cta_primary_label_vi || ""}
@@ -122,6 +130,14 @@ export const AboutContentForm = ({
                   value={formData.cta_secondary_label_en || ""}
                   onChange={(e) => setFormData({ ...formData, cta_secondary_label_en: e.target.value })}
                   placeholder="Download CV"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
+              <AdminField label={t("Secondary Button Label (JA)", "セカンダリボタンラベル (JA)", "Nhãn nút phụ (JA)")}>
+                <input
+                  value={formData.cta_secondary_label_ja || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_secondary_label_ja: e.target.value })}
+                  placeholder="CVをダウンロード"
                   className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
                 />
               </AdminField>

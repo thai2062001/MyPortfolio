@@ -423,6 +423,19 @@ export const portfolioApi = {
     return data || [];
   },
 
+  getFaqSectionSettings: async (): Promise<any | null> => {
+    const { data, error } = await supabase
+      .from('faq_section_settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+    if (error) {
+      console.error("Error fetching FAQ settings:", error);
+      return null;
+    }
+    return data;
+  },
+
   getSiteStats: async (): Promise<any[]> => {
     const { data, error } = await supabase
       .from('site_stats')

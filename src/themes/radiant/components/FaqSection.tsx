@@ -5,18 +5,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import SectionHeader from "./shared/SectionHeader";
-import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
+import { getLocalizedField, getLocalizedFields, SupportedLang } from "@/lib/content-utils";
 import { useIsTablet } from "@/hooks/use-mobile";
 
 const FaqSection = memo(() => {
   const { lang, t } = useLang();
   const currentLang = lang as SupportedLang;
   const isTablet = useIsTablet();
-  const { faqs: faqsQuery } = usePortfolioData();
+  const { faqs: faqsQuery, faqSettings: settingsQuery } = usePortfolioData();
   
   const faqs = faqsQuery.data || [];
-  const loading = faqsQuery.isLoading;
+  const settings = settingsQuery.data || null;
+  const loading = faqsQuery.isLoading || settingsQuery.isLoading;
   const [openId, setOpenId] = useState<string | null>(null);
+
+  const localizationData = useMemo(() => {
+    if (!settings) return null;
+    return getLocalizedFields(settings, ['title', 'eyebrow', 'description'], currentLang);
+  }, [settings, currentLang]);
 
   const toggleFaq = useCallback((id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -50,11 +56,11 @@ const FaqSection = memo(() => {
            eyebrow={
              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sage/10 text-sage text-[10px] font-black uppercase tracking-widest">
                <HelpCircle size={14} />
-               <span>{t("Inquiries", "お問い合わせ", "Thắc mắc")}</span>
+               <span>{localizationData?.eyebrow || t("Inquiries", "お問い合わせ", "Thắc mắc")}</span>
              </div>
            }
-           title={t("Got Questions?", "よくあるご質問", "Câu hỏi thường gặp")}
-           description={t(
+           title={localizationData?.title || t("Got Questions?", "よくあるご質問", "Câu hỏi thường gặp")}
+           description={localizationData?.description || t(
              "Find answers to common questions about my services and workflow.",
              "サービスやお仕事に関するよくある質問にお答えします。",
              "Tìm câu trả lời cho những thắc mắc phổ biến về dịch vụ và quy trình làm việc."
@@ -90,12 +96,12 @@ const FaqSection = memo(() => {
                   onClick={() => toggleFaq(faq.id)}
                   className="w-full px-6 py-5 md:py-6 flex items-center justify-between gap-4 text-left focus:outline-none"
                 >
-                  <span className={`text-base md:text-lg font-bold transition-colors duration-300 \${
+                  <span className={`text-base md:text-lg font-bold transition-colors duration-300 ${
                     isOpen ? "text-sage" : "text-gray-900 group-hover:text-sage"
                   }`}>
                     {question}
                   </span>
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 \${
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
                     isOpen ? "bg-sage text-white rotate-180" : "bg-gray-100 text-gray-400 group-hover:bg-sage/10 group-hover:text-sage"
                   }`}>
                     {isOpen ? <Minus size={18} /> : <Plus size={18} />}

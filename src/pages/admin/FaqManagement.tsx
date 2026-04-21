@@ -24,6 +24,7 @@ import { AdminPageHeader } from "@/components/admin/shared/AdminPageHeader";
 import { ResponsiveDataTable } from "@/components/admin/shared/ResponsiveDataTable";
 import { AdminDialogForm } from "@/components/admin/shared/AdminDialogForm";
 import { FaqForm } from "@/components/admin/faq/FaqForm";
+import { FaqSectionSettingsForm } from "@/components/admin/faq/FaqSectionSettingsForm";
 import { toast } from "sonner";
 import { translateFields } from "@/lib/translate";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
@@ -36,8 +37,10 @@ const FaqManagement = () => {
   const queryClient = useQueryClient();
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("identity");
+  const [settingsTab, setSettingsTab] = useState("identity");
   const [searchTerm, setSearchTerm] = useState("");
   const [placements, setPlacements] = useState<Record<PageType, boolean>>({
     home: false,
@@ -69,9 +72,29 @@ const FaqManagement = () => {
     is_published: true,
   });
 
+  const [settingsData, setSettingsData] = useState<any>({
+    eyebrow_en: "FAQ",
+    title_en: "Got Questions?",
+    description_en: "Find answers to common questions about my services and workflow.",
+  });
+
   useEffect(() => {
     fetchPlacements();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("faq_section_settings")
+        .select("*")
+        .eq("id", 1)
+        .single();
+      if (data) setSettingsData(data);
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    }
+  };
 
   const fetchPlacements = async () => {
     try {
@@ -166,6 +189,22 @@ const FaqManagement = () => {
     }
   };
 
+  const handleSaveSettings = async () => {
+    try {
+      const { error } = await supabase
+        .from("faq_section_settings")
+        .upsert({ ...settingsData, id: 1 });
+      
+      if (error) throw error;
+      
+      setIsSettingsOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["faq-settings"] });
+      toast.success(t("Section branding updated.", "セクションのブランディングが更新されました。", "Đã cập nhật thương hiệu phần."));
+    } catch (error) {
+      toast.error(t("Failed to update branding.", "ブランディングの更新に失敗しました。", "Cập nhật thương hiệu thất bại."));
+    }
+  };
+
   const handleFillSampleData = () => {
     setFormData(prev => ({
       ...prev,
@@ -198,6 +237,40 @@ const FaqManagement = () => {
         answer_ja: translatedJa.answer,
         question_vi: translatedVi.question,
         answer_vi: translatedVi.answer
+      }));
+      toast.success(t("Translation synced successfully.", "翻訳が正常に同期されました。", "Đã đồng bộ bản dịch thành công."));
+    } catch (error) {
+      toast.error(t("Magic Sync failure.", "マジックシークの失敗。", "Lỗi đồng bộ tự động."));
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const handleSettingsMagicSync = async () => {
+    if (!settingsData.title_en || !settingsData.eyebrow_en) {
+      toast.error(t("English parameters required for synchronization.", "同期には英語のパラメータが必要です。", "Yêu cầu nội dung tiếng Anh để đồng bộ."));
+      return;
+    }
+    try {
+      setIsTranslating(true);
+      const translatedJa = await translateFields({
+        title: settingsData.title_en,
+        eyebrow: settingsData.eyebrow_en,
+        description: settingsData.description_en
+      }, "ja");
+      const translatedVi = await translateFields({
+        title: settingsData.title_en,
+        eyebrow: settingsData.eyebrow_en,
+        description: settingsData.description_en
+      }, "vi");
+      setSettingsData((prev: any) => ({
+        ...prev,
+        title_ja: translatedJa.title,
+        eyebrow_ja: translatedJa.eyebrow,
+        description_ja: translatedJa.description,
+        title_vi: translatedVi.title,
+        eyebrow_vi: translatedVi.eyebrow,
+        description_vi: translatedVi.description
       }));
       toast.success(t("Translation synced successfully.", "翻訳が正常に同期されました。", "Đã đồng bộ bản dịch thành công."));
     } catch (error) {
@@ -294,6 +367,11 @@ const FaqManagement = () => {
     { id: "deployment", label: t("Safety", "安全性", "Bảo mật"), icon: ShieldCheck }
   ];
 
+  const settingsTabs = [
+    { id: "identity", label: t("Narrative", "ナラティブ", "Nội dung"), icon: FileText },
+    { id: "localization", label: t("Localization", "ローカライズ", "Địa phương hóa"), icon: Globe2 },
+  ];
+
   return (
     <AdminLayout>
       <DeleteConfirmDialog
@@ -315,48 +393,58 @@ const FaqManagement = () => {
             icon: Plus
           }}
           headerActions={
-            <AnimatePresence>
-              {selectedIds.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="flex items-center gap-2 bg-white/40 p-1.5 rounded-2xl border border-white/60 shadow-sm backdrop-blur-md"
-                >
-                   <div className="flex items-center gap-2 px-3 border-r border-sage/10 mr-1">
-                      <div className="w-5 h-5 rounded-full bg-sage text-white flex items-center justify-center text-[10px] font-black">{selectedIds.length}</div>
-                      <button onClick={() => setSelectedIds([])} className="text-[10px] font-bold uppercase tracking-widest text-sage/60 hover:text-sage">Clear</button>
-                   </div>
-                   
-                   <button 
-                    onClick={() => handleBulkStatus(true)} 
-                    disabled={isBulkPending}
-                    className="p-2 rounded-xl text-sage hover:bg-sage/10 transition-all disabled:opacity-50"
-                    title="Publish"
-                   >
-                    <CheckCircle2 size={18} />
-                   </button>
-                   
-                   <button 
-                    onClick={() => handleBulkStatus(false)} 
-                    disabled={isBulkPending}
-                    className="p-2 rounded-xl text-amber-500 hover:bg-amber-50 transition-all disabled:opacity-50"
-                    title="Vault"
-                   >
-                    <XCircle size={18} />
-                   </button>
-                   
-                   <button 
-                    onClick={handleBulkDelete} 
-                    disabled={isBulkPending}
-                    className="p-2 rounded-xl text-red-500 hover:bg-red-50 transition-all disabled:opacity-50"
-                    title="Delete"
-                   >
-                    <Trash2 size={18} />
-                   </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="flex items-center gap-4">
+              <AnimatePresence>
+                {selectedIds.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="flex items-center gap-2 bg-white/40 p-1.5 rounded-2xl border border-white/60 shadow-sm backdrop-blur-md"
+                  >
+                    <div className="flex items-center gap-2 px-3 border-r border-sage/10 mr-1">
+                        <div className="w-5 h-5 rounded-full bg-sage text-white flex items-center justify-center text-[10px] font-black">{selectedIds.length}</div>
+                        <button onClick={() => setSelectedIds([])} className="text-[10px] font-bold uppercase tracking-widest text-sage/60 hover:text-sage">Clear</button>
+                    </div>
+                    
+                    <button 
+                      onClick={() => handleBulkStatus(true)} 
+                      disabled={isBulkPending}
+                      className="p-2 rounded-xl text-sage hover:bg-sage/10 transition-all disabled:opacity-50"
+                      title="Publish"
+                    >
+                      <CheckCircle2 size={18} />
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleBulkStatus(false)} 
+                      disabled={isBulkPending}
+                      className="p-2 rounded-xl text-amber-500 hover:bg-amber-50 transition-all disabled:opacity-50"
+                      title="Vault"
+                    >
+                      <XCircle size={18} />
+                    </button>
+                    
+                    <button 
+                      onClick={handleBulkDelete} 
+                      disabled={isBulkPending}
+                      className="p-2 rounded-xl text-red-500 hover:bg-red-50 transition-all disabled:opacity-50"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 border border-black/5 hover:bg-white transition-all shadow-sm"
+              >
+                <Settings2 size={14} />
+                <span>Section Branding</span>
+              </button>
+            </div>
           }
         />
 
@@ -399,6 +487,7 @@ const FaqManagement = () => {
           }}
         />
 
+        {/* Individual FAQ Dialog */}
         <AdminDialogForm
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
@@ -420,6 +509,30 @@ const FaqManagement = () => {
             isTranslating={isTranslating}
             onAutoTranslate={handleMagicSync}
             onFillSampleData={!editingId ? handleFillSampleData : undefined}
+          />
+        </AdminDialogForm>
+
+        {/* Section Settings Dialog */}
+        <AdminDialogForm
+          open={isSettingsOpen}
+          onOpenChange={setIsSettingsOpen}
+          title={t("FAQ Section Branding", "FAQセクションのブランディング", "Thương hiệu phần FAQ")}
+          description={t("Configure the strategic header for the FAQ section.", "FAQセクションのヘッダー構成を構成します。", "Cấu hình tiêu đề chiến lược cho phần FAQ.")}
+          tabs={settingsTabs}
+          activeTab={settingsTab}
+          onTabChange={setSettingsTab}
+          onSave={handleSaveSettings}
+          saving={false}
+          sidebarTitle="Branding"
+          sidebarSubtitle="Section Header"
+          sidebarIcon={LayoutGrid}
+        >
+          <FaqSectionSettingsForm
+            formData={settingsData}
+            setFormData={setSettingsData}
+            activeSection={settingsTab}
+            isTranslating={isTranslating}
+            onAutoTranslate={handleSettingsMagicSync}
           />
         </AdminDialogForm>
       </div>

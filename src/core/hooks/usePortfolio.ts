@@ -74,6 +74,11 @@ export const useFaqs = () => useQuery({
   queryFn: () => portfolioApi.getFaqs(),
 });
 
+export const useFaqSettings = () => useQuery({
+  queryKey: ["faq-settings"],
+  queryFn: () => portfolioApi.getFaqSectionSettings(),
+});
+
 export const useHeroSettings = () => useQuery({
   queryKey: ["hero-settings"],
   queryFn: () => portfolioApi.getHeroSection(),
@@ -156,6 +161,7 @@ export const usePortfolioData = () => {
   const clients = useClients();
   const aboutContent = useAboutContent();
   const faqs = useFaqs();
+  const faqSettings = useFaqSettings();
   const heroSettings = useHeroSettings();
   const contactSettings = useContactSettings();
   const contactPurposeOptions = useContactPurposeOptions();
@@ -177,6 +183,7 @@ export const usePortfolioData = () => {
     clients,
     aboutContent,
     faqs,
+    faqSettings,
     heroSettings,
     contactSettings,
     contactPurposeOptions,
