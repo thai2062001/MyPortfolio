@@ -190,82 +190,77 @@ const ProjectCategories = () => {
         isLoading={deleting}
       />
 
-      <div className="space-y-10 animate-in fade-in duration-700 pb-12">
-        <div className="bg-white/40 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-5 md:p-6 shadow-sm mb-6 flex flex-wrap items-end gap-4">
-          <div className="flex flex-col gap-1.5 w-full sm:w-64">
-             <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground px-2">Search Vectors</span>
-             <div className="relative group">
-               <input
-                 type="text"
-                 value={searchTerm}
-                 onChange={(e) => setSearchTerm(e.target.value)}
-                 className="w-full h-11 pl-11 pr-4 bg-white border border-sage/10 rounded-xl font-bold text-xs shadow-sm focus:border-sage/30 focus:ring-4 focus:ring-sage/5 transition-all outline-none"
-                 placeholder="Filter categories..."
-               />
-               <LayoutGrid className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-sage transition-colors" size={14} />
-             </div>
-          </div>
-
-          {/* Bulk Actions Inline */}
-          <AnimatePresence>
-            {selectedIds.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -12 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-end gap-2 ml-auto sm:ml-2"
-              >
-                <div className="h-11 w-px bg-sage/15 self-end mx-1 hidden sm:block" />
-                
-                <div className="h-11 flex items-center gap-2 px-3 bg-sage/10 rounded-xl shrink-0">
-                  <div className="w-5 h-5 rounded-full bg-sage text-white flex items-center justify-center font-black text-[10px]">
-                    {selectedIds.length}
+      <div className="space-y-12 animate-in fade-in duration-700 pb-12">
+        <AdminPageHeader
+          title={t("Project Categories", "プロジェクトカテゴリー", "Danh mục dự án")}
+          description={t("Set topological boundaries for optimal project classification.", "最適なプロジェクト分類のためのトポロジー境界を設定します。", "Thiết lập ranh giới dự án để phân loại tối ưu.")}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          primaryAction={{
+            label: t("New Domain", "ドメイン追加", "Thêm tên miền"),
+            onClick: handleAdd
+          }}
+          headerActions={
+            <AnimatePresence>
+              {selectedIds.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex items-center gap-1 p-1"
+                >
+                  <div className="h-10 flex items-center gap-2 px-3 bg-sage/10 rounded-xl mr-1">
+                    <div className="w-5 h-5 rounded-full bg-sage text-white flex items-center justify-center font-black text-[10px]">
+                      {selectedIds.length}
+                    </div>
                   </div>
+
+                  <button
+                    onClick={() => bulkStatusUpdateMutation.mutate({ ids: selectedIds, isPublished: true })}
+                    disabled={bulkStatusUpdateMutation.isPending}
+                    className="h-10 px-3 rounded-xl hover:bg-sage/10 text-sage transition-all flex items-center gap-2"
+                    title={t("Publish", "公開", "Hiển thị")}
+                  >
+                    <Eye size={14} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Deploy</span>
+                  </button>
+
+                  <button
+                    onClick={() => bulkStatusUpdateMutation.mutate({ ids: selectedIds, isPublished: false })}
+                    disabled={bulkStatusUpdateMutation.isPending}
+                    className="h-10 px-3 rounded-xl hover:bg-slate-100 text-slate-500 transition-all flex items-center gap-2"
+                    title={t("Vault", "保管", "Lưu trữ")}
+                  >
+                    <EyeOff size={14} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Vault</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (window.confirm(t(`Delete ${selectedIds.length} categories?`, `${selectedIds.length}件削除しますか？`, `Xóa ${selectedIds.length} danh mục?`))) {
+                        bulkDeleteMutation.mutate(selectedIds);
+                      }
+                    }}
+                    disabled={bulkDeleteMutation.isPending}
+                    className="h-10 px-3 rounded-xl hover:bg-red-50 text-red-500 transition-all flex items-center gap-2"
+                    title={t("Delete", "削除", "Xóa")}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+
+                  <div className="w-px h-6 bg-slate-200 mx-1" />
+                  
                   <button 
                     onClick={() => setSelectedIds([])}
-                    className="text-[9px] font-bold uppercase tracking-widest text-sage/60 hover:text-sage transition-colors"
+                    className="h-10 px-3 text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
                   >
-                    Clear
+                    Cancel
                   </button>
-                </div>
-
-                <button
-                  onClick={() => bulkStatusUpdateMutation.mutate({ ids: selectedIds, isPublished: true })}
-                  disabled={bulkStatusUpdateMutation.isPending}
-                  className="h-11 px-4 rounded-xl bg-white border border-sage/15 text-sage font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 hover:bg-sage hover:text-white hover:border-sage transition-all shadow-sm disabled:opacity-50"
-                  title={t("Publish", "公開", "Hiển thị")}
-                >
-                  <Eye size={13} />
-                  <span className="hidden lg:inline">{t("Deploy", "デプロイ", "Triển khai")}</span>
-                </button>
-
-                <button
-                  onClick={() => bulkStatusUpdateMutation.mutate({ ids: selectedIds, isPublished: false })}
-                  disabled={bulkStatusUpdateMutation.isPending}
-                  className="h-11 px-4 rounded-xl bg-white border border-sage/15 text-muted-foreground font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 hover:bg-slate-700 hover:text-white hover:border-slate-700 transition-all shadow-sm disabled:opacity-50"
-                  title={t("Vault", "保管", "Lưu trữ")}
-                >
-                  <EyeOff size={13} />
-                  <span className="hidden lg:inline">{t("Vault", "保管", "Lưu trữ")}</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (window.confirm(t(`Delete ${selectedIds.length} categories?`, `${selectedIds.length}件削除しますか？`, `Xóa ${selectedIds.length} danh mục?`))) {
-                      bulkDeleteMutation.mutate(selectedIds);
-                    }
-                  }}
-                  disabled={bulkDeleteMutation.isPending}
-                  className="h-11 px-4 rounded-xl bg-red-50 border border-red-100 text-red-500 font-bold text-[10px] uppercase tracking-widest flex items-center gap-2 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all shadow-sm disabled:opacity-50"
-                  title={t("Delete", "削除", "Xóa")}
-                >
-                  <Trash2 size={13} />
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          }
+        />
 
         <div className="bg-white/40 backdrop-blur-xl border border-white/40 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden shadow-sm">
           <ResponsiveDataTable

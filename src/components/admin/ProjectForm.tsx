@@ -489,19 +489,21 @@ const ProjectForm = ({
           {projectId && (
             <AdminFormSection title={t("Gallery Cluster", "ギャラリークラスター", "Cụm thư viện ảnh")}>
                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                  <div 
+                  <button 
+                    type="button"
                     onClick={() => setShowGalleryLibrary(true)}
-                    className="aspect-square border-2 border-dashed border-sage/20 rounded-[2rem] bg-white flex flex-col items-center justify-center gap-3 hover:bg-sage/5 transition-all cursor-pointer group"
+                    className="aspect-square border-2 border-dashed border-sage/20 rounded-[2rem] bg-white flex flex-col items-center justify-center gap-3 hover:bg-sage/5 transition-all cursor-pointer group outline-none focus:ring-4 focus:ring-sage/10"
                   >
                     <div className="w-12 h-12 bg-sage/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Plus className="text-sage" size={24} />
                     </div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-sage">{t("Add Assets", "資産を追加", "Thêm tài nguyên")}</p>
-                  </div>
+                  </button>
                   {images.map(img => (
                     <div key={img.id} className="relative aspect-square rounded-[2rem] overflow-hidden border border-border/10 group bg-white">
                       <img src={img.image_url} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                       <button 
+                        type="button"
                         onClick={async () => {
                           await supabase.from("project_images").delete().eq("id", img.id);
                           setImages(images.filter(i => i.id !== img.id));
@@ -716,7 +718,8 @@ const ProjectForm = ({
   }
 
   return (
-    <AdminDialogForm
+    <>
+      <AdminDialogForm
       open={true}
       onOpenChange={(open) => !open && onClose()}
       title={projectId ? t("Project Architect", "プロジェクトアーキテクト", "Kiến trúc dự án") : t("New Creation Synthesis", "新しい創作の合成", "Tổng hợp sáng tạo mới")}
@@ -730,6 +733,18 @@ const ProjectForm = ({
       sidebarTitle={t("SETTINGS", "設定", "CÀI ĐẶT")}
       sidebarSubtitle={t("CONFIGURATION", "構成", "CẤU HÌNH")}
     />
+      <MediaPickerModal 
+        open={showGalleryLibrary}
+        onOpenChange={setShowGalleryLibrary}
+        allowMultiple={true}
+        onSelect={async (url) => {
+          if (!projectId) return;
+          await supabase.from("project_images").insert([{ project_id: projectId, image_url: url, order_index: images.length }]);
+          fetchProject();
+        }}
+        allowedTypes={['image']}
+      />
+    </>
   );
 };
 
