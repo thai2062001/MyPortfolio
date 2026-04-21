@@ -43,6 +43,7 @@ export interface PageSection {
     is_published: boolean;
     is_visible: boolean;
     is_fixed: boolean;
+    has_data?: boolean;
     data_source: DataSourceEnum;
     source_table: string | null;
     description: string | null;

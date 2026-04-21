@@ -111,7 +111,6 @@ export function PageSectionsList({
           {sections.map((section, index) => (
             <div
               key={section.id}
-              className={section.is_visible ? "" : "opacity-50"}
             >
               <SortableItem
                 section={section}

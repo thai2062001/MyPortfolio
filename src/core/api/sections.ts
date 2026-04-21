@@ -89,3 +89,43 @@ export async function toggleSectionPublished(
     if (error) throw error;
     return data;
 }
+
+/**
+ * Audit data existence for all major sections
+ * Returns a record of section_type -> has_data
+ */
+export async function getSectionsDataStatus(): Promise<Record<string, boolean>> {
+    const tables = {
+        hero: 'hero_sections',
+        about: 'about_content',
+        services: 'services',
+        experience: 'timeline_phases',
+        skills: 'skills',
+        testimonials: 'testimonials',
+        blog: 'blog_posts',
+        projects: 'projects',
+        portfolio_grid: 'projects',
+        expertise_section: 'skills',
+        contact: 'contact_sections',
+        faq: 'faqs',
+    };
+
+    const status: Record<string, boolean> = {};
+
+    // Parallel check for counts
+    await Promise.all(
+        Object.entries(tables).map(async ([type, table]) => {
+            const { count, error } = await supabase
+                .from(table)
+                .select('*', { count: 'exact', head: true });
+            
+            if (!error && count !== null) {
+                status[type] = count > 0;
+            } else {
+                status[type] = false;
+            }
+        })
+    );
+
+    return status;
+}

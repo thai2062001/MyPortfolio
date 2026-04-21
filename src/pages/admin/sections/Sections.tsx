@@ -5,7 +5,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { PageSectionsList } from "./components/PageSectionsList";
 import { WholePagePreview } from "./components/WholePagePreview";
 import { useSectionReorder } from "@/hooks/useSectionReorder";
-import { moveSection } from "@/core/api/sections";
+import { moveSection, getSectionsDataStatus } from "@/core/api/sections";
 import type { PageSection, PageType } from "@/core/types/sections";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Monitor, Laptop, Smartphone, X, ChevronLeft, Maximize2 } from "lucide-react";
@@ -21,8 +21,22 @@ function SectionsPageContent() {
   
   const [showHidden, setShowHidden] = useState(false);
   const [activeTab, setActiveTab] = useState<"home" | "portfolio">("home");
+  const [dataStatus, setDataStatus] = useState<Record<string, boolean>>({});
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<"pc" | "sp">("sp");
+  
+  // Fetch data status
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const status = await getSectionsDataStatus();
+        setDataStatus(status);
+      } catch (err) {
+        console.error("Error fetching data status:", err);
+      }
+    };
+    fetchStatus();
+  }, []);
 
   // Reset scroll positions
   useEffect(() => {
@@ -49,7 +63,14 @@ function SectionsPageContent() {
 
   const isLoading = homeReorder.isLoading || portfolioReorder.isLoading;
   const rawSections = activeTab === "home" ? homeReorder.sections : portfolioReorder.sections;
-  const activeSections = rawSections.filter((s) => isSectionImplemented(s.section_key));
+  
+  // Augment with data status
+  const augmentedSections = rawSections.map(s => ({
+    ...s,
+    has_data: dataStatus[s.section_type] ?? true // Default to true if not checked
+  }));
+
+  const activeSections = augmentedSections.filter((s) => isSectionImplemented(s.section_key));
   const visibleSections = [...activeSections].filter((s) => s.is_visible).sort((a, b) => a.order_index - b.order_index);
 
   // FULL SCREEN MODE RENDERING
@@ -140,7 +161,7 @@ function SectionsPageContent() {
             <div className="flex-1 rounded-3xl overflow-hidden bg-white/50 backdrop-blur-xl border border-black/5 shadow-2xl shadow-black/5">
               <div className="p-4 h-full overflow-y-auto hide-scrollbar">
                 <PageSectionsList
-                  sections={activeTab === "home" ? homeReorder.sections : portfolioReorder.sections}
+                  sections={augmentedSections}
                   pageType={activeTab}
                   otherPageType={activeTab === "home" ? "portfolio" : "home"}
                   isLoading={isLoading}

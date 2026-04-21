@@ -497,21 +497,21 @@ BEGIN
 
     -- [19] PAGE SECTIONS CLEANUP (Final Fix for Duplication)
     DELETE FROM public.page_sections 
-    WHERE section_key IN ('home_hero', 'home_contact', 'home_expertise', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
+    WHERE section_key IN ('home_hero', 'home_contact', 'home_expertise', 'home_services', 'expertise_section', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
 
     -- Insert/Update Radiant standard keys
     INSERT INTO public.page_sections (section_key, section_type, section_name, page_type, order_index, is_published)
     VALUES 
     ('home_hero', 'hero', 'Hero Section', 'home', 0, TRUE),
     ('home_about', 'about', 'About Section', 'home', 1, TRUE),
-    ('home_services', 'services', 'Services Section', 'home', 2, TRUE),
+    ('home_metrics', 'metrics', 'Key Metrics', 'home', 2, TRUE),
     ('home_experience', 'experience', 'Timeline & Experience', 'home', 3, TRUE),
-    ('expertise_section', 'skills', 'Expertise Section', 'home', 4, TRUE),
-    ('home_testimonials', 'testimonials', 'Testimonials Section', 'home', 5, TRUE),
-    ('home_blog', 'blog', 'Blog Section', 'home', 6, TRUE),
+    ('home_testimonials', 'testimonials', 'Testimonials Section', 'home', 4, TRUE),
+    ('home_blog', 'blog', 'Blog Section', 'home', 5, TRUE),
     -- Portfolio Page Sections
-    ('portfolio_grid', 'projects', 'Work Showcase', 'portfolio', 1, TRUE),
-    ('portfolio_contact', 'contact', 'Contact Section', 'portfolio', 2, TRUE)
+    ('portfolio_grid', 'projects', 'Work Showcase', 'portfolio', 0, TRUE),
+    ('portfolio_contact', 'contact', 'Contact Section', 'portfolio', 1, TRUE),
+    ('home_skills', 'skills', 'Skills & Expertise', 'portfolio', 2, TRUE)
     ON CONFLICT (section_key) DO UPDATE SET 
         section_type = EXCLUDED.section_type,
         section_name = EXCLUDED.section_name,

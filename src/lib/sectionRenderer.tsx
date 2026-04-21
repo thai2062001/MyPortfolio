@@ -99,9 +99,8 @@ const sectionComponentMap: Record<string, React.ComponentType<any>> = {
   home_hero: HeroSection, // Trả về component gốc để ko bị Suspense lồng nhau nếu ko cần
   home_about: AboutSection,
   home_metrics: StatsSection,
-  home_services: SkillsSection,
-  home_skills: ProficienciesSection,
-  home_expertise: ProficienciesSection,
+  home_skills: SkillsSection,
+  home_expertise: SkillsSection,
   home_testimonials: TestimonialsSection,
   home_timeline: TimelineSection,
   home_contact: ContactSection,

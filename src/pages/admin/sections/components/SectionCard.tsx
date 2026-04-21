@@ -45,6 +45,8 @@ export function SectionCard({
         transition-all duration-200
         ${isDragging ? "opacity-50 shadow-lg scale-105" : "hover:shadow-md"}
         ${isFixed ? "bg-blue-50 border-blue-200 opacity-75" : "border-gray-200"}
+        ${section.has_data === false ? "opacity-60 grayscale-[0.5]" : ""}
+        ${!section.is_visible ? "bg-gray-50 border-dashed" : ""}
       `}
     >
       {/* Drag Handle - Desktop only */}
@@ -67,6 +69,11 @@ export function SectionCard({
           {isFixed && (
             <span className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded whitespace-nowrap">
               Fixed
+            </span>
+          )}
+          {section.has_data === false && (
+            <span className="inline-block px-2 py-1 text-xs bg-amber-50 text-amber-600 border border-amber-100 rounded whitespace-nowrap font-medium">
+              Empty
             </span>
           )}
         </div>
