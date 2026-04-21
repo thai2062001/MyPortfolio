@@ -58,9 +58,9 @@ export function useSectionReorder(pageType: PageType) {
 
                 const result = await reorderSections({
                     page_type: pageType,
-                    sections: newSections.map((s) => ({
+                    sections: newSections.map((s, index) => ({
                         id: s.id,
-                        order_index: s.order_index,
+                        order_index: index,
                     })),
                 });
 

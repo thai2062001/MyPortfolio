@@ -28,10 +28,12 @@ export function SortableItem({
   canMoveUp,
   canMoveDown,
 }: SortableItemProps) {
+  const isFixedSection = section.section_key === "home_hero" || section.section_key === "portfolio_grid";
+  
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: section.id,
-      disabled: section.is_fixed,
+      disabled: isFixedSection || section.is_fixed,
     });
 
   const style = {
@@ -43,8 +45,8 @@ export function SortableItem({
     <div ref={setNodeRef} style={style} {...attributes}>
       <SectionCard
         section={section}
-        isDragging={isDragging && !section.is_fixed}
-        isFixed={section.is_fixed}
+        isDragging={isDragging && !isFixedSection}
+        isFixed={isFixedSection || section.is_fixed}
         onToggleVisibility={onToggleVisibility}
         onMove={onMove}
         otherPageType={otherPageType}

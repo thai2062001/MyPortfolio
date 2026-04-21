@@ -495,9 +495,104 @@ BEGIN
     DROP POLICY IF EXISTS "Public can view contact sections" ON public.contact_sections;
     CREATE POLICY "Public can view contact sections" ON public.contact_sections FOR SELECT USING (true);
 
+    -- =========================================================================
+    -- [18.5] SECTION MANAGEMENT RPC FUNCTIONS (Fixes PGRST202/404)
+    -- =========================================================================
+
+    -- [A] RPC: Reorder Sections
+    CREATE OR REPLACE FUNCTION public.reorder_page_sections(
+      p_page_type public.page_type_enum,
+      p_sections jsonb
+    )
+    RETURNS jsonb
+    LANGUAGE plpgsql
+    SECURITY DEFINER SET search_path = public
+    AS $$
+    DECLARE
+      v_section jsonb;
+    BEGIN
+      -- Move to temporary safe zone to avoid conflicts
+      UPDATE public.page_sections SET order_index = order_index + 1000 WHERE page_type = p_page_type;
+      
+      FOR v_section IN SELECT * FROM jsonb_array_elements(p_sections) LOOP
+        UPDATE public.page_sections 
+        SET order_index = (v_section->>'order_index')::integer 
+        WHERE id = (v_section->>'id')::uuid;
+      END LOOP;
+      RETURN jsonb_build_object('success', true, 'message', 'Reordered successfully');
+    EXCEPTION WHEN OTHERS THEN
+      RETURN jsonb_build_object('success', false, 'error', sqlerrm);
+    END;
+    $$;
+
+    -- [B] RPC: Move Section Between Pages
+    CREATE OR REPLACE FUNCTION public.move_section_to_page(
+      p_section_id uuid,
+      p_to_page_type public.page_type_enum
+    )
+    RETURNS jsonb
+    LANGUAGE plpgsql
+    SECURITY DEFINER SET search_path = public
+    AS $$
+    DECLARE
+      v_new_index integer;
+    BEGIN
+      SELECT coalesce(max(order_index), -1) + 1 INTO v_new_index 
+      FROM public.page_sections WHERE page_type = p_to_page_type;
+      
+      UPDATE public.page_sections 
+      SET page_type = p_to_page_type, order_index = v_new_index 
+      WHERE id = p_section_id;
+      
+      RETURN jsonb_build_object('success', true, 'message', 'Moved successfully');
+    EXCEPTION WHEN OTHERS THEN
+      RETURN jsonb_build_object('success', false, 'error', sqlerrm);
+    END;
+    $$;
+
+    -- [C] RPC: Toggle Visibility
+    CREATE OR REPLACE FUNCTION public.toggle_section_visibility(
+      p_section_id uuid,
+      p_is_visible boolean
+    )
+    RETURNS jsonb
+    LANGUAGE plpgsql
+    SECURITY DEFINER SET search_path = public
+    AS $$
+    BEGIN
+      UPDATE public.page_sections SET is_visible = p_is_visible WHERE id = p_section_id;
+      RETURN jsonb_build_object('success', true);
+    EXCEPTION WHEN OTHERS THEN
+      RETURN jsonb_build_object('success', false, 'error', sqlerrm);
+    END;
+    $$;
+
+    -- [D] RPC: Toggle Published
+    CREATE OR REPLACE FUNCTION public.toggle_section_published(
+      p_section_id uuid,
+      p_is_published boolean
+    )
+    RETURNS jsonb
+    LANGUAGE plpgsql
+    SECURITY DEFINER SET search_path = public
+    AS $$
+    BEGIN
+      UPDATE public.page_sections SET is_published = p_is_published WHERE id = p_section_id;
+      RETURN jsonb_build_object('success', true);
+    EXCEPTION WHEN OTHERS THEN
+      RETURN jsonb_build_object('success', false, 'error', sqlerrm);
+    END;
+    $$;
+
+    -- Permissions Grant
+    GRANT EXECUTE ON FUNCTION public.reorder_page_sections(public.page_type_enum, jsonb) TO authenticated, anon;
+    GRANT EXECUTE ON FUNCTION public.move_section_to_page(uuid, public.page_type_enum) TO authenticated, anon;
+    GRANT EXECUTE ON FUNCTION public.toggle_section_visibility(uuid, boolean) TO authenticated, anon;
+    GRANT EXECUTE ON FUNCTION public.toggle_section_published(uuid, boolean) TO authenticated, anon;
+
     -- [19] PAGE SECTIONS CLEANUP (Final Fix for Duplication)
     DELETE FROM public.page_sections 
-    WHERE section_key IN ('home_hero', 'home_contact', 'home_expertise', 'home_services', 'expertise_section', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
+    WHERE section_key IN ('home_projects', 'home_hero', 'home_contact', 'home_expertise', 'home_services', 'expertise_section', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
 
     -- Insert/Update Radiant standard keys
     INSERT INTO public.page_sections (section_key, section_type, section_name, page_type, order_index, is_published)
@@ -530,12 +625,28 @@ BEGIN
     BEGIN
         ALTER TABLE public.about_content ADD CONSTRAINT uq_about_content_key UNIQUE (section_key);
     EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END;
-
     BEGIN
         ALTER TABLE public.hero_layouts ADD CONSTRAINT uq_hero_layouts_key UNIQUE (layout_key);
     EXCEPTION WHEN duplicate_table OR duplicate_object THEN NULL; END;
 
+    -- [21] FIX RELATIONSHIPS & TABLE ALIASES
+    -- 1. Create View 'services' to point to 'service_items' for backward compatibility
+    DROP VIEW IF EXISTS public.services;
+    CREATE OR REPLACE VIEW public.services AS SELECT * FROM public.service_items;
+    GRANT SELECT ON public.services TO authenticated, anon;
+
+    -- 2. Ensure about_images has foreign key to about_content
+    IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'about_images') THEN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'about_images' AND column_name = 'about_id') THEN
+            ALTER TABLE public.about_images ADD COLUMN about_id UUID REFERENCES public.about_content(id) ON DELETE CASCADE;
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_about_images_about_id') THEN
+            CREATE INDEX idx_about_images_about_id ON public.about_images(about_id);
+        END IF;
+    END IF;
+
 END $$;
+
 
 -- [9] REFRESH CACHE
 NOTIFY pgrst, 'reload schema';

@@ -49,7 +49,7 @@ export function SectionCard({
         ${!section.is_visible ? "bg-gray-50 border-dashed" : ""}
       `}
     >
-      {/* Drag Handle - Desktop only */}
+      {/* Drag Handle - Hidden if fixed */}
       {!isFixed && (
         <GripVertical
           className="w-5 h-5 text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0 hidden md:block"
