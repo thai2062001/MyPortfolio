@@ -106,42 +106,28 @@ export const HeroSplitLayout = memo(({
             </motion.div>
           </motion.div>
 
-          {/* Image/Video Column */}
+          {/* Image Column */}
           <div className={`relative h-full min-h-[400px] md:min-h-0 p-4 md:p-8 lg:p-10 ${imagePosition === "right" ? "order-2" : "order-1"}`}>
             {content.hero_image_url && (
               <div className="w-full h-full relative overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 shadow-inner">
-                {content.hero_image_url.includes('.mp4') || content.hero_image_url.includes('video/upload') ? (
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    onLoadedData={() => setImageLoaded(true)}
-                    className={`w-full h-full object-cover transition-all duration-1000 will-change-transform ${
-                      imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
-                    }`}
-                    src={optimizeCloudinary(content.hero_image_url)}
-                  />
-                ) : (
-                  <motion.img
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ 
-                      opacity: imageLoaded ? 1 : 0,
-                      scale: imageLoaded ? 1 : 1.05
-                    }}
-                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                    onLoad={() => setImageLoaded(true)}
-                    src={optimizeCloudinary(content.hero_image_url, { 
-                      width: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1200 
-                    })}
-                    alt={fields.hero_image_alt}
-                    // @ts-ignore
-                    fetchpriority="high"
-                    className={`w-full h-full object-cover transition-all duration-1000 will-change-transform grayscale-[10%] hover:grayscale-0 ${
-                      imageLoaded ? "blur-0" : "blur-xl"
-                    }`}
-                  />
-                )}
+                <motion.img
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ 
+                    opacity: imageLoaded ? 1 : 0,
+                    scale: imageLoaded ? 1 : 1.05
+                  }}
+                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                  onLoad={() => setImageLoaded(true)}
+                  src={optimizeCloudinary(content.hero_image_url, { 
+                    width: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1200 
+                  })}
+                  alt={fields.hero_image_alt}
+                  // @ts-ignore
+                  fetchpriority="high"
+                  className={`w-full h-full object-cover transition-all duration-1000 will-change-transform grayscale-[10%] hover:grayscale-0 ${
+                    imageLoaded ? "blur-0" : "blur-xl"
+                  }`}
+                />
                 <div className="absolute inset-0 rounded-2xl md:rounded-[2rem] ring-1 ring-inset ring-white/10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none opacity-40" />
               </div>

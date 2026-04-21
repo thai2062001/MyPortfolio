@@ -46,6 +46,7 @@ BEGIN
     DROP POLICY IF EXISTS "Public can view published faqs" ON public.faqs;
     CREATE POLICY "Public can view published faqs" ON public.faqs FOR SELECT USING (is_published = TRUE);
     DROP POLICY IF EXISTS "Authenticated can manage faqs" ON public.faqs;
+    DROP POLICY IF EXISTS "Admins can manage faqs" ON public.faqs;
     CREATE POLICY "Authenticated can manage faqs" ON public.faqs FOR ALL TO authenticated USING (TRUE) WITH CHECK (TRUE);
 
     -- [3] TABLE RECOVERY: About Content Relations
@@ -76,11 +77,17 @@ BEGIN
 
     ALTER TABLE public.about_images ENABLE ROW LEVEL SECURITY;
     DROP POLICY IF EXISTS "Public can view about images" ON public.about_images;
-    CREATE POLICY "Public can view about images" ON public.about_images FOR SELECT USING (TRUE);
     DROP POLICY IF EXISTS "Authenticated can manage about images" ON public.about_images;
+    DROP POLICY IF EXISTS "Admins can manage about_images" ON public.about_images;
+    CREATE POLICY "Public can view about images" ON public.about_images FOR SELECT USING (TRUE);
     CREATE POLICY "Authenticated can manage about images" ON public.about_images FOR ALL TO authenticated USING (TRUE) WITH CHECK (TRUE);
 
     IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'about_content_tags') THEN
+        ALTER TABLE public.about_content_tags ENABLE ROW LEVEL SECURITY;
+        DROP POLICY IF EXISTS "Admins can manage about_content_tags" ON public.about_content_tags;
+        DROP POLICY IF EXISTS "Authenticated can manage about_content_tags" ON public.about_content_tags;
+        CREATE POLICY "Authenticated can manage about_content_tags" ON public.about_content_tags FOR ALL TO authenticated USING (TRUE) WITH CHECK (TRUE);
+
         IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'about_content_tags' AND column_name = 'about_id') THEN
             ALTER TABLE public.about_content_tags ADD COLUMN about_id UUID REFERENCES public.about_content(id) ON DELETE CASCADE;
             ALTER TABLE public.about_content_tags DROP COLUMN IF EXISTS content_key;
@@ -659,6 +666,20 @@ BEGIN
             CREATE INDEX idx_about_images_about_id ON public.about_images(about_id);
         END IF;
     END IF;
+
+    -- [22] SEED HERO LAYOUTS
+    INSERT INTO public.hero_layouts (layout_key, name, description, thumbnail_url, order_index, is_active)
+    VALUES 
+    ('full-background', 'Immersive Background', 'Ảnh nền tràn toàn màn hình, nội dung hiển thị đè lên ảnh.', 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop', 1, true),
+    ('split-left-image-right', 'Modern Split', 'Màn hình chia đôi, văn bản bên trái và ảnh bên phải.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2026&auto=format&fit=crop', 2, true),
+    ('centered-minimal', 'Centered Focus', 'Bố cục căn giữa tối giản.', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop', 3, true),
+    ('card-overlay', 'Glass Card', 'Nội dung nằm trong một thẻ kính đè trên nền ảnh.', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop', 4, true)
+    ON CONFLICT (layout_key) DO UPDATE SET
+      name = EXCLUDED.name,
+      description = EXCLUDED.description,
+      is_active = true;
+
+    UPDATE public.hero_sections SET selected_layout_key = 'full-background' WHERE id = 1 AND selected_layout_key IS NULL;
 
 END $$;
 

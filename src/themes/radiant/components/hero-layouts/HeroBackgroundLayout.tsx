@@ -42,23 +42,9 @@ export const HeroBackgroundLayout = memo(({
 
   return (
     <section className="relative min-h-screen min-h-[100svh] w-full flex items-center overflow-hidden bg-[#0A0C0B]">
-      {/* Immersive Background Container with Video/Image Support */}
+      {/* Immersive Background Container with Image Support */}
       <div className="absolute inset-0 z-0 bg-[#000]">
-        {content.hero_image_url?.includes(".mp4") ? (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover opacity-0 transition-opacity duration-1000"
-            onLoadedData={(e) => {
-              (e.target as HTMLVideoElement).classList.remove("opacity-0");
-              setImageLoaded(true);
-            }}
-          >
-            <source src={content.hero_image_url} type="video/mp4" />
-          </video>
-        ) : content.hero_image_url && (
+        {content.hero_image_url && (
           <motion.img
             initial={{ opacity: 0, scale: 1.1 }}
             animate={{ 

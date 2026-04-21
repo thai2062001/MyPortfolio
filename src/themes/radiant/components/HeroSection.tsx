@@ -12,12 +12,14 @@ const HeroSection = memo(() => {
   const { data: hero, isLoading } = useHeroSettings();
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
+  const layoutKey = hero?.selected_layout_key || "full-background";
+
   useEffect(() => {
     if (hero) {
-      if (hero.hero_image_url && !hero.hero_image_url.includes('.mp4')) {
+      if (hero.hero_image_url) {
         const isMobile = window.innerWidth < 768;
         // Optimization: Mobile devices only need ~800px, while desktop background layouts need 1920px
-        const width = isMobile ? 800 : ((layoutKey === "background" || layoutKey === "card-overlay") ? 1920 : 1200);
+        const width = isMobile ? 800 : ((layoutKey === "full-background" || layoutKey === "card-overlay") ? 1920 : 1200);
         
         // Synchronize with layout components optimization parameters
         const optimizedUrl = optimizeCloudinary(hero.hero_image_url, { width });
@@ -53,8 +55,6 @@ const HeroSection = memo(() => {
     setPendingUrl(to);
   }, []);
 
-  const videoUrl = "https://res.cloudinary.com/dpdzbuiml/video/upload/v1775007013/285250_1_ahltgt.mp4";
-  const layoutKey = hero?.selected_layout_key || "background";
 
   useEffect(() => {
     if (!isLoading && hero) {
@@ -71,16 +71,14 @@ const HeroSection = memo(() => {
 
   if (!hero) return null;
 
-  // HARDCODE: Force fullscreen video and background layout
-  const finalMediaUrl = "https://res.cloudinary.com/dpdzbuiml/video/upload/v1775007013/285250_1_ahltgt.mp4";
-  const finalLayoutKey = "full-background";
 
-  const HeroLayoutComponent = getHeroLayout(finalLayoutKey);
+
+  const HeroLayoutComponent = getHeroLayout(layoutKey);
 
   return (
     <>
       <HeroLayoutComponent
-        content={{ ...hero, hero_image_url: finalMediaUrl }}
+        content={hero}
         config={hero.layout_config || {}}
         onNavigate={handleNavigate}
         lang={lang}
