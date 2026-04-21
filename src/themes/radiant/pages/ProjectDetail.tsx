@@ -88,14 +88,22 @@ ParallaxCover.displayName = "ParallaxCover";
 
 const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
   const currentLang = lang as SupportedLang;
-  const currentChallengeRaw = getLocalizedField(project, 'challenge', currentLang);
+  
+  // High-resilience localized field retrieval
+  const currentChallengeRaw = (
+    getLocalizedField(project, 'challenge', currentLang) || 
+    project.challenge_en || 
+    project.challenge || 
+    ""
+  ).trim();
+  
   const currentChallenge = cleanNumbering(currentChallengeRaw);
   
-  if (!currentChallenge) return null;
+  if (!currentChallengeRaw) return null;
 
   const structuredChallenge = useMemo(() => {
     try {
-      if (currentChallengeRaw && (currentChallengeRaw.startsWith('[') || currentChallengeRaw.startsWith('{'))) {
+      if (currentChallengeRaw.startsWith('[') || currentChallengeRaw.startsWith('{')) {
         const parsed = JSON.parse(currentChallengeRaw);
         return Array.isArray(parsed) ? parsed : null;
       }
@@ -103,8 +111,8 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
     return null;
   }, [currentChallengeRaw]);
 
-  // Variant A: Grid
-  if (structuredChallenge) {
+  // Variant A: Structured Grid
+  if (structuredChallenge && structuredChallenge.length > 0) {
     return (
       <section className="py-20 md:py-32 relative bg-[#141414] overflow-hidden border-y border-white/5">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-vibe-pink/[0.02] rounded-full blur-[120px] pointer-events-none" />
@@ -129,7 +137,7 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
     );
   }
 
-  // Variant B: Immersive Parallax
+  // Variant B: Immersive Parallax (if images available)
   if (project.project_images?.length >= 2) {
     return (
       <section className="relative py-24 md:py-64 flex items-center justify-center overflow-hidden bg-[#111]">
@@ -150,6 +158,7 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
     );
   }
 
+  // Fallback: Minimalist Core
   return (
     <section className="py-24 md:py-48 bg-[#161616] text-center">
       <div className="max-w-4xl mx-auto px-6 space-y-12">
@@ -171,9 +180,12 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
 
   const structuredData = useMemo(() => {
     try {
-      if (currentSolutionRaw && (currentSolutionRaw.startsWith('[') || currentSolutionRaw.startsWith('{'))) {
-        const parsed = JSON.parse(currentSolutionRaw);
-        return Array.isArray(parsed) ? parsed : null;
+      if (currentSolutionRaw) {
+        const trimmed = currentSolutionRaw.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          const parsed = JSON.parse(trimmed);
+          return Array.isArray(parsed) ? parsed : null;
+        }
       }
     } catch (e) {}
     return null;

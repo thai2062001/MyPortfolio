@@ -70,6 +70,13 @@ export const translateFields = async (
 
     for (const [key, value] of Object.entries(fields)) {
         if (value && value.trim()) {
+            // Skip translation for JSON strings to avoid breaking structure
+            const trimmedValue = value.trim();
+            if (trimmedValue.startsWith('[') || trimmedValue.startsWith('{')) {
+                translated[key] = value;
+                continue;
+            }
+
             try {
                 translated[key] = await translateText(value, targetLang);
                 // Add small delay to avoid rate limiting
