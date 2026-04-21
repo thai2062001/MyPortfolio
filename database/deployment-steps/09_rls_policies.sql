@@ -92,6 +92,14 @@ END $$;
 DROP POLICY IF EXISTS "Public can insert messages" ON public.contact_messages;
 CREATE POLICY "Public can insert messages" ON public.contact_messages FOR INSERT WITH CHECK (true);
 
--- Portfolio visits: Public can INSERT
+-- Portfolio visits: Public can record, view (for ID retrieval), and update stats
+ALTER TABLE public.portfolio_visit_events ENABLE ROW LEVEL SECURITY;
+
 DROP POLICY IF EXISTS "Public can record visits" ON public.portfolio_visit_events;
-CREATE POLICY "Public can record visits" ON public.portfolio_visit_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can record visits" ON public.portfolio_visit_events FOR INSERT TO anon WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public can view visits" ON public.portfolio_visit_events;
+CREATE POLICY "Public can view visits" ON public.portfolio_visit_events FOR SELECT TO anon USING (true);
+
+DROP POLICY IF EXISTS "Public can update visits" ON public.portfolio_visit_events;
+CREATE POLICY "Public can update visits" ON public.portfolio_visit_events FOR UPDATE TO anon USING (true) WITH CHECK (true);
