@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useTransform, useScroll, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ChevronRight, Sparkles, Zap, BarChart3, Target, Award } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -320,6 +320,7 @@ const ProjectDetail = () => {
       .map((r: any) => ({ value: r.value, label: cleanNumbering(getLocalizedField(r, 'label', currentLang)) })) || [], 
   [project?.project_results, currentLang]);
 
+  const resultIcons = [Zap, BarChart3, Target, Award, Sparkles];
   const cn = (...classes: any[]) => classes.filter(Boolean).join(' ');
 
   const testimonial = useMemo(() => project?.project_testimonials?.[0] || null, [project?.project_testimonials]);
@@ -468,14 +469,13 @@ const ProjectDetail = () => {
                 )}
                 {results.length > 0 && (
                   <div className="lg:col-span-7 space-y-16">
-                     <div className="space-y-6 text-center md:text-right">
-                        <div className="flex items-center gap-4 justify-center md:justify-end">
+                     <div className="space-y-6 text-left">
+                        <div className="flex items-center gap-4 justify-start">
                            <span className="w-12 h-px bg-vibe-pink/30" />
                            <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-vibe-pink/60">{t("Outcome", "成果", "Thành quả")}</span>
                         </div>
                         <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
-                          {t("The", "その", "Những")} <br className="hidden md:block" />
-                          <span className="text-vibe-pink">Results.</span>
+                          {t("The", "その", "Những")} <span className="text-vibe-pink">Results.</span>
                         </h2>
                      </div>
                      
@@ -504,7 +504,10 @@ const ProjectDetail = () => {
                               ) : (
                                 <div className="space-y-6">
                                   <div className="w-12 h-12 rounded-2xl bg-vibe-pink/5 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-500">
-                                    <Sparkles className="text-vibe-pink/60" size={24} />
+                                    {(() => {
+                                      const Icon = resultIcons[i % resultIcons.length];
+                                      return <Icon className="text-vibe-pink/60" size={24} />;
+                                    })()}
                                   </div>
                                   <p className="font-serif text-xl md:text-2xl text-heading/80 leading-relaxed italic group-hover:text-heading transition-colors duration-500">
                                     {r.label}
