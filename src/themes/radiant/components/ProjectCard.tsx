@@ -55,7 +55,7 @@ const ProjectCard = memo(({
   };
 
   const srcSet = useMemo(() => {
-    if (!cover_image_url.includes("res.cloudinary.com")) return undefined;
+    if (!cover_image_url || !cover_image_url.includes("res.cloudinary.com")) return undefined;
     const widths = [400, 800, 1200];
     return widths.map(width => `${optimizeCloudinary(cover_image_url, { width })} ${width}w`).join(", ");
   }, [cover_image_url]);

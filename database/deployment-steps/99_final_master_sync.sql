@@ -57,6 +57,29 @@ BEGIN
         CONSTRAINT uq_about_content_tag UNIQUE (about_id, tag_id)
     );
 
+    CREATE TABLE IF NOT EXISTS public.about_images (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        about_id UUID NOT NULL REFERENCES public.about_content(id) ON DELETE CASCADE,
+        image_url TEXT NOT NULL,
+        alt_text TEXT,
+        caption TEXT,
+        is_cover BOOLEAN DEFAULT FALSE,
+        order_index INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_about_images_updated_at') THEN
+        CREATE TRIGGER trg_about_images_updated_at BEFORE UPDATE ON public.about_images
+        FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+    END IF;
+
+    ALTER TABLE public.about_images ENABLE ROW LEVEL SECURITY;
+    DROP POLICY IF EXISTS "Public can view about images" ON public.about_images;
+    CREATE POLICY "Public can view about images" ON public.about_images FOR SELECT USING (TRUE);
+    DROP POLICY IF EXISTS "Authenticated can manage about images" ON public.about_images;
+    CREATE POLICY "Authenticated can manage about images" ON public.about_images FOR ALL TO authenticated USING (TRUE) WITH CHECK (TRUE);
+
     IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'about_content_tags') THEN
         IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'about_content_tags' AND column_name = 'about_id') THEN
             ALTER TABLE public.about_content_tags ADD COLUMN about_id UUID REFERENCES public.about_content(id) ON DELETE CASCADE;
@@ -431,24 +454,69 @@ BEGIN
     -- Project Ordering
     ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS order_index INTEGER DEFAULT 0;
 
-    -- [19] PAGE SECTIONS CLEANUP (Final Fix for Duplication + Missing Timeline)
+    -- [18.5] CONTACT SECTIONS TABLE RECOVERY
+    CREATE TABLE IF NOT EXISTS public.contact_sections (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        eyebrow_en TEXT,
+        eyebrow_ja TEXT,
+        eyebrow_vi TEXT,
+        title_line_1_en TEXT,
+        title_line_1_ja TEXT,
+        title_line_1_vi TEXT,
+        title_line_2_en TEXT,
+        title_line_2_ja TEXT,
+        title_line_2_vi TEXT,
+        title_line_2_html TEXT,
+        description_en TEXT,
+        description_ja TEXT,
+        description_vi TEXT,
+        primary_button_label_en TEXT,
+        primary_button_label_ja TEXT,
+        primary_button_label_vi TEXT,
+        primary_button_url TEXT,
+        background_image_url TEXT,
+        overlay_opacity FLOAT DEFAULT 0.5,
+        is_published BOOLEAN DEFAULT TRUE,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_contact_sections_updated_at') THEN
+        CREATE TRIGGER trg_contact_sections_updated_at BEFORE UPDATE ON public.contact_sections
+        FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+    END IF;
+
+    -- Seed data for contact_sections if empty
+    INSERT INTO public.contact_sections (id, eyebrow_en, title_line_1_en, title_line_2_en, description_en, primary_button_label_en)
+    VALUES (1, 'Get In Touch', 'Let''s build something', 'remarkable together.', 'Whether you''re looking to reimagine your brand strategy, scale your digital presence, or drive measurable growth — I''d love to hear from you.', 'Start a Conversation')
+    ON CONFLICT (id) DO NOTHING;
+
+    ALTER TABLE public.contact_sections ENABLE ROW LEVEL SECURITY;
+    DROP POLICY IF EXISTS "Public can view contact sections" ON public.contact_sections;
+    CREATE POLICY "Public can view contact sections" ON public.contact_sections FOR SELECT USING (true);
+
+    -- [19] PAGE SECTIONS CLEANUP (Final Fix for Duplication)
     DELETE FROM public.page_sections 
-    WHERE section_key IN ('hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'expertise_section', 'timeline_section');
+    WHERE section_key IN ('home_hero', 'home_contact', 'home_expertise', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
 
     -- Insert/Update Radiant standard keys
-    INSERT INTO public.page_sections (section_key, section_name, page_type, order_index, is_published)
-    VALUES ('home_experience', 'Timeline & Experience', 'home', 3, TRUE)
-    ON CONFLICT (section_key) DO UPDATE SET section_name = 'Timeline & Experience';
-
-    -- Ensure correct names for standard keys
-    UPDATE public.page_sections SET section_name = 'Hero Section' WHERE section_key = 'home_hero';
-    UPDATE public.page_sections SET section_name = 'About Section' WHERE section_key = 'home_about';
-    UPDATE public.page_sections SET section_name = 'Services Section' WHERE section_key = 'home_services';
-    UPDATE public.page_sections SET section_name = 'Expertise Section' WHERE section_key = 'home_expertise';
-    UPDATE public.page_sections SET section_name = 'Projects Section' WHERE section_key = 'home_projects';
-    UPDATE public.page_sections SET section_name = 'Testimonials Section' WHERE section_key = 'home_testimonials';
-    UPDATE public.page_sections SET section_name = 'Blog Section' WHERE section_key = 'home_blog';
-    UPDATE public.page_sections SET section_name = 'Contact Section' WHERE section_key = 'home_contact';
+    INSERT INTO public.page_sections (section_key, section_type, section_name, page_type, order_index, is_published)
+    VALUES 
+    ('home_hero', 'hero', 'Hero Section', 'home', 0, TRUE),
+    ('home_about', 'about', 'About Section', 'home', 1, TRUE),
+    ('home_services', 'services', 'Services Section', 'home', 2, TRUE),
+    ('home_experience', 'experience', 'Timeline & Experience', 'home', 3, TRUE),
+    ('expertise_section', 'skills', 'Expertise Section', 'home', 4, TRUE),
+    ('home_testimonials', 'testimonials', 'Testimonials Section', 'home', 5, TRUE),
+    ('home_blog', 'blog', 'Blog Section', 'home', 6, TRUE),
+    -- Portfolio Page Sections
+    ('portfolio_grid', 'projects', 'Work Showcase', 'portfolio', 1, TRUE),
+    ('portfolio_contact', 'contact', 'Contact Section', 'portfolio', 2, TRUE)
+    ON CONFLICT (section_key) DO UPDATE SET 
+        section_type = EXCLUDED.section_type,
+        section_name = EXCLUDED.section_name,
+        page_type = EXCLUDED.page_type,
+        is_published = TRUE;
 
     -- [20] FINAL CONSTRAINT POLISH
     BEGIN
