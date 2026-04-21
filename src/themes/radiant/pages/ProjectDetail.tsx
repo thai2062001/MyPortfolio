@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useTransform, useScroll, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChevronRight, Sparkles, Zap, BarChart3, Target, Award } from "lucide-react";
+import { ArrowLeft, ChevronRight, ChevronDown, Sparkles, Zap, BarChart3, Target, Award } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -103,19 +103,41 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
 
   const structuredChallenge = useMemo(() => {
     try {
-      if (currentChallengeRaw.startsWith('[') || currentChallengeRaw.startsWith('{')) {
-        const parsed = JSON.parse(currentChallengeRaw);
+      const trimmed = currentChallengeRaw.trim();
+      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+        const parsed = JSON.parse(trimmed);
         return Array.isArray(parsed) ? parsed : null;
       }
     } catch (e) {}
     return null;
   }, [currentChallengeRaw]);
 
+  const scrollToSolution = () => {
+    document.getElementById('solution-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   // Variant A: Structured Grid
   if (structuredChallenge && structuredChallenge.length > 0) {
     return (
-      <section className="py-20 md:py-32 relative bg-[#141414] overflow-hidden border-y border-white/5">
+      <section id="challenge-section" className="py-20 md:py-32 relative bg-[#141414] overflow-hidden border-y border-white/5">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-vibe-pink/[0.02] rounded-full blur-[120px] pointer-events-none" />
+        
+        {/* Navigation Portal */}
+        <motion.button 
+          onClick={scrollToSolution}
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-50 flex-col items-center gap-8 group cursor-pointer"
+        >
+          <div className="h-32 w-px bg-white/10 group-hover:h-48 group-hover:bg-vibe-pink/50 transition-all duration-700" />
+          <span className="font-sans text-[10px] tracking-[0.8em] font-black uppercase text-white/20 group-hover:text-white transition-colors duration-500 [writing-mode:vertical-lr] rotate-180">
+            {t("To Solution", "解決策へ", "Tới Giải pháp")}
+          </span>
+          <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-vibe-pink/50 group-hover:scale-110 transition-all duration-700">
+             <ChevronDown size={14} className="text-white/20 group-hover:text-vibe-pink group-hover:translate-y-1 transition-all duration-500" />
+          </div>
+        </motion.button>
+
         <div className="w-full px-6 md:px-12 lg:px-20 mx-auto max-w-[1920px] relative z-10">
           <div className="mb-16 md:mb-20 space-y-4 text-center md:text-left">
             <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-bold text-vibe-pink/60">{t("Obstacles", "課題", "Thách thức")}</span>
@@ -140,7 +162,20 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
   // Variant B: Immersive Parallax (if images available)
   if (project.project_images?.length >= 2) {
     return (
-      <section className="relative py-24 md:py-64 flex items-center justify-center overflow-hidden bg-[#111]">
+      <section id="challenge-section" className="relative py-24 md:py-64 flex items-center justify-center overflow-hidden bg-[#111]">
+        {/* Navigation Portal for Variant B */}
+        <motion.button 
+          onClick={scrollToSolution}
+          className="hidden lg:flex absolute right-12 bottom-24 z-50 items-center gap-6 group cursor-pointer"
+        >
+          <span className="font-sans text-xs tracking-[0.5em] font-black uppercase text-white/40 group-hover:text-white transition-colors duration-500">
+             Discover Solution
+          </span>
+          <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/5 group-hover:border-vibe-pink group-hover:bg-vibe-pink/10 transition-all duration-700">
+             <ChevronDown size={20} className="text-white group-hover:translate-y-1 transition-transform" />
+          </div>
+        </motion.button>
+
         <motion.div initial={!isStatic ? { scale: 1.15 } : { scale: 1 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: isStatic ? 0.3 : 2.5 }} className="absolute inset-0 z-0">
           <img src={optimizeCloudinary(project.project_images[1].image_url, { width: 1920, quality: "best" })} alt="" className="w-full h-full object-cover opacity-40 grayscale-[0.3]" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#111] via-transparent to-[#111] opacity-95" />
@@ -160,10 +195,13 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
 
   // Fallback: Minimalist Core
   return (
-    <section className="py-24 md:py-48 bg-[#161616] text-center">
+    <section id="challenge-section" className="py-24 md:py-48 bg-[#161616] text-center border-y border-white/5">
       <div className="max-w-4xl mx-auto px-6 space-y-12">
         <h2 className="font-display text-5xl md:text-7xl text-white italic">{t("The Challenge", "課題", "Đề bài")}</h2>
         <p className="font-body text-xl text-white/70 leading-relaxed italic">{currentChallenge}</p>
+        <button onClick={scrollToSolution} className="font-sans text-[10px] tracking-[0.4em] uppercase text-white/30 hover:text-vibe-pink transition-colors">
+          ↓ Start Synthesis
+        </button>
       </div>
     </section>
   );
@@ -173,26 +211,32 @@ ChallengeSection.displayName = "ChallengeSection";
 
 const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => {
   const currentLang = lang as SupportedLang;
-  const currentSolutionRaw = getLocalizedField(project, 'solution', currentLang);
+  
+  // High-resilience localized field retrieval
+  const currentSolutionRaw = (
+    getLocalizedField(project, 'solution', currentLang) || 
+    project.solution_en || 
+    project.solution || 
+    ""
+  ).trim();
+  
   const currentSolution = cleanNumbering(currentSolutionRaw);
 
-  if (!currentSolution) return null;
+  if (!currentSolutionRaw) return null;
 
   const structuredData = useMemo(() => {
     try {
-      if (currentSolutionRaw) {
-        const trimmed = currentSolutionRaw.trim();
-        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-          const parsed = JSON.parse(trimmed);
-          return Array.isArray(parsed) ? parsed : null;
-        }
+      const trimmed = currentSolutionRaw.trim();
+      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : null;
       }
     } catch (e) {}
     return null;
   }, [currentSolutionRaw]);
 
   return (
-    <section className="py-20 md:py-48 relative bg-vibe-pink/[0.02] border-y border-vibe-pink/10 overflow-hidden">
+    <section id="solution-section" className="py-20 md:py-48 relative bg-vibe-pink/[0.02] border-y border-vibe-pink/10 overflow-hidden">
       <div className="w-full px-6 md:px-12 lg:px-20 mx-auto max-w-[1920px] relative z-10 text-center md:text-left">
         <motion.div initial={isStatic ? { opacity: 1 } : { opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="flex flex-col items-center md:items-start gap-6 mb-20 md:mb-24 text-center md:text-left w-full">
            <div className="w-full flex flex-col items-center gap-6">
