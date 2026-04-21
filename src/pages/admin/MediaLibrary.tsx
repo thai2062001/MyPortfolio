@@ -134,6 +134,10 @@ const MediaLibrary = () => {
   }, []);
 
   useEffect(() => {
+    // Skip the first run as fetchInitialData handles it, 
+    // and skip if we're still doing the initial load
+    if (loading) return;
+
     fetchAssets(
       selectedFolderId,
       assetTypeFilter === "all" ? undefined : assetTypeFilter,
@@ -149,9 +153,14 @@ const MediaLibrary = () => {
 
       // Default to common folder if exists
       const common = fetchedFolders.find((f) => f.slug === "common");
-      if (common) setSelectedFolderId(common.id);
-
-      await fetchAssets(common?.id);
+      
+      // Setting this will trigger the useEffect, but we also want to wait for the initial asset fetch
+      if (common) {
+        setSelectedFolderId(common.id);
+        await fetchAssets(common.id);
+      } else {
+        await fetchAssets(null);
+      }
     } catch (error) {
       toast.error(
         t(
@@ -168,6 +177,9 @@ const MediaLibrary = () => {
   const fetchAssets = async (folderId?: string | null, type?: string) => {
     try {
       setIsRefreshing(true);
+      // Clear current assets to prevent "flash" of old folder data
+      setAssets([]); 
+      
       const fetchedAssets = await getMediaAssets(folderId || undefined, type);
       setAssets(fetchedAssets);
     } catch (error) {
