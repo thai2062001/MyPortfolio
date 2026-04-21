@@ -106,7 +106,7 @@ export const Footer = memo(() => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32">
               <div className="space-y-8">
                 <Link to="/" className="font-artistic text-4xl text-heading block transition-opacity hover:opacity-70">
-                  Pham Thi Hai Yen
+                  Pham Ba thai
                 </Link>
                 <p className="text-sm md:text-base text-heading/40 font-light leading-relaxed max-w-xs">
                   {t(
@@ -198,10 +198,10 @@ export const Footer = memo(() => {
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-heading/5">
               <div className="flex items-center gap-8">
-                <div className="w-12 h-12 rounded-full bg-heading/5 border border-heading/10 flex items-center justify-center text-heading font-display text-xl shadow-inner italic">Y</div>
+                <div className="w-12 h-12 rounded-full bg-heading/5 border border-heading/10 flex items-center justify-center text-heading font-display text-xl shadow-inner italic">T</div>
                 <div className="flex flex-col gap-1">
                    <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-heading/40">
-                     © 2026 Pham Thi Hai Yen
+                     © 2026 Pham Ba thai
                    </span>
                    <span className="font-sans text-[9px] tracking-[0.2em] uppercase text-heading/20">All Rights Reserved • Curated Excellence</span>
                 </div>

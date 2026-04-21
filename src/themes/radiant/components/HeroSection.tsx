@@ -53,8 +53,8 @@ const HeroSection = memo(() => {
     setPendingUrl(to);
   }, []);
 
-  const videoUrl = "https://res.cloudinary.com/dpdzbuiml/video/upload/q_auto/f_auto/v1775532590/Cinematic_Woman_Scene_A_woman_sits_at_a_desk_in_a_field_of_flowers_8LsdavUH_xeukdy.mp4";
-  const layoutKey = hero?.selected_layout_key || "split-left-image-right";
+  const videoUrl = "https://res.cloudinary.com/dpdzbuiml/video/upload/v1775007013/285250_1_ahltgt.mp4";
+  const layoutKey = hero?.selected_layout_key || "background";
 
   useEffect(() => {
     if (!isLoading && hero) {
@@ -71,11 +71,11 @@ const HeroSection = memo(() => {
 
   if (!hero) return null;
 
-  const finalMediaUrl = (hero.hero_image_url && hero.hero_image_url.length > 10) 
-    ? hero.hero_image_url 
-    : videoUrl;
+  // HARDCODE: Force fullscreen video and background layout
+  const finalMediaUrl = "https://res.cloudinary.com/dpdzbuiml/video/upload/v1775007013/285250_1_ahltgt.mp4";
+  const finalLayoutKey = "full-background";
 
-  const HeroLayoutComponent = getHeroLayout(layoutKey);
+  const HeroLayoutComponent = getHeroLayout(finalLayoutKey);
 
   return (
     <>

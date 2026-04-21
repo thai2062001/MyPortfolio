@@ -227,7 +227,7 @@ const Navbar = memo(() => {
               onClick={() => handleLinkClick("/")}
             >
               <ShinyText 
-                text="Pham Thi Hai Yen" 
+                text="Pham Ba thai" 
                 disabled={false} 
                 speed={5} 
                 color={shouldBeTransparent ? "#fcfaf7" : "#1c1c19"} 

@@ -42,9 +42,23 @@ export const HeroBackgroundLayout = memo(({
 
   return (
     <section className="relative min-h-screen min-h-[100svh] w-full flex items-center overflow-hidden bg-[#0A0C0B]">
-      {/* Immersive Background Image Container with Blur-up */}
-      <div className="absolute inset-0 z-0 bg-[#1a1a17]">
-        {content.hero_image_url && (
+      {/* Immersive Background Container with Video/Image Support */}
+      <div className="absolute inset-0 z-0 bg-[#000]">
+        {content.hero_image_url?.includes(".mp4") ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover opacity-0 transition-opacity duration-1000"
+            onLoadedData={(e) => {
+              (e.target as HTMLVideoElement).classList.remove("opacity-0");
+              setImageLoaded(true);
+            }}
+          >
+            <source src={content.hero_image_url} type="video/mp4" />
+          </video>
+        ) : content.hero_image_url && (
           <motion.img
             initial={{ opacity: 0, scale: 1.1 }}
             animate={{ 
@@ -82,65 +96,81 @@ export const HeroBackgroundLayout = memo(({
       <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-20">
         <div className={`flex flex-col ${isCentered ? "items-center text-center mx-auto" : "items-start text-left"} max-w-4xl`}>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex items-center gap-4 mb-8"
-          >
-            <div className="h-px w-8 bg-gold md:w-12" />
-            <p className="font-sans text-[10px] md:text-sm tracking-[0.4em] uppercase text-gold font-bold">
-              {fields.badge}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-4 md:space-y-6 mb-8 will-change-transform"
-          >
-            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light leading-[0.9] text-white tracking-tight">
-              {fields.title_line_1}
-              <br />
-              <span className="italic font-normal text-white/90 lowercase">
-                {fields.title_line_2}
-              </span>
-            </h1>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="font-body text-base md:text-xl lg:text-2xl text-white/80 font-light leading-relaxed max-w-2xl mb-12 italic"
-          >
-            {fields.description}
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 w-full sm:w-auto"
-          >
-            <button
-              onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-              className="group relative px-12 py-5 bg-white text-[#0A0C0B] font-sans text-[11px] tracking-[0.3em] uppercase font-black overflow-hidden transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95 shadow-2xl shadow-black/20"
+          {fields.badge?.trim() && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="flex items-center gap-4 mb-8"
             >
-              <span className="relative z-10 group-hover:text-white transition-colors duration-500">
-                {fields.primary_button_label}
-              </span>
-              <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-            </button>
+              <div className="h-px w-8 bg-gold md:w-12" />
+              <p className="font-sans text-[10px] md:text-sm tracking-[0.4em] uppercase text-gold font-bold">
+                {fields.badge}
+              </p>
+            </motion.div>
+          )}
 
-            <button
-              onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-              className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-sans text-[11px] tracking-[0.3em] uppercase font-black hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
+          {(fields.title_line_1?.trim() || fields.title_line_2?.trim()) && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-4 md:space-y-6 mb-8 will-change-transform"
             >
-              {fields.secondary_button_label}
-            </button>
-          </motion.div>
+              <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light leading-[0.9] text-white tracking-tight">
+                {fields.title_line_1}
+                {fields.title_line_2?.trim() && (
+                  <>
+                    <br />
+                    <span className="italic font-normal text-white/90 lowercase">
+                      {fields.title_line_2}
+                    </span>
+                  </>
+                )}
+              </h1>
+            </motion.div>
+          )}
+
+          {fields.description?.trim() && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-body text-base md:text-xl lg:text-2xl text-white/80 font-light leading-relaxed max-w-2xl mb-12 italic"
+            >
+              {fields.description}
+            </motion.p>
+          )}
+
+          {(fields.primary_button_label?.trim() || fields.secondary_button_label?.trim()) && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 w-full sm:w-auto"
+            >
+              {fields.primary_button_label && (
+                <button
+                  onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
+                  className="group relative px-12 py-5 bg-white text-[#0A0C0B] font-sans text-[11px] tracking-[0.3em] uppercase font-black overflow-hidden transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95 shadow-2xl shadow-black/20"
+                >
+                  <span className="relative z-10 group-hover:text-white transition-colors duration-500">
+                    {fields.primary_button_label}
+                  </span>
+                  <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                </button>
+              )}
+
+              {fields.secondary_button_label && (
+                <button
+                  onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
+                  className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-sans text-[11px] tracking-[0.3em] uppercase font-black hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
+                >
+                  {fields.secondary_button_label}
+                </button>
+              )}
+            </motion.div>
+          )}
         </div>
       </div>
 

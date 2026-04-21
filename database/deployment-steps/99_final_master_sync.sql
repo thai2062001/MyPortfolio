@@ -162,6 +162,21 @@ BEGIN
     ALTER TABLE public.hero_sections ADD COLUMN IF NOT EXISTS selected_layout_key TEXT DEFAULT 'default';
     ALTER TABLE public.hero_sections ADD COLUMN IF NOT EXISTS layout_config JSONB DEFAULT '{}'::jsonb;
 
+    -- [4] HERO SECTIONS ENHANCEMENT (Localization)
+    ALTER TABLE public.hero_sections 
+    ADD COLUMN IF NOT EXISTS badge_en TEXT,
+    ADD COLUMN IF NOT EXISTS badge_vi TEXT,
+    ADD COLUMN IF NOT EXISTS title_line_1_en TEXT,
+    ADD COLUMN IF NOT EXISTS title_line_1_vi TEXT,
+    ADD COLUMN IF NOT EXISTS title_line_2_en TEXT,
+    ADD COLUMN IF NOT EXISTS title_line_2_vi TEXT,
+    ADD COLUMN IF NOT EXISTS description_en TEXT,
+    ADD COLUMN IF NOT EXISTS description_vi TEXT,
+    ADD COLUMN IF NOT EXISTS primary_button_label_en TEXT,
+    ADD COLUMN IF NOT EXISTS primary_button_label_vi TEXT,
+    ADD COLUMN IF NOT EXISTS secondary_button_label_en TEXT,
+    ADD COLUMN IF NOT EXISTS secondary_button_label_vi TEXT;
+
     -- [6] TESTIMONIALS NAMING SYNC (Fixes PGRST204/205)
     IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'testimonials') THEN
         ALTER TABLE public.testimonials ADD COLUMN IF NOT EXISTS name TEXT;
