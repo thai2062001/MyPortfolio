@@ -193,6 +193,8 @@ export interface Metric {
 // Personal Info
 export interface PersonalInfo {
     id: number;
+    full_name: string | null;
+    bio: string | null;
     phone_number: string | null;
     email: string | null;
     address: string | null;

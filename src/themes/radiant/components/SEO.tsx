@@ -11,13 +11,13 @@ interface SEOProps {
 const SEO = ({ title, description, image, article }: SEOProps) => {
   const { pathname } = useLocation();
   
-  const defaultTitle = "Hai Yen Pham | Senior Marketing Executive";
-  const defaultDescription = "Professional portfolio of Hai Yen Pham, specializing in brand acceleration and strategic growth marketing.";
-  const siteUrl = "https://yenphamportfolio.site";
+  const defaultTitle = "Pham Ba thai | Senior Marketing Executive";
+  const defaultDescription = "Professional portfolio of Pham Ba thai, specializing in brand acceleration and strategic growth marketing.";
+  const siteUrl = "https://ba-thai-portfolio.site";
   const defaultImage = "/main_image.jpg";
 
   const seo = {
-    title: title ? `${title} | Hai Yen Pham` : defaultTitle,
+    title: title ? `${title} | Pham Ba thai` : defaultTitle,
     description: description || defaultDescription,
     image: `${siteUrl}${image || defaultImage}`,
     url: `${siteUrl}${pathname}`,

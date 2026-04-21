@@ -3,7 +3,7 @@ export const vi = {
     skillsExperience: "Kỹ năng & Kinh nghiệm",
     aboutMe: "Về tôi",
     aboutMeContent:
-      "Xin chào, tôi là Phạm Thị Hải Yến, chuyên gia trong lĩnh vực sáng tạo nội dung và quảng cáo. Sau khi tốt nghiệp ngành Quản trị Kinh doanh năm 2018, tôi đã tiếp tục học tập tại Nhật Bản để trau dồi kiến thức về ngành dịch vụ và phát triển kỹ năng chuyên môn trong môi trường quốc tế.",
+      "Xin chào, tôi là Phạm Bá Thái, chuyên gia trong lĩnh vực sáng tạo nội dung và quảng cáo. Sau khi tốt nghiệp ngành Quản trị Kinh doanh năm 2018, tôi đã tiếp tục học tập tại Nhật Bản để trau dồi kiến thức về ngành dịch vụ và phát triển kỹ năng chuyên môn trong môi trường quốc tế.",
     aboutMeContent2:
       "Khi đại dịch làm gián đoạn kế hoạch thực tập, nó đã dẫn dắt tôi đến một con đường mới. Tôi khám phá ra niềm đam mê viết lách thông qua việc viết blog, nền tảng cho sự nghiệp sáng tạo nội dung của mình sau này. Trải nghiệm này giúp tôi nhận ra tình yêu với sự sáng tạo và tiềm năng phát triển trong lĩnh vực marketing.",
     returningToVietnam: "Trở về Việt Nam",

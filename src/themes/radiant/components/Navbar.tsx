@@ -7,7 +7,7 @@ import ShinyText from "./framer-ui/ShinyText";
 import CardNav from "./framer-ui/CardNav";
 import { HeroSectionWithLayout } from "@/types/admin";
 import { TransitionCurtain } from "./shared/PageCurtain";
-import { useHeroSettings } from "@/core/hooks/usePortfolio";
+import { useHeroSettings, usePersonalInfo } from "@/core/hooks/usePortfolio";
 import { useSectionRenderer } from "@/core/hooks/useSectionRenderer";
 
 const Navbar = memo(() => {
@@ -24,6 +24,7 @@ const Navbar = memo(() => {
   const isTablet = useIsTablet();
   const { lang, setLang, t } = useLang();
   const { data: hero } = useHeroSettings();
+  const { data: personalInfo } = usePersonalInfo();
 
   // Use framer-motion's useMotionValueEvent for high-performance scroll tracking
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -227,7 +228,7 @@ const Navbar = memo(() => {
               onClick={() => handleLinkClick("/")}
             >
               <ShinyText 
-                text="Pham Ba thai" 
+                text={personalInfo?.full_name || "Pham Ba thai"} 
                 disabled={false} 
                 speed={5} 
                 color={shouldBeTransparent ? "#fcfaf7" : "#1c1c19"} 

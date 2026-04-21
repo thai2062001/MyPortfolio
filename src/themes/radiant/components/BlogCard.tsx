@@ -70,12 +70,12 @@ const BlogCard = memo(({ post, index }: BlogCardProps) => {
 
         <div className="space-y-4 flex-grow">
           <h3 
-            className="text-2xl md:text-3xl font-serif text-heading font-medium leading-[1.2] tracking-tight hover:text-sage transition-colors cursor-pointer group-hover:underline decoration-sage/20 underline-offset-8"
+            className="text-2xl md:text-3xl font-serif text-heading font-medium leading-[1.2] tracking-tight hover:text-sage transition-colors cursor-pointer group-hover:underline decoration-sage/20 underline-offset-8 break-words"
             onClick={() => navigate(`/blog/${post.slug}`)}
           >
             {localization.title}
           </h3>
-          <p className="text-muted-foreground/60 font-body text-sm leading-relaxed line-clamp-2 md:line-clamp-3 italic font-light">
+          <p className="text-muted-foreground/60 font-body text-sm leading-relaxed line-clamp-2 md:line-clamp-3 italic font-light break-words">
             {localization.excerpt}
           </p>
         </div>

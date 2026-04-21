@@ -53,13 +53,15 @@ const PersonalInfoPage = () => {
         .eq("id", 1)
         .single();
       if (error && error.code !== "PGRST116") throw error;
-      return data as PersonalInfo || { id: 1, phone_number: "", email: "", address: "" };
+      return data as PersonalInfo || { id: 1, full_name: "", bio: "", phone_number: "", email: "", address: "" };
     },
   });
 
   // Local state for the form
   const [formData, setFormData] = useState<PersonalInfo>({
     id: 1,
+    full_name: "",
+    bio: "",
     phone_number: "",
     email: "",
     address: "",
@@ -328,7 +330,12 @@ const PersonalInfoPage = () => {
                 <p className="text-xs tracking-[0.3em] font-bold text-sage uppercase">
                   {t("Contact Details", "連絡先の詳細", "Chi tiết liên hệ")}
                 </p>
-                <h2 className="text-3xl font-serif font-bold text-heading">{t("Contact Info", "連絡先情報", "Thông tin liên hệ")}</h2>
+                <div className="space-y-1">
+                  <h1 className="text-4xl font-serif font-bold text-heading">{formData.full_name || "Digital Identity"}</h1>
+                  <h2 className="text-xl font-serif text-muted-foreground italic flex items-center gap-2">
+                    {t("Contact Info", "連絡先情報", "Thông tin liên hệ")}
+                  </h2>
+                </div>
               </div>
 
               <div className="space-y-8">

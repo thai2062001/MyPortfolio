@@ -1,7 +1,7 @@
 import { Linkedin, Mail, ArrowUpRight, Github, Instagram, ArrowUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/contexts/LangContext";
-import { useSocialLinks } from "@/core/hooks/usePortfolio";
+import { useSocialLinks, usePersonalInfo } from "@/core/hooks/usePortfolio";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { Link } from "react-router-dom";
 import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
@@ -13,6 +13,7 @@ export const Footer = memo(() => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { data: socialLinks = [], isLoading: loading } = useSocialLinks();
+  const { data: personalInfo } = usePersonalInfo();
   
   const [hasVisited, setHasVisited] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState("");
@@ -106,7 +107,7 @@ export const Footer = memo(() => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-32">
               <div className="space-y-8">
                 <Link to="/" className="font-artistic text-4xl text-heading block transition-opacity hover:opacity-70">
-                  Pham Ba thai
+                  {personalInfo?.full_name || "Pham Ba thai"}
                 </Link>
                 <p className="text-sm md:text-base text-heading/40 font-light leading-relaxed max-w-xs">
                   {t(
@@ -198,10 +199,12 @@ export const Footer = memo(() => {
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-12 pt-12 border-t border-heading/5">
               <div className="flex items-center gap-8">
-                <div className="w-12 h-12 rounded-full bg-heading/5 border border-heading/10 flex items-center justify-center text-heading font-display text-xl shadow-inner italic">T</div>
+                <div className="w-12 h-12 rounded-full bg-heading/5 border border-heading/10 flex items-center justify-center text-heading font-display text-xl shadow-inner italic">
+                  {(personalInfo?.full_name || "P")[0]}
+                </div>
                 <div className="flex flex-col gap-1">
                    <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-heading/40">
-                     © 2026 Pham Ba thai
+                     © 2026 {personalInfo?.full_name || "Pham Ba thai"}
                    </span>
                    <span className="font-sans text-[9px] tracking-[0.2em] uppercase text-heading/20">All Rights Reserved • Curated Excellence</span>
                 </div>

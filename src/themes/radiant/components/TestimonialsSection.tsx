@@ -4,15 +4,16 @@ import { User } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useLang } from "@/contexts/LangContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useTestimonials } from "@/core/hooks/usePortfolio";
+import { useTestimonials, usePersonalInfo } from "@/core/hooks/usePortfolio";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import SectionHeader from "./shared/SectionHeader";
 import AmbientAccent from "./shared/AmbientAccent";
 
 const TestimonialsSection = memo(() => {
-  const { lang } = useLang();
+  const { lang, t } = useLang();
   const isMobile = useIsMobile();
   const testimonialsQuery = useTestimonials();
+  const { data: personalInfo } = usePersonalInfo();
   
   const testimonials = testimonialsQuery.data || [];
   const loading = testimonialsQuery.isLoading;
@@ -123,7 +124,7 @@ const TestimonialsSection = memo(() => {
                   <div className="flex items-center gap-6 w-full justify-center">
                     <div className="h-px flex-1 max-w-[40px] bg-white/10" />
                     <span className="font-artistic text-5xl md:text-6xl text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                      Hải Yến
+                      {personalInfo?.full_name || "Bá Thái"}
                     </span>
                     <div className="h-px flex-1 max-w-[40px] bg-white/10" />
                   </div>
@@ -203,7 +204,7 @@ const TestimonialsSection = memo(() => {
                 >
                   <div className="bg-white/50 backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:bg-sage hover:shadow-2xl hover:border-sage transition-all duration-500 group h-full cursor-default select-none">
                     <div className="space-y-6">
-                       <p className="font-sans text-[15px] md:text-[16px] text-heading/70 leading-relaxed italic group-hover:text-white/90 transition-colors duration-500">
+                       <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light group-hover:text-white/90 transition-colors duration-500">
                           "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
                        </p>
                     </div>
@@ -240,7 +241,7 @@ const TestimonialsSection = memo(() => {
                     <div key={testimonial.id} className="flex-none pl-6 w-full h-full">
                       <div className="bg-white/80 md:bg-white/50 md:backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:md:bg-sage transition-all duration-500 group h-full select-none">
                         <div className="space-y-6">
-                           <p className="font-sans text-[15px] md:text-[16px] text-heading/70 leading-relaxed italic group-hover:md:text-white/90 transition-colors duration-500">
+                           <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light group-hover:md:text-white/90 transition-colors duration-500">
                               "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
                            </p>
                         </div>

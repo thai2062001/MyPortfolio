@@ -3,7 +3,7 @@ export const en = {
     skillsExperience: "Skills & Experience",
     aboutMe: "About Me",
     aboutMeContent:
-      "Hello, my name is Pham Thi Hai Yen, and I specialize in content creation and advertising. After earning my degree in Business Administration in 2018, I continued my studies in Japan to deepen my knowledge of the service industry and develop professional skills in an international environment.",
+      "Hello, my name is Pham Ba thai, and I specialize in content creation and advertising. After earning my degree in Business Administration in 2018, I continued my studies in Japan to deepen my knowledge of the service industry and develop professional skills in an international environment.",
     aboutMeContent2:
       "When the pandemic disrupted my plans for hands-on internships, it led me to explore a new path. I discovered my passion for writing through blogging, which became the foundation for my career in content creation. This experience helped me realize my love for creativity and my potential to grow in the marketing field.",
     returningToVietnam: "Returning to Vietnam",
