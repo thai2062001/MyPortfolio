@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import PageLayout from "@/themes/radiant/components/PageLayout";
 import SkillContactModal from "@/themes/radiant/components/SkillContactModal";
 import SkillCTASection from "@/themes/radiant/components/SkillCTASection";
@@ -14,6 +14,132 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useLang } from "@/contexts/LangContext";
 import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
 import { fadeIn, staggerContainer } from "@/lib/animations";
+
+const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: number; isMobile: boolean; currentLang: string }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  // Dynamic shadow that moves opposite to the tilt
+  const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], [20, -20]);
+  const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], [20, -20]);
+  
+  // Glare effect
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <div 
+      className="relative group h-full transition-transform duration-500 hover:-translate-y-2"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* 3D Extrusion base - creates the 'thickness' of the card */}
+      <div className="absolute inset-0 bg-sage/20 rounded-[2.5rem] translate-y-3 blur-[2px]" />
+      
+      <motion.div
+        initial={{ opacity: 0, y: isMobile ? 20 : 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: isMobile ? 0.1 : 0.3 }}
+        transition={{ 
+          delay: isMobile ? 0 : (index * 0.1), 
+          duration: isMobile ? 0.4 : 0.8,
+          ease: "easeOut"
+        }}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className="relative bg-white/95 backdrop-blur-2xl border-2 border-white rounded-[2.5rem] p-10 shadow-2xl flex flex-col items-center text-center cursor-default h-full"
+      >
+        {/* Glare effect overlay */}
+        <motion.div
+          style={{
+            background: useTransform(
+              [glareX, glareY],
+              ([x, y]) => `radial-gradient(circle at ${x} ${y}, rgba(255,255,255,0.8) 0%, transparent 60%)`
+            ),
+            transform: "translateZ(1px)",
+          }}
+          className="absolute inset-3 rounded-[2rem] pointer-events-none z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+
+        <div 
+          style={{ transform: "translateZ(80px)", transformStyle: "preserve-3d" }}
+          className="flex flex-col items-center w-full relative z-10 h-full"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-sage/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-sage/20 transition-colors pointer-events-none" />
+          
+          <div 
+            style={{ transform: "translateZ(40px)" }}
+            className="w-20 h-20 bg-white shadow-[0_15px_35px_rgba(0,0,0,0.1)] rounded-3xl flex items-center justify-center p-5 mb-8 border border-sage/10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 relative z-10"
+          >
+            {tool.icon_url ? (
+              <img
+                src={optimizeCloudinary(tool.icon_url)}
+                alt={tool.tool_name}
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-sage">
+                <Zap size={32} />
+              </div>
+            )}
+          </div>
+
+          <div 
+            style={{ transform: "translateZ(30px)" }}
+            className="space-y-4 mb-8 flex-1 relative z-10"
+          >
+            <h5 className="font-display text-xl font-bold text-slate-900 group-hover:text-sage transition-colors duration-500 tracking-tight">
+              {getLocalizedField(tool, 'tool_name', currentLang)}
+            </h5>
+            <div className="h-px w-10 bg-sage/20 mx-auto group-hover:w-20 transition-all duration-700" />
+            <p className="font-body text-sm text-slate-500 leading-relaxed font-light line-clamp-4 italic">
+              {getLocalizedField(tool, 'description', currentLang)}
+            </p>
+          </div>
+
+          {tool.tool_url && (
+            <motion.a
+              style={{ transform: "translateZ(50px)" }}
+              className="inline-flex items-center gap-2 font-label text-[10px] uppercase tracking-widest font-bold text-sage py-3 px-8 rounded-2xl bg-sage/5 hover:bg-sage hover:text-white transition-all transform hover:scale-110 shadow-lg shadow-sage/5 active:scale-95"
+              href={tool.tool_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Launch Protocol
+            </motion.a>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 const SkillDetailPage = () => {
   const { skillSlug } = useParams<{ skillSlug: string }>();
@@ -360,57 +486,18 @@ const SkillDetailPage = () => {
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                style={{ perspective: "1500px" }}
+              >
                 {tools.map((tool, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: isMobile ? 20 : 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: isMobile ? 0.1 : 0.3 }}
-                    transition={{ 
-                      delay: isMobile ? 0 : (i * 0.1), 
-                      duration: isMobile ? 0.4 : 0.8,
-                      ease: "easeOut"
-                    }}
-                    className="group relative bg-white/60 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 shadow-sm hover:shadow-2xl transition-all duration-300 md:duration-700 overflow-hidden flex flex-col items-center text-center"
-                  >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-sage/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-sage/10 transition-colors" />
-                    
-                    <div className="w-20 h-20 bg-white shadow-xl rounded-3xl flex items-center justify-center p-5 mb-8 border border-sage/5 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 md:duration-700 relative z-10 overflow-hidden">
-                      {tool.icon_url ? (
-                        <img
-                          src={optimizeCloudinary(tool.icon_url)}
-                          alt={tool.tool_name}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-sage">
-                          <Zap size={32} />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-4 mb-8 flex-1 relative z-10">
-                      <h5 className="font-display text-xl font-bold text-slate-900 group-hover:text-sage transition-colors duration-500">
-                        {getLocalizedField(tool, 'tool_name', currentLang)}
-                      </h5>
-                      <div className="h-px w-10 bg-sage/20 mx-auto group-hover:w-20 transition-all duration-700" />
-                      <p className="font-body text-sm text-slate-500 leading-relaxed font-light line-clamp-4 italic">
-                        {getLocalizedField(tool, 'description', currentLang)}
-                      </p>
-                    </div>
-
-                    {tool.tool_url && (
-                      <a
-                        className="inline-flex items-center gap-2 font-label text-[10px] uppercase tracking-widest font-bold text-sage py-3 px-6 rounded-2xl bg-sage/5 hover:bg-sage hover:text-white transition-all transform hover:scale-105"
-                        href={tool.tool_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Launch Protocol
-                      </a>
-                    )}
-                  </motion.div>
+                  <Tool3DCard 
+                    key={tool.id || i} 
+                    tool={tool} 
+                    index={i} 
+                    isMobile={isMobile} 
+                    currentLang={currentLang} 
+                  />
                 ))}
               </div>
             </div>

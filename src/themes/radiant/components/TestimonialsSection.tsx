@@ -116,8 +116,8 @@ const TestimonialsSection = memo(() => {
 
               <div className="space-y-12 flex-1 flex flex-col justify-center">
                 <h3 className="font-display text-4xl md:text-5xl lg:text-5xl tracking-tight leading-[1.3] italic text-white/90">
-                  Data tells the story. <br/>
-                  <span className="text-sage drop-shadow-[0_0_15px_rgba(112,164,136,0.3)]">Strategy</span> drives the result.
+                  Code builds the vision. <br/>
+                  <span className="text-sage drop-shadow-[0_0_15px_rgba(112,164,136,0.3)]">Innovation</span> drives the impact.
                 </h3>
 
                 <div className="pt-6 flex flex-col items-center gap-4 w-full">
