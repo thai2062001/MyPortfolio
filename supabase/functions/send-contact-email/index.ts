@@ -1,46 +1,106 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { Resend } from "npm:resend"
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { Resend } from "npm:resend";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"))
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 
 serve(async (req) => {
-  // Handle CORS
   if (req.method === "OPTIONS") {
-    return new Response("ok", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-      },
-    })
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   try {
-    const { name, email, company, message } = await req.json()
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const fromEmail = Deno.env.get("FROM_EMAIL") ?? Deno.env.get("RESEND_FROM_EMAIL");
+    const toEmail = Deno.env.get("TO_EMAIL") ?? Deno.env.get("ADMIN_EMAIL");
+    const fromName = Deno.env.get("RESEND_FROM_NAME") ?? "Portfolio Contact";
 
-    // Send notification to admin
-    await resend.emails.send({
-      from: Deno.env.get("RESEND_FROM_EMAIL") || "onboarding@resend.dev",
-      to: Deno.env.get("ADMIN_EMAIL") || "your-email@example.com",
-      subject: `New Contact from ${name}`,
+    if (!resendApiKey || !fromEmail || !toEmail) {
+      return new Response(
+        JSON.stringify({ error: "Missing required email secrets: RESEND_API_KEY, FROM_EMAIL, TO_EMAIL" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    const payload = await req.json();
+    const name = String(payload?.name ?? "").trim();
+    const email = String(payload?.email ?? "").trim();
+    const company = payload?.company ? String(payload.company).trim() : "";
+    const purpose = payload?.purpose ? String(payload.purpose).trim() : "";
+    const subject = payload?.subject ? String(payload.subject).trim() : "";
+    const message = String(payload?.message ?? "").trim();
+
+    if (!name || !email || !message) {
+      return new Response(JSON.stringify({ error: "name, email, and message are required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const resend = new Resend(resendApiKey);
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeCompany = escapeHtml(company);
+    const safePurpose = escapeHtml(purpose);
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message).replaceAll("\n", "<br />");
+    const emailSubject = `New Contact Message from ${name}`;
+
+    const { error } = await resend.emails.send({
+      from: `${fromName} <${fromEmail}>`,
+      to: [toEmail],
+      replyTo: email,
+      subject: emailSubject,
       html: `
         <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        ${company ? `<p><strong>Company:</strong> ${company}</p>` : ""}
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> ${safeEmail}</p>
+        ${safeCompany ? `<p><strong>Company:</strong> ${safeCompany}</p>` : ""}
+        ${safePurpose ? `<p><strong>Purpose:</strong> ${safePurpose}</p>` : ""}
+        ${safeSubject ? `<p><strong>Subject:</strong> ${safeSubject}</p>` : ""}
         <p><strong>Message:</strong></p>
-        <p>${message}</p>
+        <p>${safeMessage}</p>
       `,
-    })
+    });
+
+    if (error) {
+      throw error;
+    }
 
     return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
       status: 200,
-    })
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      status: 400,
-    })
+    return new Response(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Unexpected error",
+      }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
-})
+});

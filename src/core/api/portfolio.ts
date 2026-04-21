@@ -494,14 +494,34 @@ export const portfolioApi = {
   },
 
   submitContactMessage: async (messageData: any): Promise<{ success: boolean; error?: any }> => {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('contact_messages')
-      .insert([messageData]);
+      .insert([messageData])
+      .select('id, name, email, company, purpose, subject, message')
+      .single();
     
     if (error) {
       console.error("Error submitting contact message:", error);
       return { success: false, error };
     }
+
+    const { error: functionError } = await supabase.functions.invoke("send-contact-email", {
+      body: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        purpose: data.purpose,
+        subject: data.subject,
+        message: data.message,
+      },
+    });
+
+    if (functionError) {
+      console.error("Error sending contact notification email:", functionError);
+      return { success: false, error: functionError };
+    }
+
     return { success: true };
   },
 
