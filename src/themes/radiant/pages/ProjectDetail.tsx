@@ -561,16 +561,18 @@ const ProjectDetail = () => {
           )}
 
           {/* Navigation Section */}
-          <section className="border-t border-heading/10 bg-white py-24 md:py-32">
-             <div className="container mx-auto px-6 max-w-6xl">
-                <ProjectNavigation 
-                  prevProject={prevProject} 
-                  nextProject={nextProject} 
-                  onNavigate={(targetSlug) => isMobile ? navigate(`/project/${targetSlug}`) : setPendingUrl(`/project/${targetSlug}`)} 
-                  t={t} 
-                />
-             </div>
-          </section>
+          {(prevProject || nextProject) && (
+            <section className="border-t border-heading/10 bg-white py-24 md:py-32">
+               <div className="container mx-auto px-6 max-w-6xl">
+                  <ProjectNavigation 
+                    prevProject={prevProject} 
+                    nextProject={nextProject} 
+                    onNavigate={(targetSlug) => isMobile ? navigate(`/project/${targetSlug}`) : setPendingUrl(`/project/${targetSlug}`)} 
+                    t={t} 
+                  />
+               </div>
+            </section>
+          )}
         </main>
       )}
 

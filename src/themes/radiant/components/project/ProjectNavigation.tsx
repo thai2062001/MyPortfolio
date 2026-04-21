@@ -19,6 +19,8 @@ export const ProjectNavigation = ({
   onNavigate,
   t,
 }: ProjectNavigationProps) => {
+  if (!prevProject && !nextProject) return null;
+  
   return (
     <section className="bg-background border-t border-heading/5">
       <div className="flex flex-col md:flex-row items-stretch min-h-[400px]">
