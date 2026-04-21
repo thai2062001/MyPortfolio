@@ -141,6 +141,7 @@ const MediaLibrary = () => {
     fetchAssets(
       selectedFolderId,
       assetTypeFilter === "all" ? undefined : assetTypeFilter,
+      true // We are switching folder or filter, so clear the grid
     );
     setSelectedAssetIds([]); // Clear selection when switching folders or filters
   }, [selectedFolderId, assetTypeFilter]);
@@ -174,16 +175,19 @@ const MediaLibrary = () => {
     }
   };
 
-  const fetchAssets = async (folderId?: string | null, type?: string) => {
+  const fetchAssets = async (folderId?: string | null, type?: string, isSwitchingFolder = false) => {
     try {
       setIsRefreshing(true);
-      // Clear current assets to prevent "flash" of old folder data
-      setAssets([]); 
+      // Only clear assets if we are actually switching folders to prevent flash
+      if (isSwitchingFolder) {
+        setAssets([]); 
+      }
       
       const fetchedAssets = await getMediaAssets(folderId || undefined, type);
       setAssets(fetchedAssets);
     } catch (error) {
-      console.error(error);
+      console.error("Asset matrix sync failed:", error);
+      toast.error(t("Failed to sync assets.", "アセットの同期に失敗しました。", "Đồng bộ hóa tài nguyên thất bại."));
     } finally {
       setIsRefreshing(false);
     }
@@ -835,14 +839,35 @@ const MediaLibrary = () => {
               </div>
             </div>
 
-            <MediaAssetGrid
-              assets={filteredAssets}
-              selectedAssetId={selectedAssetId}
-              onSelectAsset={setSelectedAssetId}
-              selectedAssetIds={selectedAssetIds}
-              onToggleSelect={handleToggleAssetSelect}
-              isSelectionMode={selectedAssetIds.length > 0}
-            />
+            <div className="flex-1 relative overflow-hidden">
+              <MediaAssetGrid
+                assets={filteredAssets}
+                selectedAssetId={selectedAssetId}
+                onSelectAsset={setSelectedAssetId}
+                selectedAssetIds={selectedAssetIds}
+                onToggleSelect={handleToggleAssetSelect}
+                isSelectionMode={selectedAssetIds.length > 0}
+              />
+              
+              {/* Refreshing Overlay */}
+              <AnimatePresence>
+                {isRefreshing && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 z-30 bg-white/40 backdrop-blur-[2px] flex items-center justify-center pointer-events-none"
+                  >
+                    <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-sage/10 flex flex-col items-center gap-3 animate-in zoom-in-95 duration-200">
+                      <Loader2 className="w-6 h-6 text-sage animate-spin" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-sage">
+                        {t("Syncing Matrix...", "同期中...", "Đang đồng bộ...")}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* ASSET DETAILS PANEL - Desktop Side Panel (Persistent) / Mobile Drawer */}

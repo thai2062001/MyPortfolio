@@ -320,14 +320,14 @@ export const BatchProcessDialog = ({
       }
     }
 
-    setCurrentStep("complete");
-    setProcessing(false);
-
-    // Call parent handler with processed files
+    // Call parent handler with processed files BEFORE showing complete screen
     const successFiles = processedFiles.filter((f) => f.status === "success");
     if (successFiles.length > 0) {
       await onProcess(successFiles);
     }
+
+    setCurrentStep("complete");
+    setProcessing(false);
   };
 
   const successCount = files.filter((f) => f.status === "success").length;

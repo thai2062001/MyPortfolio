@@ -66,11 +66,11 @@ const ProjectCard = memo(({
 
   return (
     <div
-      className="group relative cursor-pointer"
+      className="group relative cursor-pointer isolation-isolate"
       onClick={handleClick}
     >
-      <div className={`relative overflow-hidden rounded-[3.5rem] md:rounded-[4.5rem] bg-stone-100 transition-all duration-1000 ease-[0.22,1,0.36,1] border border-white/40 group-hover:shadow-[0_60px_120px_-30px_rgba(0,0,0,0.12)] group-hover:-translate-y-3`}>
-        <div className={`relative aspect-[4/5.5] ${aspectRatioClass} overflow-hidden bg-muted`}>
+      <div className={`relative overflow-hidden rounded-[3.5rem] md:rounded-[4.5rem] bg-stone-100 transition-all duration-1000 ease-[0.22,1,0.36,1] border border-white/40 group-hover:shadow-[0_60px_120px_-30px_rgba(0,0,0,0.15)] group-hover:-translate-y-3 transform-gpu backface-hidden`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
+        <div className={`relative aspect-[4/5.5] ${aspectRatioClass} overflow-hidden bg-muted transform-gpu`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
           <img
             src={optimizeCloudinary(cover_image_url, { width: 800 })}
             srcSet={srcSet}
@@ -80,13 +80,13 @@ const ProjectCard = memo(({
             // @ts-expect-error - fetchpriority is relatively new
             fetchpriority={priority ? "high" : "auto"}
             onLoad={onLoad}
-            className="absolute inset-0 w-full h-full object-cover scale-[1.03] group-hover:scale-110 transition-transform duration-[2000ms] ease-out brightness-[0.98] group-hover:brightness-100"
+            className="absolute inset-0 w-full h-full object-cover scale-[1.03] group-hover:scale-110 transition-transform duration-[2000ms] ease-out brightness-[0.98] group-hover:brightness-100 will-change-transform"
           />
            
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
           <div className="absolute inset-x-4 bottom-4 md:inset-x-6 md:bottom-6 z-10 transition-transform duration-700 ease-out group-hover:translate-y-[-0.5rem]">
-            <div className="ethereal-glass rounded-[2.5rem] p-6 md:p-8 space-y-4 shadow-[0_20px_40px_rgba(0,0,0,0.1)] group-hover:border-sage/30 transition-colors duration-700">
+            <div className="ethereal-glass rounded-[2.5rem] p-6 md:p-8 space-y-4 shadow-[0_20px_40px_rgba(0,0,0,0.1)] group-hover:border-sage/30 transition-colors duration-700 transform-gpu">
               <div className="space-y-4">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 overflow-hidden">
