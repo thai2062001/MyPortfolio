@@ -98,6 +98,51 @@ export const AboutContentForm = ({
               </AdminField>
             </div>
           </AdminFormSection>
+
+          <AdminFormSection title={t("Interaction Design (CTA)", "インタラクションデザイン (CTA)", "Thiết kế tương tác (CTA)")}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <AdminField label={t("Primary Button Label (EN)", "プライマリボタンラベル (EN)", "Nhãn nút chính (EN)")}>
+                <input
+                  value={formData.cta_primary_label_en || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_primary_label_en: e.target.value })}
+                  placeholder="View Projects"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
+              <AdminField label={t("Primary Button Label (VI)", "プライマリボタンラベル (VI)", "Nhãn nút chính (VI)")}>
+                <input
+                  value={formData.cta_primary_label_vi || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_primary_label_vi: e.target.value })}
+                  placeholder="Xem dự án"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
+              <AdminField label={t("Secondary Button Label (EN)", "セカンダリボタンラベル (EN)", "Nhãn nút phụ (EN)")}>
+                <input
+                  value={formData.cta_secondary_label_en || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_secondary_label_en: e.target.value })}
+                  placeholder="Download CV"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
+              <AdminField label={t("Secondary Button Label (VI)", "セカンダリボタンラベル (VI)", "Nhãn nút phụ (VI)")}>
+                <input
+                  value={formData.cta_secondary_label_vi || ""}
+                  onChange={(e) => setFormData({ ...formData, cta_secondary_label_vi: e.target.value })}
+                  placeholder="Tải CV"
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-bold shadow-sm"
+                />
+              </AdminField>
+              <AdminField label={t("Resume/CV URL", "履歴書/CVのURL", "Đường dẫn CV")} className="md:col-span-2">
+                <input
+                  value={formData.resume_url || ""}
+                  onChange={(e) => setFormData({ ...formData, resume_url: e.target.value })}
+                  placeholder="https://..."
+                  className="w-full h-14 px-6 bg-muted/20 border-none rounded-xl font-mono text-xs shadow-sm"
+                />
+              </AdminField>
+            </div>
+          </AdminFormSection>
         </div>
       )}
 

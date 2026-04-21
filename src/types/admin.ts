@@ -117,6 +117,13 @@ export interface AboutContent {
     content_vi?: string;
     order_index: number;
     is_published: boolean;
+    cta_primary_label_en?: string;
+    cta_primary_label_ja?: string;
+    cta_primary_label_vi?: string;
+    cta_secondary_label_en?: string;
+    cta_secondary_label_ja?: string;
+    cta_secondary_label_vi?: string;
+    resume_url?: string;
     created_at: string;
     updated_at: string;
     about_images?: AboutImage[];

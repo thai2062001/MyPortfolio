@@ -20,7 +20,7 @@ export const AdminHeader = ({
 }: AdminHeaderProps) => {
   return (
     <header
-      className="mx-4 md:mx-10 mt-4 mb-2 px-8 py-5 flex items-center justify-between flex-shrink-0 relative z-10 rounded-[2rem]"
+      className="mx-4 md:mx-10 mt-4 mb-2 px-8 py-5 flex items-center justify-between flex-shrink-0 relative z-30 rounded-[2rem]"
       style={{
         background: "rgba(255,255,255,0.45)",
         backdropFilter: "blur(24px)",

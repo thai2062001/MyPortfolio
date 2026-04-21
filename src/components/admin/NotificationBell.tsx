@@ -61,7 +61,7 @@ export const NotificationBell = () => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 border border-gray-200 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-[120] border border-gray-200 animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Header */}
           <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-transparent">
             <h3 className="font-semibold text-gray-900">

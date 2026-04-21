@@ -45,6 +45,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ContactMessage {
   id: string;
@@ -64,6 +65,7 @@ const ContactMessages = () => {
   const { lang, translations, t } = useLang();
   const deleteConfirm = useDeleteConfirm();
   const [searchParams] = useSearchParams();
+  const isMobile = useIsMobile();
 
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -205,6 +207,12 @@ const ContactMessages = () => {
     if (selectedMessage && !selectedMessage.is_read) handleToggleRead(selectedMessage.id, false);
   }, [selectedId]);
 
+  useEffect(() => {
+    if (!isMobile && isMobileDetailOpen) {
+      setIsMobileDetailOpen(false);
+    }
+  }, [isMobile, isMobileDetailOpen]);
+
   if (loading) return <AdminLayout><AdminLoading message={t("Loading messages...", "メッセージを読み込み中...", "Đang tải tin nhắn...")} /></AdminLayout>;
 
   return (
@@ -277,7 +285,9 @@ const ContactMessages = () => {
                     key={msg.id}
                     onClick={() => {
                       setSelectedId(msg.id);
-                      setIsMobileDetailOpen(true);
+                      if (isMobile) {
+                        setIsMobileDetailOpen(true);
+                      }
                     }}
                     className={cn(
                       "group cursor-pointer p-5 md:p-6 rounded-[2rem] transition-all duration-500 relative flex flex-col gap-2",
@@ -346,7 +356,7 @@ const ContactMessages = () => {
           </div>
 
           {/* DETAIL DIALOG (Mobile) */}
-          <Dialog open={isMobileDetailOpen} onOpenChange={setIsMobileDetailOpen}>
+          <Dialog open={isMobile && isMobileDetailOpen} onOpenChange={setIsMobileDetailOpen}>
             <DialogContent hideDefaultClose className="md:hidden max-w-[95vw] h-[90vh] p-0 overflow-hidden bg-white/95 backdrop-blur-3xl border-white/60 shadow-2xl rounded-[3rem] focus:outline-none">
               {selectedMessage && (
                 <div className="h-full flex flex-col">

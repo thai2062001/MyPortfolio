@@ -1,7 +1,7 @@
 import { useState, memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FileDown } from "lucide-react";
 import { useLang } from "@/contexts/LangContext";
 import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { useAboutContent, usePersonalInfo } from "@/core/hooks/usePortfolio";
@@ -29,10 +29,13 @@ const AboutSection = memo(() => {
 
   const localizationData = useMemo(() => {
     if (!mainSection) return null;
-    const fields = getLocalizedFields(mainSection, ['content', 'title'], currentLang);
+    const fields = getLocalizedFields(mainSection, ['content', 'title', 'cta_primary_label', 'cta_secondary_label'], currentLang);
     return {
       title: fields.title,
       content: fields.content,
+      ctaPrimary: fields.cta_primary_label,
+      ctaSecondary: fields.cta_secondary_label,
+      resumeUrl: (mainSection as any).resume_url,
       tags: (mainSection as any).about_content_tags?.map((t: any) => ({
         ...t.about_tags,
         name: getLocalizedField(t.about_tags, 'name', currentLang)
@@ -60,6 +63,7 @@ const AboutSection = memo(() => {
   const mainImage = optimizeCloudinary(coverObj?.image_url || "", { width: 1000 });
   const otherImages = mainGallery.filter((img: any) => img.id !== coverObj?.id);
   const totalImages = mainGallery.length;
+  const pi = piQuery.data;
 
   return (
     <section className="relative py-16 md:py-48 px-6 bg-[#FEFEFE] overflow-hidden" id="about">
@@ -149,7 +153,7 @@ const AboutSection = memo(() => {
           </div>
 
           {/* LEFT CONTENT: Headline & Stats */}
-          <div className="lg:col-span-6 space-y-10 md:space-y-24 order-2 lg:order-2">
+          <div className="lg:col-span-6 space-y-6 md:space-y-8 order-2 lg:order-2">
             <SectionHeader
                eyebrow={
                  <div className="inline-flex items-center gap-3 bg-heading text-white px-6 py-2 rounded-full text-[10px] tracking-[0.3em] font-sans font-bold uppercase">
@@ -163,7 +167,7 @@ const AboutSection = memo(() => {
                eyebrowClassName="font-sans text-[11px] uppercase tracking-[0.3em] text-on-surface/40 font-bold"
                titleClassName="font-display text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-6xl 2xl:text-8xl font-extrabold tracking-tight text-on-surface leading-tight md:leading-[1.05]"
                descriptionClassName="font-body text-base md:text-lg lg:text-base xl:text-lg text-on-surface-variant max-w-xl leading-relaxed italic"
-               className="gap-3 lg:gap-6"
+               className="gap-2 lg:gap-4"
             />
 
             <motion.div variants={fadeIn("up", 0.4, isMobile)} className="flex flex-wrap gap-x-4 gap-y-3 max-w-xl pb-2">
@@ -180,15 +184,26 @@ const AboutSection = memo(() => {
               })}
             </motion.div>
 
-            <motion.div variants={fadeIn("up", 0.5, isMobile)} className="pt-4">
+            <motion.div variants={fadeIn("up", 0.5, isMobile)} className="pt-0 flex flex-col sm:flex-row items-center gap-4 md:gap-4">
               <button
                 onClick={() => isTablet ? navigate("/portfolio") : setPendingUrl("/portfolio")}
-                className="group relative inline-flex items-center gap-6 bg-heading text-white px-8 py-4 md:px-12 md:py-6 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95 shadow-2xl shadow-heading/10"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-heading text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95 shadow-2xl shadow-heading/10"
               >
-                <span className="relative z-10">{t("View Projects", "プロジェクトを見る", "Xem dự án")}</span>
+                <span className="relative z-10 whitespace-nowrap">{localizationData.ctaPrimary || t("View Projects", "プロジェクトを見る", "Xem dự án")}</span>
                 <ArrowUpRight size={18} className="relative z-10 group-hover:rotate-45 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-sage scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out" />
               </button>
+
+              <a
+                href={localizationData.resumeUrl || (pi as any)?.resume_url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-white text-heading border border-heading/10 px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95 shadow-xl hover:shadow-heading/5"
+              >
+                <span className="relative z-10 whitespace-nowrap">{localizationData.ctaSecondary || t("Download CV", "CVをダウンロード", "Tải CV")}</span>
+                <FileDown size={18} className="relative z-10 group-hover:translate-y-1 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-heading/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out" />
+              </a>
             </motion.div>
           </div>
         </motion.div>
