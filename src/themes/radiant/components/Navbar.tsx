@@ -60,7 +60,7 @@ const Navbar = memo(() => {
   const { data: hero } = useHeroSettings();
   const heroData = hero as HeroSectionWithLayout | undefined;
   const heroLayout = isHomePage ? (heroData?.selected_layout_key || "split-left-image-right") : null;
-  const isTransparent = isHomePage && !isScrolled && (heroLayout === "full-background" || !hero);
+  const isTransparent = isHomePage && !isScrolled;
 
   const langLabel = lang === "en" ? "JA" : lang === "ja" ? "VN" : "EN";
   const toggleLang = () => {
@@ -84,8 +84,10 @@ const Navbar = memo(() => {
         )}
       >
         <div className={cn(
-          "mx-auto flex items-center justify-between h-14 md:h-16 px-6 md:px-10 rounded-full border transition-all duration-500 gap-8 md:gap-14 bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border-black/5 dark:border-white/5 shadow-lg shadow-black/5 w-fit",
-          !isScrolled && isTransparent && "bg-transparent border-transparent backdrop-blur-none shadow-none"
+          "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
+          isTransparent && !isScrolled
+            ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
+            : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
         )}>
           {/* Identity/Logo */}
           <div 
@@ -103,44 +105,41 @@ const Navbar = memo(() => {
           </div>
 
           {!isMobile && (
-            <nav className="flex items-center gap-8 lg:gap-12 pointer-events-auto">
+            <nav className="flex items-center gap-16 lg:gap-24 pointer-events-auto">
                 {[
                   { label: t("Home", "ホーム"), to: "/" },
                   { label: t("Portfolio", "ポートフォリオ"), to: "/portfolio" },
-                ].map((item) => (
+                ].map((link) => (
                   <button
-                    key={item.label}
-                    onClick={() => handleLinkClick(item.to)}
+                    key={link.to}
+                    onClick={() => handleLinkClick(link.to)}
                     className={cn(
-                      "text-sm md:text-lg font-serif font-bold tracking-tight transition-all duration-300 relative group",
-                      isTransparent ? "text-white/80 hover:text-white" : "text-[#1c1c19]/80 hover:text-[#1c1c19]"
+                      "relative text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 py-1 font-serif",
+                      isTransparent ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-sage"
                     )}
                   >
-                    {item.label}
-                    <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full opacity-30" />
+                    {link.label}
+                    <motion.div
+                      className={cn(
+                        "absolute -bottom-1 left-0 right-0 h-[1px]",
+                        isTransparent ? "bg-white" : "bg-sage"
+                      )}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: location.pathname === link.to ? 1 : 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
                   </button>
                 ))}
               </nav>
             )}
 
             {/* Actions */}
-            <div className="flex items-center gap-3 md:gap-6 z-10">
-              <button 
-                onClick={toggleLang}
-                className={cn(
-                  "text-[10px] md:text-xs font-black w-8 h-8 md:w-10 md:h-10 rounded-full border flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95",
-                  isTransparent 
-                    ? "border-white/10 text-white hover:bg-white/10" 
-                    : "border-black/5 text-[#1c1c19] hover:bg-black/5"
-                )}
-              >
-                {langLabel}
-              </button>
-
+            <div className="flex items-center gap-6 md:gap-10 z-10">
               <button
-                onClick={() => handleLinkClick("/portfolio#contact")}
+                onClick={() => handleLinkClick("/contact")}
                 className={cn(
-                  "h-10 md:h-12 px-5 md:px-8 rounded-full font-sans font-black text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all duration-500 hover:scale-[1.05] active:scale-[0.98] shadow-xl shadow-black/5",
+                  "px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl shadow-black/10 flex items-center gap-2",
                   isTransparent 
                     ? "bg-white text-[#1c1c19] hover:bg-white/90" 
                     : "bg-[#1c1c19] text-white hover:bg-[#1c1c19]/90"
@@ -150,8 +149,7 @@ const Navbar = memo(() => {
               </button>
             </div>
           </div>
-        </div>
-      </motion.header>
+        </motion.header>
 
       <TransitionCurtain isActive={!!pendingUrl} onComplete={() => navigate(pendingUrl!)} />
     </>
