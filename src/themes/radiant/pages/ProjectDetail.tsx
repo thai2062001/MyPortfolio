@@ -446,29 +446,45 @@ const ProjectDetail = () => {
           <SolutionSection project={project} lang={lang} t={t} isStatic={isTabletOrMobile} isTablet={isTabletOrMobile} />
 
           {/* 5. Strategy & Impact Section */}
-          <section className="py-24 md:py-56 bg-white">
-             <div className="container mx-auto px-6 max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-start">
+          <section className="py-24 md:py-32 bg-white">
+             <div className="container mx-auto px-6 max-w-4xl space-y-32 md:space-y-48">
                 {approaches.length > 0 && (
-                  <div className="lg:col-span-5 space-y-16 md:space-y-20">
-                     <div className="space-y-4 text-center md:text-left">
-                        <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-bold text-sage">The Path</span>
-                        <h2 className="font-display text-5xl md:text-7xl text-heading tracking-tighter leading-none italic">{t("The Approach", "アプローチ", "Cách làm")}</h2>
+                  <div className="space-y-16">
+                     <div className="space-y-6 text-left">
+                        <div className="flex items-center gap-4 justify-start">
+                           <span className="w-12 h-px bg-sage/30" />
+                           <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-sage/60">{t("Methodology", "手法", "Phương pháp luận")}</span>
+                        </div>
+                        <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
+                          {t("The", "その", "Những")} <span className="text-sage">Approach.</span>
+                        </h2>
                      </div>
-                     <div className="relative pl-8 md:pl-10 border-l border-heading/5 space-y-12 md:space-y-16">
+                     
+                     <div className="space-y-6">
                         {approaches.map((step: any, i: number) => (
-                           <motion.div key={i} initial={isTabletOrMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: isTabletOrMobile ? 0 : i * 0.1 }} className="relative">
-                             <div className="absolute -left-[35px] md:-left-[45px] top-1.5 w-2 h-2 rounded-full bg-sage" />
-                             <div className="space-y-2">
-                                <span className="font-artistic text-2xl text-sage/60">0{i+1}.</span>
-                                <p className="font-body text-lg md:text-xl text-heading/70 leading-relaxed font-light">{step.content}</p>
-                             </div>
+                           <motion.div 
+                              key={i} 
+                              initial={isTabletOrMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }} 
+                              whileInView={{ opacity: 1, x: 0 }} 
+                              viewport={{ once: true }} 
+                              transition={{ delay: i * 0.1, duration: 0.8 }}
+                              className="group relative p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-white border border-heading/5 hover:border-sage/20 transition-all duration-500 overflow-hidden"
+                           >
+                              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sage/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                              
+                              <div className="flex items-start gap-6 md:gap-8">
+                                 <span className="font-display text-4xl md:text-5xl text-sage/30 group-hover:text-sage transition-colors duration-500 shrink-0">0{i+1}.</span>
+                                 <p className="font-serif text-lg md:text-xl text-heading/80 leading-relaxed italic group-hover:text-heading transition-colors duration-500">
+                                    {step.content}
+                                 </p>
+                              </div>
                            </motion.div>
                         ))}
                      </div>
                   </div>
                 )}
                 {results.length > 0 && (
-                  <div className="lg:col-span-7 space-y-16">
+                  <div className="space-y-16">
                      <div className="space-y-6 text-left">
                         <div className="flex items-center gap-4 justify-start">
                            <span className="w-12 h-px bg-vibe-pink/30" />
