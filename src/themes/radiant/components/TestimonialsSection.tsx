@@ -121,12 +121,12 @@ const TestimonialsSection = memo(() => {
                 </h3>
 
                 <div className="pt-6 flex flex-col items-center gap-4 w-full">
-                  <div className="flex items-center gap-6 w-full justify-center">
-                    <div className="h-px flex-1 max-w-[40px] bg-white/10" />
-                    <span className="font-artistic text-5xl md:text-6xl text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                  <div className="flex items-center gap-4 w-full justify-center px-2">
+                    <div className="h-px flex-1 max-w-[30px] bg-white/10 hidden sm:block" />
+                    <span className="font-artistic text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] whitespace-nowrap">
                       {personalInfo?.full_name || "Bá Thái"}
                     </span>
-                    <div className="h-px flex-1 max-w-[40px] bg-white/10" />
+                    <div className="h-px flex-1 max-w-[30px] bg-white/10 hidden sm:block" />
                   </div>
                   
                   <div className="flex flex-col items-center gap-2">
