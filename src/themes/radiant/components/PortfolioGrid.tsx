@@ -24,6 +24,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
   const projectsQuery = useProjects(!isArchivePage);
   const projects = useMemo(() => projectsQuery.data || [], [projectsQuery.data]);
   const isLoading = projectsQuery.isLoading;
+  const shouldAnimateGrid = !isTablet;
 
   const initialCount = isArchivePage ? 8 : 3;
   const [visibleCount, setVisibleCount] = useState(initialCount);
@@ -110,31 +111,53 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
           />
         )}
 
-        <motion.div 
-          variants={staggerContainer(0.05, 0.05)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.05 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto"
-        >
-          {visibleProjects.map((p, i) => {
-            return (
-              <motion.div key={p.slug} variants={fadeIn("up", 0)}>
-                <ProjectCard
-                  slug={p.slug}
-                  title={p.title}
-                  cover_image_url={p.cover_image_url}
-                  tall={p.tall}
-                  category_name={p.project_categories?.name}
-                  short_description={p.short_description}
-                  tags={p.tags}
-                  priority={i < 3} 
-                  onClick={(slug) => onNavigate ? onNavigate(slug) : navigate(`/project/${slug}`)}
-                />
-              </motion.div>
-            );
-          })}
-        </motion.div>
+        {shouldAnimateGrid ? (
+          <motion.div
+            variants={staggerContainer(0.05, 0.05)}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.05 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto"
+          >
+            {visibleProjects.map((p, i) => {
+              return (
+                <motion.div key={p.slug} variants={fadeIn("up", 0)}>
+                  <ProjectCard
+                    slug={p.slug}
+                    title={p.title}
+                    cover_image_url={p.cover_image_url}
+                    tall={p.tall}
+                    category_name={p.project_categories?.name}
+                    short_description={p.short_description}
+                    tags={p.tags}
+                    priority={i < 3}
+                    onClick={(slug) => onNavigate ? onNavigate(slug) : navigate(`/project/${slug}`)}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto">
+            {visibleProjects.map((p, i) => {
+              return (
+                <div key={p.slug}>
+                  <ProjectCard
+                    slug={p.slug}
+                    title={p.title}
+                    cover_image_url={p.cover_image_url}
+                    tall={p.tall}
+                    category_name={p.project_categories?.name}
+                    short_description={p.short_description}
+                    tags={p.tags}
+                    priority={i < 3}
+                    onClick={(slug) => onNavigate ? onNavigate(slug) : navigate(`/project/${slug}`)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {!isArchivePage && (
           <motion.div 

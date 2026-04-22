@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
 import { memo, useMemo } from "react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { useLang } from "@/contexts/LangContext";
 import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
+import { useIsTablet } from "@/hooks/use-mobile";
 
 interface ProjectCardProps {
   slug: string;
@@ -33,6 +33,7 @@ const ProjectCard = memo(({
 }: ProjectCardProps) => {
   const { lang } = useLang();
   const currentLang = lang as SupportedLang;
+  const isTablet = useIsTablet();
 
   const localizedTitle = useMemo(() => {
     // If title comes from database with lang suffixes, we'd use getLocalizedField
@@ -69,10 +70,10 @@ const ProjectCard = memo(({
       className="group relative cursor-pointer isolation-isolate"
       onClick={handleClick}
     >
-      <div className={`relative overflow-hidden rounded-2xl bg-stone-100 transition-all duration-1000 ease-[0.22,1,0.36,1] border border-white/40 group-hover:shadow-[0_60px_120px_-30px_rgba(0,0,0,0.15)] group-hover:-translate-y-3 transform-gpu backface-hidden`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
+      <div className={`relative overflow-hidden rounded-2xl bg-stone-100 transition-all duration-500 md:duration-1000 ease-[0.22,1,0.36,1] border border-white/40 md:group-hover:shadow-[0_60px_120px_-30px_rgba(0,0,0,0.15)] md:group-hover:-translate-y-3 transform-gpu backface-hidden`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
         <div className={`relative aspect-[4/5] ${aspectRatioClass} overflow-hidden bg-muted transform-gpu`} style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
           <img
-            src={optimizeCloudinary(cover_image_url, { width: 800 })}
+            src={optimizeCloudinary(cover_image_url, { width: isTablet ? 600 : 800 })}
             srcSet={srcSet}
             sizes={sizes}
             alt={localizedTitle}
@@ -80,17 +81,17 @@ const ProjectCard = memo(({
             // @ts-expect-error - fetchpriority is relatively new
             fetchpriority={priority ? "high" : "auto"}
             onLoad={onLoad}
-            className="absolute inset-0 w-full h-full object-cover scale-[1.03] group-hover:scale-110 transition-transform duration-[2000ms] ease-out brightness-[0.98] group-hover:brightness-100 will-change-transform"
+            className="absolute inset-0 w-full h-full object-cover scale-[1.02] md:scale-[1.03] md:group-hover:scale-110 transition-transform duration-500 md:duration-[2000ms] ease-out brightness-[0.98] md:group-hover:brightness-100 will-change-transform"
           />
            
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-80 md:group-hover:opacity-100 transition-opacity duration-500 md:duration-700 pointer-events-none" />
           
-          <div className="absolute inset-x-4 bottom-4 md:inset-x-6 md:bottom-6 z-10 transition-transform duration-700 ease-out group-hover:translate-y-[-0.5rem]">
-            <div className="ethereal-glass bg-white/60 backdrop-blur-xl rounded-xl p-6 md:p-8 space-y-4 shadow-[0_20px_40px_rgba(0,0,0,0.15)] group-hover:border-sage/40 transition-colors duration-700 transform-gpu">
+          <div className="absolute inset-x-4 bottom-4 md:inset-x-6 md:bottom-6 z-10 transition-transform duration-500 md:duration-700 ease-out md:group-hover:translate-y-[-0.5rem]">
+            <div className="ethereal-glass bg-white/85 md:bg-white/60 backdrop-blur-sm md:backdrop-blur-xl rounded-xl p-6 md:p-8 space-y-4 shadow-[0_12px_24px_rgba(0,0,0,0.12)] md:shadow-[0_20px_40px_rgba(0,0,0,0.15)] md:group-hover:border-sage/40 transition-colors duration-500 md:duration-700 transform-gpu">
               <div className="space-y-4">
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 overflow-hidden">
-                      <span className="w-6 h-px bg-gray-500 opacity-40 transition-all duration-700 group-hover:w-10" />
+                      <span className="w-6 h-px bg-gray-500 opacity-40 transition-all duration-500 md:duration-700 md:group-hover:w-10" />
                       <p className="font-artistic text-[18px] md:text-[20px] text-vibe-pink">
                         {category_name || "Project"}
                       </p>
@@ -127,12 +128,12 @@ const ProjectCard = memo(({
                        </p>
                      )}
                      
-                     <div className="flex items-center gap-4 text-sage group/cta cursor-pointer">
-                        <span className="font-sans text-[10px] tracking-[0.3em] uppercase font-extrabold">Discover</span>
-                        <div className="relative w-8 h-[1px] bg-sage/20 overflow-hidden">
-                          <div className="absolute inset-0 bg-sage transition-transform duration-500 translate-x-[-100%] group-hover/cta:translate-x-0" />
-                        </div>
-                     </div>
+                      <div className="flex items-center gap-4 text-sage group/cta cursor-pointer">
+                         <span className="font-sans text-[10px] tracking-[0.3em] uppercase font-extrabold">Discover</span>
+                         <div className="relative w-8 h-[1px] bg-sage/20 overflow-hidden">
+                          <div className="absolute inset-0 bg-sage transition-transform duration-500 translate-x-[-100%] md:group-hover/cta:translate-x-0" />
+                         </div>
+                      </div>
                   </div>
                 </div>
               </div>
