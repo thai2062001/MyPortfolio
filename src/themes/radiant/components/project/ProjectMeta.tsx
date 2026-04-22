@@ -10,10 +10,10 @@ const ProjectMetaItem = ({ label, value }: ProjectMetaProps) => {
   if (!value) return null;
   return (
     <div className="flex flex-col gap-1.5 md:gap-3">
-       <span className="font-sans text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-bold text-sage/60">
+       <span className="font-display text-[10px] md:text-[11px] tracking-[0.3em] uppercase font-bold text-sage/60">
          {label}
        </span>
-       <span className="font-body text-base md:text-lg text-heading font-medium tracking-tight">
+       <span className="font-display text-lg md:text-xl text-heading font-bold tracking-tight">
          {value}
        </span>
     </div>
@@ -50,19 +50,27 @@ export const ProjectMeta = ({ client, duration, role, year, tags = [], lang = "e
         {/* Identity Section (Tags) - Integrated into the flow */}
         {tags.length > 0 && (
           <div className="flex flex-col gap-1.5 md:gap-3 col-span-2 md:col-span-4 lg:col-span-1 border-t md:border-t-0 border-heading/5 pt-8 md:pt-0">
-            <span className="font-sans text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-bold text-sage/60">
+            <span className="font-display text-[10px] md:text-[11px] tracking-[0.3em] uppercase font-bold text-sage/60">
               {t("Identity", "IDENTITY")}
             </span>
-            <div className="flex flex-wrap gap-x-4 gap-y-1">
-              {tags.map((tag) => (
-                <span 
-                  key={tag.id}
-                  className="font-sans text-[11px] md:text-[12px] tracking-wide text-heading/50 hover:text-vibe-pink transition-colors duration-300 cursor-default"
-                >
-                  <span className="text-vibe-pink/40 mr-1">#</span>
-                  {lang === "ja" && tag.name_ja ? tag.name_ja : tag.name_en}
-                </span>
-              ))}
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag, idx) => {
+                const colors = [
+                  "bg-sage/10 text-sage border-sage/20",
+                  "bg-vibe-pink/10 text-vibe-pink border-vibe-pink/20",
+                  "bg-[#c5a572]/10 text-[#c5a572] border-[#c5a572]/20"
+                ];
+                const colorClass = colors[idx % colors.length];
+                
+                return (
+                  <span 
+                    key={tag.id}
+                    className={`font-display text-[10px] md:text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border transition-all duration-300 cursor-default hover:scale-105 ${colorClass}`}
+                  >
+                    {lang === "ja" && tag.name_ja ? tag.name_ja : tag.name_en}
+                  </span>
+                )
+              })}
             </div>
           </div>
         )}
