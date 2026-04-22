@@ -61,7 +61,8 @@ const PageLayout = ({
 
   // 2. High-Precision Anchor Scroll logic
   useEffect(() => {
-    if (!isLoading && isReady && hash) {
+    if (isMobile || !isLoading && isReady && hash) {
+      if (isMobile) return;
       let retries = 0;
       const maxRetries = 30; 
       let lastAbsoluteTop = -1;

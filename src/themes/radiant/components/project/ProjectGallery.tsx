@@ -163,7 +163,7 @@ export const ProjectGallery = ({
                     className="pointer-events-auto"
                   >
                     {activeImage.caption && (
-                      <div className="inline-block bg-black/40 backdrop-blur-sm px-10 py-6 rounded-[2rem] border border-white/10 shadow-2xl mb-8">
+                      <div className="inline-block bg-black/60 md:bg-black/40 md:backdrop-blur-sm px-10 py-6 rounded-[2rem] border border-white/10 shadow-2xl mb-8">
                         <p className="font-body text-xl md:text-2xl font-light text-white/90 leading-relaxed italic">
                           "{activeImage.caption}"
                         </p>
@@ -180,13 +180,13 @@ export const ProjectGallery = ({
             <div className="absolute inset-x-0 bottom-6 px-6 flex justify-between z-30">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                className="w-14 h-14 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white shadow-xl"
+                className="w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white shadow-xl"
               >
                 <ChevronLeft size={20} strokeWidth={1} />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                className="w-14 h-14 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white shadow-xl"
+                className="w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white shadow-xl"
               >
                 <ChevronRight size={20} strokeWidth={1} />
               </button>
@@ -263,14 +263,14 @@ export const ProjectGallery = ({
       </div>
 
       {/* Lightbox Modal via Portal */}
-      {typeof document !== "undefined" && createPortal(
+      {!isMobile && typeof document !== "undefined" && createPortal(
         <AnimatePresence>
           {selectedImageIndex !== null && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100005] flex items-center justify-center bg-[#111]/98 backdrop-blur-md p-6 md:p-20"
+              className="fixed inset-0 z-[100005] flex items-center justify-center bg-[#111]/98 backdrop-blur-none md:backdrop-blur-md p-6 md:p-20"
               onClick={() => setSelectedImageIndex(null)}
             >
               <motion.button

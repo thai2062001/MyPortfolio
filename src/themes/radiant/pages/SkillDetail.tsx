@@ -14,7 +14,49 @@ import { useLang } from "@/contexts/LangContext";
 import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 
-const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: number; isMobile: boolean; currentLang: string }) => {
+const ToolCardMobile = ({ tool, currentLang }: { tool: any; currentLang: string }) => {
+  return (
+    <div className="relative h-full">
+      <div className="relative bg-white/95 border border-white rounded-[2rem] p-6 shadow-lg flex flex-col items-center text-center h-full">
+        <div className="w-16 h-16 bg-white shadow-[0_10px_24px_rgba(0,0,0,0.08)] rounded-2xl flex items-center justify-center p-4 mb-5 border border-sage/10">
+          {tool.icon_url ? (
+            <img
+              src={optimizeCloudinary(tool.icon_url)}
+              alt={tool.tool_name}
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-sage">
+              <Zap size={28} />
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-3 flex-1">
+          <h5 className="font-display text-lg font-bold text-slate-900 tracking-tight">
+            {getLocalizedField(tool, 'tool_name', currentLang)}
+          </h5>
+          <p className="font-body text-sm text-slate-500 leading-relaxed font-light line-clamp-4 italic">
+            {getLocalizedField(tool, 'description', currentLang)}
+          </p>
+        </div>
+
+        {tool.tool_url && (
+          <a
+            className="inline-flex items-center gap-2 font-label text-[10px] uppercase tracking-widest font-bold text-sage py-3 px-6 rounded-2xl bg-sage/5 active:scale-95 mt-5"
+            href={tool.tool_url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Launch Protocol
+          </a>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ToolCardDesktop = ({ tool, index, currentLang }: { tool: any; index: number; currentLang: string }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -23,17 +65,10 @@ const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: 
 
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
-
-  // Dynamic shadow that moves opposite to the tilt
-  const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], [20, -20]);
-  const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], [20, -20]);
-  
-  // Glare effect
   const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
   const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -56,16 +91,15 @@ const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* 3D Extrusion base - creates the 'thickness' of the card */}
       <div className="absolute inset-0 bg-sage/20 rounded-[2.5rem] translate-y-3 blur-[2px]" />
       
       <motion.div
-        initial={{ opacity: 0, y: isMobile ? 20 : 30 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: isMobile ? 0.1 : 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         transition={{ 
-          delay: isMobile ? 0 : (index * 0.1), 
-          duration: isMobile ? 0.4 : 0.8,
+          delay: index * 0.1, 
+          duration: 0.8,
           ease: "easeOut"
         }}
         style={{
@@ -75,7 +109,6 @@ const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: 
         }}
         className="relative bg-white/95 backdrop-blur-2xl border-2 border-white rounded-[2.5rem] p-10 shadow-2xl flex flex-col items-center text-center cursor-default h-full"
       >
-        {/* Glare effect overlay */}
         <motion.div
           style={{
             background: useTransform(
@@ -217,8 +250,8 @@ const SkillDetailPage = () => {
         <>
           <section className="relative overflow-hidden bg-[#fcfaf7]">
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[120px] -ml-64 -mb-64 pointer-events-none" />
+            <div className="hidden md:block absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none" />
+            <div className="hidden md:block absolute bottom-0 left-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[120px] -ml-64 -mb-64 pointer-events-none" />
 
             <div className="max-w-[1440px] mx-auto px-6 md:px-12 pt-32 md:pt-48 pb-20 md:pb-32 flex flex-col gap-12 md:gap-16 relative z-10">
               <motion.div 
@@ -228,7 +261,7 @@ const SkillDetailPage = () => {
                 className="flex flex-col gap-8 md:gap-10"
               >
                 <div className="flex flex-col gap-4 max-w-4xl">
-                  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/50 backdrop-blur-md border border-black/5 shadow-sm w-fit">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/70 md:bg-white/50 md:backdrop-blur-md border border-black/5 shadow-sm w-fit">
                     <div className="w-2 h-2 rounded-full bg-sage" />
                     <span className="font-sans text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500">
                       Skill Specialization
@@ -281,7 +314,7 @@ const SkillDetailPage = () => {
           >
             {skill.cover_image_url && (
               <div className="relative group/banner">
-                <div className="absolute -inset-4 bg-sage/5 rounded-[3rem] blur-3xl -z-10 group-hover/banner:bg-sage/10 transition-colors duration-700" />
+                <div className="hidden md:block absolute -inset-4 bg-sage/5 rounded-[3rem] blur-3xl -z-10 group-hover/banner:bg-sage/10 transition-colors duration-700" />
                 <div className="relative bg-white p-3 rounded-[3rem] shadow-2xl shadow-sage/10 border border-black/5 overflow-hidden group">
                   <img
                     alt={skill.skill_name}
@@ -387,7 +420,7 @@ const SkillDetailPage = () => {
                         className="w-full max-w-4xl relative z-20"
                       >
                         <div className="space-y-4 mb-6">
-                          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
+                          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/20 md:bg-white/10 md:backdrop-blur-md border border-white/20">
                             <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                             <span className="font-sans text-xs uppercase tracking-[0.2em] font-bold text-white">
                               Principle {String(i + 1).padStart(2, "0")}
@@ -423,7 +456,7 @@ const SkillDetailPage = () => {
                             />
                           ) : (
                             <div className="relative group perspective-1000">
-                              <div className="absolute inset-0 bg-black/20 rounded-3xl blur-3xl group-hover:blur-[60px] transition-all duration-700 opacity-40 translate-y-12" />
+                              <div className="hidden md:block absolute inset-0 bg-black/20 rounded-3xl blur-3xl group-hover:blur-[60px] transition-all duration-700 opacity-40 translate-y-12" />
                               <div className="relative bg-white/5 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                                 <img
                                   src={optimizeCloudinary(displayImage.image_url)}
@@ -431,7 +464,7 @@ const SkillDetailPage = () => {
                                   className="w-full min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[600px] object-contain bg-black/40"
                                 />
                                 {displayImage.caption && (
-                                  <div className="absolute bottom-8 right-8 px-6 py-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl max-w-[70%]">
+                                  <div className="absolute bottom-8 right-8 px-6 py-3 bg-black/60 md:bg-black/40 md:backdrop-blur-xl border border-white/10 rounded-2xl max-w-[70%]">
                                     <p className="font-body text-sm italic text-white/90">
                                       {displayImage.caption}
                                     </p>
@@ -453,15 +486,15 @@ const SkillDetailPage = () => {
             </div>
 
             {/* Abstract Background Shapes */}
-            <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[120px] -mr-64 pointer-events-none" />
-            <div className="absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[120px] -ml-64 pointer-events-none" />
+            <div className="hidden md:block absolute top-1/4 right-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[120px] -mr-64 pointer-events-none" />
+            <div className="hidden md:block absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[120px] -ml-64 pointer-events-none" />
           </section>
         )}
         {skill.show_tools !== false && tools.length > 0 && (
           <section className="relative overflow-hidden bg-[#f8f9f5] py-32">
             {/* Ambient Background Glow */}
-            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[140px] -mt-64 pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[140px] -mb-64 pointer-events-none" />
+            <div className="hidden md:block absolute top-0 left-1/4 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[140px] -mt-64 pointer-events-none" />
+            <div className="hidden md:block absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[140px] -mb-64 pointer-events-none" />
 
             <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
               <motion.div 
@@ -470,7 +503,7 @@ const SkillDetailPage = () => {
                 viewport={{ once: true }}
                 className="text-center mb-24"
               >
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/50 backdrop-blur-md border border-black/5 shadow-sm mb-6">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-white/70 md:bg-white/50 md:backdrop-blur-md border border-black/5 shadow-sm mb-6">
                   <div className="w-2 h-2 rounded-full bg-sage" />
                   <span className="font-label text-[10px] uppercase tracking-[0.2em] font-bold text-slate-500">
                     Instrument Cluster
@@ -489,13 +522,20 @@ const SkillDetailPage = () => {
                 style={{ perspective: "1500px" }}
               >
                 {tools.map((tool, i) => (
-                  <Tool3DCard 
-                    key={tool.id || i} 
-                    tool={tool} 
-                    index={i} 
-                    isMobile={isMobile} 
-                    currentLang={currentLang} 
-                  />
+                  isMobile ? (
+                    <ToolCardMobile
+                      key={tool.id || i}
+                      tool={tool}
+                      currentLang={currentLang}
+                    />
+                  ) : (
+                    <ToolCardDesktop
+                      key={tool.id || i}
+                      tool={tool}
+                      index={i}
+                      currentLang={currentLang}
+                    />
+                  )
                 ))}
               </div>
             </div>

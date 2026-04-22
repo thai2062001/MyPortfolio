@@ -59,8 +59,8 @@ export const Footer = memo(() => {
         </div>
       ) : (
         <>
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-sage/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-vibe-sky/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+          <div className="hidden md:block absolute top-0 right-0 w-[800px] h-[800px] bg-sage/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+          <div className="hidden md:block absolute bottom-0 left-0 w-[600px] h-[600px] bg-vibe-sky/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4 pointer-events-none" />
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-16 mb-24 md:mb-32">
@@ -183,7 +183,7 @@ export const Footer = memo(() => {
                   <div className="flex items-center gap-4">
                     <div className="relative">
                        <div className="w-2.5 h-2.5 rounded-full bg-sage" />
-                       <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-sage animate-ping opacity-40" />
+                       <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-sage animate-none md:animate-ping opacity-40" />
                     </div>
                     <span className="text-sm text-heading/60 font-medium tracking-wide">
                       {t("Available for projects", "プロジェクト対応可能")}

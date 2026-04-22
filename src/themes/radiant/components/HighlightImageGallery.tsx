@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { SkillHighlightImage } from "@/types/skills";
 
 interface HighlightImageGalleryProps {
@@ -22,6 +23,7 @@ export const HighlightImageGallery = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [direction, setDirection] = useState(0); // 1 for next, -1 for prev
   const [showLightbox, setShowLightbox] = useState(false);
+  const isMobile = useIsMobile();
 
   const currentImage = images[selectedIndex];
 
@@ -94,8 +96,8 @@ export const HighlightImageGallery = ({
         <motion.div
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="relative bg-white/5 backdrop-blur-sm rounded-none md:rounded-3xl overflow-hidden md:shadow-2xl border-y md:border border-white/10 w-full min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:h-[800px] cursor-default group/card"
+          style={isMobile ? {} : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="relative bg-white/10 md:bg-white/5 backdrop-blur-none md:backdrop-blur-sm rounded-none md:rounded-3xl overflow-hidden md:shadow-2xl border-y md:border border-white/10 w-full min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:h-[800px] cursor-default group/card"
         >
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
@@ -172,7 +174,7 @@ export const HighlightImageGallery = ({
 
           {/* Caption Tag */}
           {currentImage.caption && (
-            <div className="absolute top-4 md:top-6 left-4 md:left-6 max-w-[80%] px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 z-20">
+            <div className="absolute top-4 md:top-6 left-4 md:left-6 max-w-[80%] px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-white/20 md:bg-white/10 backdrop-blur-none md:backdrop-blur-md border border-white/20 z-20">
               <p className="font-body text-[10px] md:text-xs italic text-white/90 truncate">
                 {currentImage.caption}
               </p>

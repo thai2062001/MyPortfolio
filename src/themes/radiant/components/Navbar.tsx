@@ -93,6 +93,7 @@ const Navbar = memo(() => {
 
   return (
     <>
+      {!isMobile && (
       <motion.header
         initial={{ y: -120 }}
         animate={{ 
@@ -137,7 +138,6 @@ const Navbar = memo(() => {
             </div>
           </div>
 
-          {!isMobile && (
             <nav className="flex items-center gap-16 lg:gap-24 pointer-events-auto">
                 {[
                   { label: t("Home", "ホーム"), to: "/" },
@@ -174,7 +174,6 @@ const Navbar = memo(() => {
                   </motion.button>
                 ))}
               </nav>
-            )}
 
             {/* Actions */}
             <div className="flex items-center gap-6 md:gap-10 z-10">
@@ -192,6 +191,7 @@ const Navbar = memo(() => {
             </div>
           </div>
         </motion.header>
+      )}
 
       {isMobile && (
         <>
@@ -231,7 +231,7 @@ const Navbar = memo(() => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-md"
+                className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-none"
               >
                 <div className="h-full w-full px-8 pt-24 pb-10 flex flex-col relative overflow-y-auto">
                   <div className="flex-1 flex flex-col justify-center items-center gap-16">
@@ -249,7 +249,7 @@ const Navbar = memo(() => {
                       <div className="font-artistic text-2xl tracking-tight">
                         <ShinyText 
                           text={personalInfo?.full_name || "Pham Ba Thai"} 
-                          disabled={false}
+                          disabled
                           speed={5} 
                           color="#1c1c19" 
                           shineColor="#ffffff"

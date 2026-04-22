@@ -86,6 +86,22 @@ const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt:
 
 ParallaxCover.displayName = "ParallaxCover";
 
+const StaticCover = memo(({ src, alt, onReady }: { src: string; alt: string; onReady?: () => void }) => {
+  return (
+    <div className="relative w-full h-[400px] md:h-[800px] rounded-[2.5rem] md:rounded-[5rem] overflow-hidden bg-[#111] shadow-2xl">
+      <img
+        src={optimizeCloudinary(src, { width: 1600, quality: "best" })}
+        alt={alt}
+        onLoad={onReady}
+        className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+    </div>
+  );
+});
+
+StaticCover.displayName = "StaticCover";
+
 const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
   const currentLang = lang as SupportedLang;
   
@@ -120,7 +136,7 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
   if (structuredChallenge && structuredChallenge.length > 0) {
     return (
       <section id="challenge-section" className="py-20 md:py-32 relative bg-[#141414] overflow-hidden border-y border-white/5">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-vibe-pink/[0.02] rounded-full blur-[120px] pointer-events-none" />
+        <div className="hidden md:block absolute top-0 right-0 w-[800px] h-[800px] bg-vibe-pink/[0.02] rounded-full blur-[120px] pointer-events-none" />
         
         {/* Navigation Portal */}
         <motion.button 
@@ -255,7 +271,7 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
                 viewport={{ once: true }} 
                 transition={{ delay: isStatic ? 0 : i * 0.1, duration: 0.8 }}
                 whileHover={!isStatic ? "hover" : undefined}
-                className="group relative bg-white/40 backdrop-blur-xl border border-vibe-pink/10 p-10 md:p-14 rounded-[3.5rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
+            className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-10 md:p-14 rounded-[3.5rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
               >
                 <div className="absolute inset-0 rounded-[3.5rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
@@ -462,7 +478,11 @@ const ProjectDetail = () => {
           {/* Focal Image */}
           {project.cover_image_url && (
             <section className="container mx-auto px-6 max-w-6xl relative z-10 mb-24 md:mb-48">
-               <ParallaxCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} isStatic={isTabletOrMobile} />
+              {isTabletOrMobile ? (
+                <StaticCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} />
+              ) : (
+                <ParallaxCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} isStatic={isTabletOrMobile} />
+              )}
             </section>
           )}
 
@@ -561,7 +581,7 @@ const ProjectDetail = () => {
                               transition={{ delay: i * 0.1, duration: 0.8 }}
                               className={cn(
                                 "group relative p-12 md:p-16 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500",
-                                "bg-white/40 backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
+                "bg-white/80 md:bg-white/40 md:backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
                                 i === 0 && results.length % 2 !== 0 ? 'sm:col-span-2' : ''
                               )}
                            >

@@ -50,7 +50,7 @@ export const HeroCardOverlayLayout = memo(({
             // @ts-expect-error - fetchpriority is a new attribute
             fetchpriority="high"
             className={`w-full h-full object-cover object-center md:object-[center_20%] transition-all duration-[800ms] will-change-transform ${
-              imageLoaded ? "blur-0 scale-100" : "blur-md scale-105"
+              imageLoaded ? "blur-0 scale-100" : "blur-sm md:blur-md scale-105"
             }`}
           />
         )}
@@ -65,7 +65,7 @@ export const HeroCardOverlayLayout = memo(({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className={`relative max-w-3xl w-full p-10 md:p-16 lg:p-20 rounded-[3rem] bg-white/85 backdrop-blur-2xl border border-white/40 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] overflow-hidden group will-change-transform ${
+          className={`relative max-w-3xl w-full p-10 md:p-16 lg:p-20 rounded-[3rem] bg-white/95 md:bg-white/85 backdrop-blur-none md:backdrop-blur-2xl border border-white/40 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] overflow-hidden group will-change-transform ${
             isCentered ? "text-center mx-auto" : "text-left"
           }`}
         >

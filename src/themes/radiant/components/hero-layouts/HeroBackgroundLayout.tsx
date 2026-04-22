@@ -60,7 +60,7 @@ export const HeroBackgroundLayout = memo(({
             // @ts-expect-error - fetchpriority is a new attribute
             fetchpriority="high"
             className={`w-full h-full object-cover object-[center_30%] transition-all duration-[1500ms] will-change-transform ${
-              imageLoaded ? "blur-0" : "blur-lg"
+              imageLoaded ? "blur-0" : "blur-sm md:blur-lg"
             }`}
           />
         )}
@@ -150,7 +150,7 @@ export const HeroBackgroundLayout = memo(({
               {fields.secondary_button_label && (
                 <button
                   onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                  className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
+                  className="px-12 py-5 bg-white/15 md:bg-white/5 backdrop-blur-none md:backdrop-blur-md border border-white/20 text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
                 >
                   {fields.secondary_button_label}
                 </button>

@@ -43,7 +43,7 @@ const TimelineRow = memo(({
         
         <div className="absolute left-4 top-[2.2rem] -translate-x-1/2 flex items-center justify-center z-10">
           <div className="w-2.5 h-2.5 rounded-full bg-vibe-pink border-2 border-white shadow-lg" />
-          <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-vibe-pink animate-ping opacity-20" />
+          <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-vibe-pink animate-none md:animate-ping opacity-20" />
         </div>
 
         <div className="pt-6">
@@ -71,7 +71,7 @@ const TimelineRow = memo(({
       {/* DESKTOP LAYOUT */}
       <div className="hidden md:block relative">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
-           <div className="w-16 h-16 rounded-full bg-white/80 border border-sage/40 flex items-center justify-center shadow-sm backdrop-blur-md group-hover:scale-110 transition-all duration-700">
+          <div className="w-16 h-16 rounded-full bg-white/80 border border-sage/40 flex items-center justify-center shadow-sm backdrop-blur-md group-hover:scale-110 transition-all duration-700">
               <div className="w-3 h-3 rounded-full bg-vibe-pink" />
            </div>
         </div>
