@@ -8,6 +8,7 @@ import { useTestimonials, usePersonalInfo } from "@/core/hooks/usePortfolio";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import SectionHeader from "./shared/SectionHeader";
 import AmbientAccent from "./shared/AmbientAccent";
+import { TestimonialsModal } from "./TestimonialsModal";
 
 const TestimonialsSection = memo(() => {
   const { lang, t } = useLang();
@@ -15,6 +16,7 @@ const TestimonialsSection = memo(() => {
   const isTablet = useIsTablet();
   const testimonialsQuery = useTestimonials();
   const { data: personalInfo } = usePersonalInfo();
+  const [isTestimonialsModalOpen, setIsTestimonialsModalOpen] = useState(false);
   
   const testimonials = testimonialsQuery.data || [];
   const loading = testimonialsQuery.isLoading;
@@ -75,8 +77,8 @@ const TestimonialsSection = memo(() => {
 
   if (testimonials.length === 0) return null;
 
-  const handleOpenContact = () => {
-    window.dispatchEvent(new CustomEvent("open-contact-modal"));
+  const handleOpenTestimonials = () => {
+    setIsTestimonialsModalOpen(true);
   };
 
   return (
@@ -158,7 +160,7 @@ const TestimonialsSection = memo(() => {
 
               <div className="pt-12 w-full px-4">
                 <motion.button 
-                  onClick={handleOpenContact}
+                  onClick={handleOpenTestimonials}
                   initial="initial"
                   whileHover={!isMobile ? "hover" : undefined}
                   whileTap={!isMobile ? "tap" : undefined}
@@ -193,7 +195,7 @@ const TestimonialsSection = memo(() => {
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     className="relative z-10 transition-colors duration-300 font-sans"
                   >
-                    {lang === "en" ? "Leave a review" : lang === "ja" ? "レビューを書く" : "Để lại đánh giá"}
+                    {lang === "en" ? "View All Reviews" : lang === "ja" ? "すべてのレビューを表示" : "Xem tất cả đánh giá"}
                   </motion.span>
                   
                   {/* Subtle glass reflection on top */}
@@ -321,6 +323,10 @@ const TestimonialsSection = memo(() => {
             )}
           </div>
         </div>
+        <TestimonialsModal 
+          isOpen={isTestimonialsModalOpen} 
+          onClose={() => setIsTestimonialsModalOpen(false)} 
+        />
       </div>
     </section>
   );
