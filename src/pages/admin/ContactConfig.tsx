@@ -323,7 +323,7 @@ const ContactConfig = () => {
                             {t("Internal Key", "内部キー", "Mã nội bộ")}
                           </label>
                           <Input
-                            value={purpose.value}
+                            value={purpose.value || ""}
                             onChange={(e) => setPurposes(purposes.map(p => p.id === purpose.id ? { ...p, value: e.target.value } : p))}
                             className="h-11 bg-white/50 border-none rounded-xl text-xs font-mono shadow-inner"
                             placeholder="e.g. general"
