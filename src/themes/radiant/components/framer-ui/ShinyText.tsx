@@ -19,17 +19,22 @@ const ShinyText: React.FC<ShinyTextProps> = ({
   shineColor = '#ffffff',
   spread = 40,
 }) => {
-  // Use CSS custom property for dynamic speed while enjoying CSS performance
-  const style: React.CSSProperties = {
-    backgroundImage: `linear-gradient(120deg, ${color} 40%, ${shineColor} 50%, ${color} 60%)`,
-    backgroundSize: '200% 100%',
-    WebkitBackgroundClip: 'text',
-    backgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    display: 'inline-block',
-    // @ts-ignore
-    '--shiny-speed': `${speed}s`,
-  };
+  // On mobile/tablet we disable shine entirely and render crisp solid text.
+  const style: React.CSSProperties = disabled
+    ? {
+        color,
+        display: "inline-block",
+      }
+    : {
+        backgroundImage: `linear-gradient(120deg, ${color} 40%, ${shineColor} 50%, ${color} 60%)`,
+        backgroundSize: "200% 100%",
+        WebkitBackgroundClip: "text",
+        backgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        display: "inline-block",
+        // @ts-ignore
+        "--shiny-speed": `${speed}s`,
+      };
 
   return (
     <span 

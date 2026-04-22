@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useCallback } from "react";
+import { useIsTablet } from "@/hooks/use-mobile";
 
 interface ScrollIndicatorProps {
   color?: string;
@@ -7,6 +8,7 @@ interface ScrollIndicatorProps {
 }
 
 export const ScrollIndicator = ({ color = "white", className = "" }: ScrollIndicatorProps) => {
+  const isTablet = useIsTablet();
   const { scrollY } = useScroll();
   // Fade out as we scroll down
   const opacity = useTransform(scrollY, [0, 200], [1, 0]);
@@ -24,6 +26,8 @@ export const ScrollIndicator = ({ color = "white", className = "" }: ScrollIndic
       }
     }
   }, []);
+
+  if (isTablet) return null;
 
   return (
     <motion.div

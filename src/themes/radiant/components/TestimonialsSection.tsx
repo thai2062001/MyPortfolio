@@ -172,7 +172,7 @@ const TestimonialsSection = memo(() => {
                     },
                     tap: { scale: 0.98, y: 0 }
                   }}
-                  className="w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full font-bold text-[11px] tracking-[0.3em] uppercase transition-colors duration-300 relative overflow-hidden group/btn"
+                  className="w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full transition-all duration-300 relative overflow-hidden group/btn"
                 >
                   {/* The White Background Fill Layer */}
                   {!isMobile && (
@@ -189,11 +189,11 @@ const TestimonialsSection = memo(() => {
                   {/* Button Text */}
                   <motion.span 
                     variants={{
-                      initial: { color: "rgba(255, 255, 255, 0.8)" },
+                      initial: { color: "rgba(255, 255, 255, 1)" },
                       hover: { color: "#00170b" }
                     }}
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative z-10 transition-colors duration-300 font-sans"
+                    className="relative z-10 transition-colors duration-300 font-display text-xl md:text-2xl tracking-tight normal-case"
                   >
                     {lang === "en" ? "View All Reviews" : lang === "ja" ? "すべてのレビューを表示" : "Xem tất cả đánh giá"}
                   </motion.span>

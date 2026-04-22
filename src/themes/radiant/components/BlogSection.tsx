@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { memo, useMemo } from "react";
 
 const BlogSection = memo(() => {
-  const { data: posts = [], isLoading } = useBlogPosts(false); // Fetch ANY published posts for now so it shows up
+  const { data: posts = [], isLoading } = useBlogPosts(false);
   const { t } = useLang();
   const isTablet = useIsTablet();
   const navigate = useNavigate();
@@ -20,14 +20,12 @@ const BlogSection = memo(() => {
 
   if (isLoading) return null;
   
-  // Only hide if absolutely no posts found
   if (posts.length === 0) {
     return null;
   }
 
   return (
     <section id="blog" className="py-24 md:py-32 lg:py-48 relative overflow-hidden bg-stone-50/10">
-      {/* Decorative background element consistent with Radiant theme */}
       <div className="hidden md:block absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="hidden md:block absolute bottom-0 left-0 w-[300px] h-[300px] bg-vibe-pink/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       
@@ -40,7 +38,7 @@ const BlogSection = memo(() => {
             "テクノロジー、デザイン、そして戦略的インパクトの融合を探求します。",
             "Khám phá sự giao thoa giữa công nghệ, thiết kế và tác động chiến lược."
           )}
-          align={isTablet ? "between" : "between"} // Kept between for desktop as per design
+          align="between"
           eyebrowClassName="font-sans text-[10px] tracking-[0.4em] uppercase text-sage font-bold"
           titleClassName="font-display text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-heading leading-[1.05] tracking-tight"
           descriptionClassName="font-body text-base text-muted-foreground/60 leading-relaxed font-light italic max-w-sm"
@@ -73,7 +71,7 @@ const BlogSection = memo(() => {
             onClick={() => navigate("/blog")}
             className="group h-16 px-10 rounded-full border border-sage/20 bg-white/50 backdrop-blur-md hover:bg-sage hover:text-white transition-all duration-700 gap-6 shadow-sm hover:scale-105 active:scale-95"
           >
-            <span className="font-sans text-[11px] font-black uppercase tracking-[0.4em]">
+            <span className="font-display text-lg md:text-xl tracking-tight normal-case">
               {t("Explore Archive", "アーカイブを探索", "Khám phá kho lưu trữ")}
             </span>
             <div className="w-8 h-8 rounded-full bg-sage/5 flex items-center justify-center group-hover:bg-white/20 transition-colors">

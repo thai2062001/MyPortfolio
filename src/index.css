@@ -392,3 +392,22 @@
 .shiny-text-animated {
   animation: shiny-animation var(--shiny-speed, 3s) linear infinite;
 }
+
+@media (max-width: 1023px) {
+  .liquid-glass,
+  .ethereal-glass,
+  .stitch-glass,
+  .glass-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .light-blob,
+  .organic-blob {
+    filter: blur(40px);
+  }
+
+  .shiny-text-animated {
+    animation: none;
+  }
+}
