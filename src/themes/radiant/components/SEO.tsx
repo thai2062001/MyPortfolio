@@ -11,15 +11,15 @@ interface SEOProps {
 const SEO = ({ title, description, image, article }: SEOProps) => {
   const { pathname } = useLocation();
   
-  const defaultTitle = "Pham Ba thai | Senior Marketing Executive";
-  const defaultDescription = "Professional portfolio of Pham Ba thai, specializing in brand acceleration and strategic growth marketing.";
+  const defaultTitle = "Thái Phạm | Senior Marketing Executive";
+  const defaultDescription = "Professional portfolio of Thái Phạm, specializing in brand acceleration and strategic growth marketing.";
   const siteUrl = "https://ba-thai-portfolio.site";
-  const defaultImage = "/main_image.jpg";
+  const fixedImage = "https://res.cloudinary.com/dpdzbuiml/image/upload/v1776841852/common/s8bn1t36h2eleg9jn9i6.webp";
 
   const seo = {
-    title: title ? `${title} | Pham Ba thai` : defaultTitle,
+    title: title ? `${title} | Thái Phạm` : defaultTitle,
     description: description || defaultDescription,
-    image: `${siteUrl}${image || defaultImage}`,
+    image: fixedImage,
     url: `${siteUrl}${pathname}`,
   };
 
