@@ -383,7 +383,7 @@ const ContactConfig = () => {
                       <div className="flex items-center gap-3 shrink-0 self-end lg:self-center">
                         <Button
                           onClick={() => handleSavePurpose(purpose)}
-                          className="w-12 h-12 p-0 bg-white hover:bg-heading hover:text-white border border-border/10 rounded-xl transition-all shadow-sm flex items-center justify-center"
+                          className="w-12 h-12 p-0 bg-sage text-white hover:bg-sage/90 border-none rounded-xl transition-all shadow-lg shadow-sage/20 flex items-center justify-center"
                         >
                           <Save size={18} />
                         </Button>
