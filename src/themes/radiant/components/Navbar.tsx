@@ -24,7 +24,6 @@ const Navbar = memo(() => {
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Mobile: render menu icon only, skip scroll-driven navbar logic.
     if (isMobile) {
       setIsVisible(true);
       setIsScrolled(false);
@@ -100,93 +99,85 @@ const Navbar = memo(() => {
   return (
     <>
       {!isMobile && (
-      <motion.header
-        initial={{ y: -120 }}
-        animate={{ 
-          y: isVisible ? 0 : -120,
-          opacity: isVisible ? 1 : 0,
-          paddingTop: isScrolled ? "12px" : "24px",
-          paddingBottom: isScrolled ? "12px" : "24px"
-        }}
-        transition={{ 
-          duration: 0.6, 
-          ease: [0.22, 1, 0.36, 1],
-          opacity: { duration: 0.4 }
-        }}
-        className={cn(
-          "fixed top-0 inset-x-0 z-[300] px-4",
-          isMobile && "hidden"
-        )}
-      >
-        <div 
-          className={cn(
-            "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
-            isTransparent
-              ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
-              : isTablet
-                ? "bg-white/92 dark:bg-[#1c1c19]/92 border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
-                : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
-          )}
+        <motion.header
+          initial={{ y: -120 }}
+          animate={{ 
+            y: isVisible ? 0 : -120,
+            opacity: isVisible ? 1 : 0,
+            paddingTop: isScrolled ? "12px" : "24px",
+            paddingBottom: isScrolled ? "12px" : "24px"
+          }}
+          transition={{ 
+            duration: 0.6, 
+            ease: [0.22, 1, 0.36, 1],
+            opacity: { duration: 0.4 }
+          }}
+          className="fixed top-0 inset-x-0 z-[300] px-4"
         >
-          {/* Identity/Logo */}
           <div 
-            className="group flex items-center shrink-0 cursor-pointer z-10"
-            onClick={() => handleLinkClick("/")}
+            className={cn(
+              "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
+              isTransparent
+                ? "bg-transparent border-transparent shadow-none"
+                : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
+            )}
           >
-            <div className="font-artistic text-xl md:text-2xl tracking-tight">
-              <ShinyText 
-                text={personalInfo?.full_name || "Pham Ba Thai"} 
-                disabled={isTablet}
-                speed={5} 
-                color={isTransparent ? "#ffffff" : "#1c1c19"} 
-                shineColor={isTransparent ? "#000000" : "#ffffff"}
-              />
+            {/* Identity/Logo */}
+            <div 
+              className="group flex items-center shrink-0 cursor-pointer z-10"
+              onClick={() => handleLinkClick("/")}
+            >
+              <div className="font-artistic text-xl md:text-2xl tracking-tight">
+                <ShinyText 
+                  text={personalInfo?.full_name || "Pham Ba Thai"} 
+                  disabled={isTablet}
+                  speed={5} 
+                  color={isTransparent ? "#ffffff" : "#1c1c19"} 
+                  shineColor={isTransparent ? "#000000" : "#ffffff"}
+                />
+              </div>
             </div>
-          </div>
 
             <nav className="flex items-center gap-16 lg:gap-24 pointer-events-auto">
-                {[
-                  { label: t("Home", "ホーム"), to: "/" },
-                  { label: t("Portfolio", "ポートフォリオ"), to: "/portfolio" },
-                ].map((link) => (
-                  <motion.button
-                    key={link.to}
-                    onClick={() => handleLinkClick(link.to)}
-                    initial="initial"
-                    whileHover="hover"
-                    animate="animate"
+              {[
+                { label: t("Home", "ホーム"), to: "/" },
+                { label: t("Portfolio", "ポートフォリオ"), to: "/portfolio" },
+              ].map((link) => (
+                <motion.button
+                  key={link.to}
+                  onClick={() => handleLinkClick(link.to)}
+                  initial="initial"
+                  whileHover="hover"
+                  animate="animate"
+                  className={cn(
+                    "relative text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] transition-all duration-300 py-1 font-display",
+                    isTransparent ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-sage"
+                  )}
+                >
+                  {link.label}
+                  <motion.div
                     className={cn(
-                      "relative text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] transition-all duration-300 py-1 font-display",
-                      isTransparent ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-sage"
+                      "absolute -bottom-1 left-0 right-0 h-[1.5px]",
+                      isTransparent ? "bg-white" : "bg-sage"
                     )}
-                  >
-                    {link.label}
-                    <motion.div
-                      className={cn(
-                        "absolute -bottom-1 left-0 right-0 h-[1.5px]",
-                        isTransparent ? "bg-white" : "bg-sage"
-                      )}
-                      variants={{
-                        initial: { scaleX: 0 },
-                        animate: { scaleX: location.pathname === link.to ? 1 : 0 },
-                        hover: { scaleX: 1 }
-                      }}
-                      style={{ transformOrigin: "left" }}
-                      transition={{ 
-                        duration: 0.4, 
-                        ease: [0.22, 1, 0.36, 1] 
-                      }}
-                    />
-                  </motion.button>
-                ))}
-              </nav>
+                    variants={{
+                      initial: { scaleX: 0 },
+                      animate: { scaleX: location.pathname === link.to ? 1 : 0 },
+                      hover: { scaleX: 1 }
+                    }}
+                    style={{ transformOrigin: "left" }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </motion.button>
+              ))}
+            </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-6 md:gap-10 z-10">
+            <div className="flex items-center shrink-0 z-10">
               <button
                 onClick={() => handleLinkClick("/portfolio#contact")}
                 className={cn(
-                  "px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl shadow-black/10 flex items-center gap-2",
+                  "px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl shadow-black/10",
                   isTransparent 
                     ? "bg-white text-[#1c1c19] hover:bg-white/90" 
                     : "bg-[#1c1c19] text-white hover:bg-[#1c1c19]/90"
@@ -204,27 +195,26 @@ const Navbar = memo(() => {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={cn(
-              "fixed top-4 right-4 z-[320] w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-500",
+              "fixed top-4 right-4 z-[10000] w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-500",
               isMobileMenuOpen 
                 ? "bg-white text-[#1c1c19] border border-black/10" 
                 : "bg-[#1c1c19] text-white border border-white/10 shadow-xl"
             )}
-            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             <div className="relative w-5 h-5 flex flex-col justify-center items-center">
               <motion.span
                 animate={isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4 }}
                 className="absolute block w-full h-0.5 bg-current rounded-full"
               />
               <motion.span
-                animate={isMobileMenuOpen ? { opacity: 0, x: 10 } : { opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                transition={{ duration: 0.3 }}
                 className="absolute block w-full h-0.5 bg-current rounded-full"
               />
               <motion.span
                 animate={isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4 }}
                 className="absolute block w-full h-0.5 bg-current rounded-full"
               />
             </div>
@@ -236,75 +226,62 @@ const Navbar = memo(() => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-none"
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-[9999] bg-[#fcfaf7]/98 backdrop-blur-md"
               >
-                <div className="h-full w-full px-8 pt-24 pb-10 flex flex-col relative overflow-y-auto">
-                  <div className="flex-1 flex flex-col justify-center items-center gap-16">
-                    {/* Mobile Logo Branding - Exactly like PC */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1, duration: 0.5 }}
-                      onClick={() => {
-                         setIsMobileMenuOpen(false);
-                         handleLinkClick("/");
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <div className="font-artistic text-2xl tracking-tight">
-                        <ShinyText 
-                          text={personalInfo?.full_name || "Pham Ba Thai"} 
-                          disabled
-                          speed={5} 
-                          color="#1c1c19" 
-                          shineColor="#ffffff"
-                        />
-                      </div>
-                    </motion.div>
-
-                    <div className="flex flex-col items-center gap-10">
-                      {[
-                        { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
-                        { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
-                      ].map((link, i) => (
-                        <motion.button
-                          key={link.to}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.1 * (i + 1) }}
-                          onClick={() => {
-                            setIsMobileMenuOpen(false);
-                            handleLinkClick(link.to);
-                          }}
-                          className="relative group text-xs font-bold uppercase tracking-[0.4em] text-[#1c1c19]/60 hover:text-[#1c1c19] transition-all duration-300 font-display"
-                        >
-                          {link.label}
-                          <motion.div
-                            className="absolute -bottom-2 left-0 right-0 h-[1.5px] bg-[#1c1c19]"
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: location.pathname === link.to ? 1 : 0 }}
-                            whileHover={{ scaleX: 1 }}
-                            style={{ transformOrigin: "left" }}
-                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                          />
-                        </motion.button>
-                      ))}
+                <div className="h-full w-full px-8 pt-32 pb-10 flex flex-col items-center justify-center gap-20 overflow-y-auto">
+                  {/* Mobile Branding */}
+                  <div 
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLinkClick("/");
+                    }}
+                  >
+                    <div className="font-artistic text-3xl tracking-tight">
+                      <ShinyText 
+                        text={personalInfo?.full_name || "Pham Ba Thai"} 
+                        disabled={false}
+                        speed={5} 
+                        color="#1c1c19" 
+                        shineColor="#ffffff"
+                      />
                     </div>
-                    
-                    <motion.button
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        handleLinkClick("/portfolio#contact");
-                      }}
-                      className="w-full max-w-[240px] rounded-full bg-[#1c1c19] py-4 text-[10px] font-bold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all font-display"
-                    >
-                      {t("Contact", "お問い合わせ", "Liên hệ")}
-                    </motion.button>
                   </div>
+
+                  <div className="flex flex-col items-center gap-12 mt-4">
+                    {[
+                      { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
+                      { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
+                    ].map((link, i) => (
+                      <button
+                        key={link.to}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleLinkClick(link.to);
+                        }}
+                        className="group relative text-sm font-bold uppercase tracking-[0.5em] text-[#1c1c19]/60 hover:text-[#1c1c19] transition-all font-display"
+                      >
+                        {link.label}
+                        <motion.div
+                          className="absolute -bottom-2 left-0 right-0 h-px bg-[#1c1c19]"
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: location.pathname === link.to ? 1 : 0 }}
+                          style={{ transformOrigin: "left" }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLinkClick("/portfolio#contact");
+                    }}
+                    className="mt-8 px-12 py-5 rounded-full bg-[#1c1c19] text-[10px] font-bold uppercase tracking-[0.3em] text-white shadow-2xl font-display"
+                  >
+                    {t("Contact", "お問い合わせ", "Liên hệ")}
+                  </button>
                 </div>
               </motion.div>
             )}
