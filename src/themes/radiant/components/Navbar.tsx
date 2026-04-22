@@ -5,85 +5,60 @@ import { useLang } from "@/contexts/LangContext";
 import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import ShinyText from "./framer-ui/ShinyText";
-import { HeroSectionWithLayout } from "@/types/admin";
 import { TransitionCurtain } from "./shared/PageCurtain";
-import { useHeroSettings, usePersonalInfo } from "@/core/hooks/usePortfolio";
+import { usePersonalInfo } from "@/core/hooks/usePortfolio";
 
 const Navbar = memo(() => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const lastScrollYRef = useRef(0);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  const { lang, setLang, t } = useLang();
+  const { t } = useLang();
   const { data: personalInfo } = usePersonalInfo();
 
-  // Use lightweight scroll tracking on small screens to keep header layering/styling correct.
+  const lastScrollY = useRef(0);
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    if (isTablet) {
+    // Mobile: render menu icon only, skip scroll-driven navbar logic.
+    if (isMobile) {
       setIsVisible(true);
-      let ticking = false;
-      const onTabletScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20);
-          ticking = false;
-        });
-      };
-
-      onTabletScroll();
-      window.addEventListener("scroll", onTabletScroll, { passive: true });
-
-      return () => {
-        window.removeEventListener("scroll", onTabletScroll);
-      };
+      setIsScrolled(false);
+      return;
     }
 
-    let ticking = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
     const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
+      const latest = window.scrollY || 0;
+      setIsScrolled(latest > 20);
 
-      window.requestAnimationFrame(() => {
-        const latest = window.scrollY || 0;
-        const newScrolled = latest > 20;
-        setIsScrolled((prev) => (prev === newScrolled ? prev : newScrolled));
+      const diff = latest - lastScrollY.current;
+      if (latest < 50) {
+        setIsVisible(true);
+      } else if (diff > 15) {
+        setIsVisible(false);
+      } else if (diff < -10) {
+        setIsVisible(true);
+      }
 
-        const directionDown = latest > lastScrollYRef.current;
-        if (directionDown && latest > 100) {
-          setIsVisible((prev) => (prev ? false : prev));
-        } else {
-          setIsVisible((prev) => (prev ? prev : true));
-        }
+      if (timeoutId.current) clearTimeout(timeoutId.current);
+      timeoutId.current = setTimeout(() => {
+        setIsVisible(true);
+      }, 500);
 
-        if (timeoutId) clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => setIsVisible(true), 300);
-
-        lastScrollYRef.current = latest;
-        ticking = false;
-      });
+      lastScrollY.current = latest;
     };
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-
     return () => {
       window.removeEventListener("scroll", onScroll);
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timeoutId.current) clearTimeout(timeoutId.current);
     };
-  }, [isTablet]);
-
-  useEffect(() => {
-    if (!isTablet) return;
-    setIsVisible(true);
-  }, [isTablet, location.pathname]);
+  }, [isMobile]);
 
   useEffect(() => {
     if (!isMobile) return;
@@ -114,34 +89,38 @@ const Navbar = memo(() => {
   }, [location.pathname]);
 
   const isHomePage = location.pathname === "/";
-  const { data: hero } = useHeroSettings();
-  const heroData = hero as HeroSectionWithLayout | undefined;
-  const isScrolledLocal = isScrolled;
-  const isTransparent = isHomePage && !isScrolledLocal;
+  const isTransparent = isHomePage && !isScrolled;
 
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
+        initial={{ y: -120 }}
         animate={{ 
-          y: isVisible ? 0 : -100,
-          opacity: isVisible ? 1 : 0
+          y: isVisible ? 0 : -120,
+          opacity: isVisible ? 1 : 0,
+          paddingTop: isScrolled ? "12px" : "24px",
+          paddingBottom: isScrolled ? "12px" : "24px"
         }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ 
+          duration: 0.6, 
+          ease: [0.22, 1, 0.36, 1],
+          opacity: { duration: 0.4 }
+        }}
         className={cn(
-          "fixed top-0 inset-x-0 z-[300] px-4 transition-all duration-500",
-          isMobile && "hidden",
-          isScrolledLocal ? "py-3" : "py-5"
+          "fixed top-0 inset-x-0 z-[300] px-4",
+          isMobile && "hidden"
         )}
       >
-        <div className={cn(
-          "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
-          isTransparent && !isScrolledLocal
-            ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
-            : isTablet
-              ? "bg-white/92 dark:bg-[#1c1c19]/92 border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
-              : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
-        )}>
+        <div 
+          className={cn(
+            "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
+            isTransparent
+              ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
+              : isTablet
+                ? "bg-white/92 dark:bg-[#1c1c19]/92 border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
+                : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
+          )}
+        >
           {/* Identity/Logo */}
           <div 
             className="group flex items-center shrink-0 cursor-pointer z-10"

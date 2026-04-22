@@ -187,22 +187,22 @@ const AboutSection = memo(() => {
             <motion.div variants={fadeIn("up", 0.5, isMobile)} className="pt-0 flex flex-col sm:flex-row items-center gap-4 md:gap-4">
               <button
                 onClick={() => isTablet ? navigate("/portfolio") : setPendingUrl("/portfolio")}
-                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-heading text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95 shadow-2xl shadow-heading/10"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-heading text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-1000 hover:scale-105 active:scale-95 shadow-2xl shadow-heading/10"
               >
                 <span className="relative z-10 whitespace-nowrap">{localizationData.ctaPrimary || t("View Projects", "プロジェクトを見る", "Xem dự án")}</span>
-                <ArrowUpRight size={18} className="relative z-10 group-hover:rotate-45 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-sage scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out" />
+                <ArrowUpRight size={18} className="relative z-10 group-hover:rotate-45 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-sage scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 ease-out" />
               </button>
 
               <a
                 href={localizationData.resumeUrl || (pi as any)?.resume_url || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-white text-heading border border-heading/10 px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 hover:scale-105 active:scale-95 shadow-xl hover:shadow-heading/5"
+                className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-white text-heading border border-heading/10 px-8 py-4 md:px-10 md:py-5 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-1000 hover:scale-105 active:scale-95 shadow-xl hover:shadow-heading/5"
               >
                 <span className="relative z-10 whitespace-nowrap">{localizationData.ctaSecondary || t("Download CV", "CVをダウンロード", "Tải CV")}</span>
-                <FileDown size={18} className="relative z-10 group-hover:translate-y-1 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-heading/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out" />
+                <FileDown size={18} className="relative z-10 group-hover:translate-y-1 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-heading/5 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-1000 ease-out" />
               </a>
             </motion.div>
           </div>
