@@ -72,11 +72,11 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
   if (isLoading) {
     return (
       <section className="py-20" id="works">
-        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
           {[1, 2, 3].map(i => (
             <div key={i} className="space-y-6">
-              <div className="aspect-[4/5] bg-stone-100 rounded-[3.5rem] animate-pulse" />
-              <div className="h-20 bg-stone-50 rounded-[2rem] animate-pulse mx-4" />
+              <div className="aspect-[4/5] bg-stone-100 rounded-2xl animate-pulse" />
+              <div className="h-20 bg-stone-50 rounded-xl animate-pulse mx-4" />
             </div>
           ))}
         </div>
@@ -115,12 +115,11 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.05 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 lg:gap-24 max-w-[1600px] mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto"
         >
           {visibleProjects.map((p, i) => {
-            const offsetClass = (!isTablet && i % 3 === 1) ? "lg:mt-32 md:mt-16" : (!isTablet && i % 3 === 2) ? "lg:mt-16" : "";
             return (
-              <motion.div key={p.slug} variants={fadeIn("up", 0)} className={offsetClass}>
+              <motion.div key={p.slug} variants={fadeIn("up", 0)}>
                 <ProjectCard
                   slug={p.slug}
                   title={p.title}

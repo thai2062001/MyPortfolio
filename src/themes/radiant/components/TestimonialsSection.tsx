@@ -18,10 +18,11 @@ const TestimonialsSection = memo(() => {
   const testimonials = testimonialsQuery.data || [];
   const loading = testimonialsQuery.isLoading;
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    align: 'start',
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
     skipSnaps: false,
-    dragFree: true
+    dragFree: false,
+    containScroll: "trimSnaps",
   });
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -29,21 +30,28 @@ const TestimonialsSection = memo(() => {
 
   const updateButtons = useCallback((api: any) => {
     if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    
-    const slidesInView = api.slidesInView();
-    const lastSlideIndex = testimonials.length - 1;
-    const isAtEnd = slidesInView.includes(lastSlideIndex);
-    
-    setCanScrollNext(api.canScrollNext() && !isAtEnd);
+    const lastSlideIndex = Math.max(0, testimonials.length - 1);
+    const currentIndex = api.selectedScrollSnap();
+
+    setCanScrollPrev(currentIndex > 0);
+    setCanScrollNext(currentIndex < lastSlideIndex);
   }, [testimonials.length]);
 
   useEffect(() => {
     if (!emblaApi) return;
-    updateButtons(emblaApi);
-    emblaApi.on("select", () => updateButtons(emblaApi));
-    emblaApi.on("reInit", () => updateButtons(emblaApi));
-    emblaApi.on("scroll", () => updateButtons(emblaApi));
+
+    const handleStateChange = () => updateButtons(emblaApi);
+    handleStateChange();
+
+    emblaApi.on("select", handleStateChange);
+    emblaApi.on("reInit", handleStateChange);
+    emblaApi.on("settle", handleStateChange);
+
+    return () => {
+      emblaApi.off("select", handleStateChange);
+      emblaApi.off("reInit", handleStateChange);
+      emblaApi.off("settle", handleStateChange);
+    };
   }, [emblaApi, updateButtons]);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
