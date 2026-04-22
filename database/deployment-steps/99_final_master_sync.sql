@@ -616,6 +616,17 @@ BEGIN
     DELETE FROM public.page_sections 
     WHERE section_key IN ('home_projects', 'home_hero', 'home_contact', 'home_expertise', 'home_services', 'expertise_section', 'hero_section', 'about_section', 'services_section', 'projects_section', 'testimonials_section', 'blog_section', 'contact_section', 'faq_section', 'timeline_section');
 
+
+alter table public.daily_report_logs
+  add column if not exists status text not null default 'sent',
+  add column if not exists sent_at timestamptz default now(),
+  add column if not exists resend_id text,
+  add column if not exists error_message text;
+
+-- Nếu trước đó đã tạo payload thì bỏ luôn
+alter table public.daily_report_logs
+  drop column if exists payload;
+
     -- Insert/Update Radiant standard keys
     INSERT INTO public.page_sections (section_key, section_type, section_name, page_type, order_index, is_published)
     VALUES 

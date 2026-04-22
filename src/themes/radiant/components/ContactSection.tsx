@@ -7,7 +7,13 @@ import { useIsTablet } from "@/hooks/use-mobile";
 import { ContactModal } from "./ContactModal";
 import { getLocalizedFields, SupportedLang } from "@/lib/content-utils";
 
-const ContactSection = memo(() => {
+interface ContactSectionProps {
+  customTitle?: string;
+  customDescription?: string;
+  customEyebrow?: string;
+}
+
+const ContactSection = memo(({ customTitle, customDescription, customEyebrow }: ContactSectionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const { lang } = useLang();
   const currentLang = lang as SupportedLang;
@@ -15,12 +21,13 @@ const ContactSection = memo(() => {
   
   const { 
     contactSettings, 
+    contactFormSettings,
     contactPurposeOptions 
   } = usePortfolioData();
 
   const contactContent = contactSettings?.data || {};
   const purposeOptions = contactPurposeOptions?.data || [];
-  const formSettings = contactContent?.form_settings || {};
+  const formSettings = contactFormSettings?.data || {};
   
   useEffect(() => {
     const handleOpenModal = () => setModalOpen(true);
@@ -28,13 +35,23 @@ const ContactSection = memo(() => {
     return () => window.removeEventListener("open-contact-modal", handleOpenModal);
   }, []);
 
-  const fields = useMemo(() => getLocalizedFields(contactContent, [
-    'eyebrow',
-    'title_line_1',
-    'title_line_2',
-    'description',
-    'primary_button_label'
-  ], currentLang), [contactContent, currentLang]);
+  const fields = useMemo(() => {
+    const defaultFields = getLocalizedFields(contactContent, [
+      'eyebrow',
+      'title_line_1',
+      'title_line_2',
+      'description',
+      'primary_button_label'
+    ], currentLang);
+    
+    return {
+      ...defaultFields,
+      eyebrow: customEyebrow || defaultFields.eyebrow,
+      title_line_1: customTitle || defaultFields.title_line_1,
+      title_line_2: customTitle ? "" : defaultFields.title_line_2, // Clear line 2 if custom title provided
+      description: customDescription || defaultFields.description
+    };
+  }, [contactContent, currentLang, customTitle, customDescription, customEyebrow]);
 
   if (!contactSettings.data) return null;
 
@@ -61,8 +78,13 @@ const ContactSection = memo(() => {
             </motion.div>
 
             <motion.h2 variants={fadeIn("up", 0.2)} className="font-display text-5xl md:text-7xl lg:text-[8rem] text-heading leading-[0.95] tracking-tighter">
-              {fields.title_line_1} <br/>
-              <span className="font-artistic italic text-sage lowercase opacity-80 block mt-6">{fields.title_line_2}</span>
+              {fields.title_line_1}
+              {fields.title_line_2 && (
+                <>
+                  <br/>
+                  <span className="font-artistic italic text-sage lowercase opacity-80 block mt-6">{fields.title_line_2}</span>
+                </>
+              )}
             </motion.h2>
 
             <motion.p variants={fadeIn("up", 0.3)} className="font-body text-lg md:text-2xl text-foreground/50 font-light max-w-3xl mx-auto leading-relaxed italic">

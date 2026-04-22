@@ -259,7 +259,7 @@ const ContactConfig = () => {
                     <Button
                       onClick={handleSaveSettings}
                       disabled={saving}
-                      className="w-full h-14 md:h-16 bg-heading hover:bg-heading/90 text-white rounded-2xl shadow-xl shadow-heading/20 font-bold transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 overflow-hidden group"
+                      className="w-full h-14 md:h-16 bg-sage hover:bg-sage/90 text-white rounded-2xl shadow-xl shadow-sage/20 font-bold transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 overflow-hidden group"
                     >
                       <Save size={18} className="group-hover:scale-110 transition-transform" />
                       <span className="uppercase tracking-[0.2em] text-[10px]">{saving ? t("Saving...", "保存中...", "Đang lưu...") : t("Save Settings", "設定を保存", "Lưu cài đặt")}</span>

@@ -3,8 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import PageLayout from "@/themes/radiant/components/PageLayout";
-import SkillContactModal from "@/themes/radiant/components/SkillContactModal";
-import SkillCTASection from "@/themes/radiant/components/SkillCTASection";
+import ContactSection from "@/themes/radiant/components/ContactSection";
 import ApplicationCard from "@/themes/radiant/components/ApplicationCard";
 import { HighlightImageGallery } from "@/themes/radiant/components/HighlightImageGallery";
 import { portfolioApi } from "@/core/api/portfolio";
@@ -143,7 +142,6 @@ const Tool3DCard = ({ tool, index, isMobile, currentLang }: { tool: any; index: 
 
 const SkillDetailPage = () => {
   const { skillSlug } = useParams<{ skillSlug: string }>();
-  const [isContactOpen, setIsContactOpen] = useState(false);
   const isMobile = useIsMobile();
   const { lang, t } = useLang();
   const currentLang = lang as SupportedLang;
@@ -543,17 +541,26 @@ const SkillDetailPage = () => {
             </div>
           </section>
         )}
-        <SkillCTASection onContactClick={() => setIsContactOpen(true)} />
+        <ContactSection 
+          customTitle={t(
+            "Interested in this skill?", 
+            "このスキルにご興味がありますか？", 
+            "Bạn quan tâm đến kỹ năng này?"
+          )}
+          customDescription={t(
+            "If this expertise aligns with your project needs, I would love to discuss how I can help bring your vision to life.",
+            "この専門性があなたのプロジェクトのニーズに合致する場合は, あなたのビジョンを形にするお手伝いができることを嬉しく思います。",
+            "Nếu kỹ năng này phù hợp với nhu cầu dự án của bạn, tôi rất sẵn lòng thảo luận về cách tôi có thể giúp bạn hiện thực hóa tầm nhìn của mình."
+          )}
+          customEyebrow={t(
+            "Next Chapter",
+            "次のステップ",
+            "Chương tiếp theo"
+          )}
+        />
         </>
       )}
       </div>
-      {skill && (
-        <SkillContactModal
-          isOpen={isContactOpen}
-          onClose={() => setIsContactOpen(false)}
-          skillName={skillName}
-        />
-      )}
     </PageLayout>
   );
 };

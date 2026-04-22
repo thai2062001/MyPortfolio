@@ -89,6 +89,11 @@ export const useContactSettings = () => useQuery({
   queryFn: () => portfolioApi.getContactSection(),
 });
 
+export const useContactFormSettings = () => useQuery({
+  queryKey: ["contact-form-settings"],
+  queryFn: () => portfolioApi.getContactFormSettings(),
+});
+
 export const useContactPurposeOptions = () => useQuery({
   queryKey: ["contact-purpose-options"],
   queryFn: () => portfolioApi.getContactPurposeOptions(),
@@ -164,6 +169,7 @@ export const usePortfolioData = () => {
   const faqSettings = useFaqSettings();
   const heroSettings = useHeroSettings();
   const contactSettings = useContactSettings();
+  const contactFormSettings = useContactFormSettings();
   const contactPurposeOptions = useContactPurposeOptions();
   const expertiseSection = useExpertiseSection();
   const expertiseSkills = useExpertiseSkills();
@@ -186,6 +192,7 @@ export const usePortfolioData = () => {
     faqSettings,
     heroSettings,
     contactSettings,
+    contactFormSettings,
     contactPurposeOptions,
     expertiseSection,
     expertiseSkills,

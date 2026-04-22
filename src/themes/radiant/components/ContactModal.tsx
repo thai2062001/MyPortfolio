@@ -42,9 +42,13 @@ const CustomPurposeSelect = ({
   }, []);
 
   const selectedOption = options.find(opt => opt.value === value);
-  const displayLabel = selectedOption 
-    ? (lang === "ja" ? (selectedOption.label_ja || selectedOption.label_en) : selectedOption.label_en) 
-    : placeholder;
+  const getLabel = (option: any) => {
+    if (lang === "ja") return option.label_ja || option.label_en;
+    if (lang === "vi") return option.label_vi || option.label_en;
+    return option.label_en;
+  };
+  
+  const displayLabel = selectedOption ? getLabel(selectedOption) : placeholder;
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -77,7 +81,7 @@ const CustomPurposeSelect = ({
             <div className="max-h-[300px] overflow-y-auto thin-scrollbar space-y-1">
               {options.map((option, idx) => (
                 <motion.button
-                  key={option.id}
+                  key={option.id || idx}
                   type="button"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -92,7 +96,7 @@ const CustomPurposeSelect = ({
                       : "text-heading/70 hover:bg-black/5 hover:text-heading"
                   }`}
                 >
-                  {lang === "ja" ? (option.label_ja || option.label_en) : option.label_en}
+                  {getLabel(option)}
                 </motion.button>
               ))}
             </div>
@@ -105,7 +109,7 @@ const CustomPurposeSelect = ({
         value={value} 
         required={required} 
         name="purpose" 
-        onChange={() => {}}
+        autoComplete="off"
       />
     </div>
   );
@@ -260,7 +264,11 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
                           <CustomPurposeSelect 
                             options={purposeOptions}
                             value={formData.purpose}
-                            placeholder={lang === "ja" ? formSettings.purpose_placeholder_ja : formSettings.purpose_placeholder_en}
+                            placeholder={
+                              lang === "ja" ? formSettings.purpose_placeholder_ja : 
+                              lang === "vi" ? formSettings.purpose_placeholder_vi : 
+                              formSettings.purpose_placeholder_en
+                            }
                             lang={lang}
                             onChange={(val) => setFormData(prev => ({ ...prev, purpose: val }))}
                             required={formSettings.is_purpose_required}

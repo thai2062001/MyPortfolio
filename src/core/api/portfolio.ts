@@ -506,6 +506,21 @@ export const portfolioApi = {
     return data || [];
   },
 
+  getContactFormSettings: async (): Promise<any | null> => {
+    const { data, error } = await supabase
+      .from('contact_form_settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+    if (error) {
+      if (error.code !== "PGRST116") {
+        console.error("Error fetching contact form settings:", error);
+      }
+      return null;
+    }
+    return data;
+  },
+
   submitContactMessage: async (messageData: any): Promise<{ success: boolean; error?: any }> => {
     const { data, error } = await supabase
       .from('contact_messages')
