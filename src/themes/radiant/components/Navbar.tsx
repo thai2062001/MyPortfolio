@@ -233,20 +233,20 @@ const Navbar = memo(() => {
                 transition={{ duration: 0.2 }}
                 className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-md"
               >
-                <div className="h-full w-full px-8 pt-20 pb-10 flex flex-col relative overflow-y-auto">
-                  <div className="flex-1 flex flex-col justify-center items-center gap-12">
-                    {/* Mobile Logo Branding - Now part of the center stack */}
+                <div className="h-full w-full px-8 pt-24 pb-10 flex flex-col relative overflow-y-auto">
+                  <div className="flex-1 flex flex-col justify-center items-center gap-16">
+                    {/* Mobile Logo Branding - Exactly like PC */}
                     <motion.div 
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.05, duration: 0.5 }}
+                      transition={{ delay: 0.1, duration: 0.5 }}
                       onClick={() => {
                          setIsMobileMenuOpen(false);
                          handleLinkClick("/");
                       }}
-                      className="mb-4"
+                      className="cursor-pointer"
                     >
-                      <div className="font-artistic text-3xl tracking-tight">
+                      <div className="font-artistic text-2xl tracking-tight">
                         <ShinyText 
                           text={personalInfo?.full_name || "Pham Ba Thai"} 
                           disabled={false}
@@ -257,7 +257,7 @@ const Navbar = memo(() => {
                       </div>
                     </motion.div>
 
-                    <div className="flex flex-col items-center gap-6">
+                    <div className="flex flex-col items-center gap-10">
                       {[
                         { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
                         { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
@@ -271,9 +271,17 @@ const Navbar = memo(() => {
                             setIsMobileMenuOpen(false);
                             handleLinkClick(link.to);
                           }}
-                          className="text-4xl md:text-5xl font-display text-[#1c1c19] hover:text-sage transition-colors"
+                          className="relative group text-xs font-bold uppercase tracking-[0.4em] text-[#1c1c19]/60 hover:text-[#1c1c19] transition-all duration-300 font-display"
                         >
                           {link.label}
+                          <motion.div
+                            className="absolute -bottom-2 left-0 right-0 h-[1.5px] bg-[#1c1c19]"
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: location.pathname === link.to ? 1 : 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            style={{ transformOrigin: "left" }}
+                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                          />
                         </motion.button>
                       ))}
                     </div>
@@ -286,7 +294,7 @@ const Navbar = memo(() => {
                         setIsMobileMenuOpen(false);
                         handleLinkClick("/portfolio#contact");
                       }}
-                      className="w-full max-w-[280px] rounded-full bg-[#1c1c19] py-5 text-lg font-bold uppercase tracking-widest text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
+                      className="w-full max-w-[240px] rounded-full bg-[#1c1c19] py-4 text-[10px] font-bold uppercase tracking-[0.3em] text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all font-display"
                     >
                       {t("Contact", "お問い合わせ", "Liên hệ")}
                     </motion.button>

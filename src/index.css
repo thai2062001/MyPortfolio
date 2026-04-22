@@ -406,8 +406,4 @@
   .organic-blob {
     filter: blur(40px);
   }
-
-  .shiny-text-animated {
-    animation: none;
-  }
 }
