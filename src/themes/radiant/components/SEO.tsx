@@ -11,8 +11,8 @@ interface SEOProps {
 const SEO = ({ title, description, image, article }: SEOProps) => {
   const { pathname } = useLocation();
   
-  const defaultTitle = "Thái Phạm | Senior Marketing Executive";
-  const defaultDescription = "Professional portfolio of Thái Phạm, specializing in brand acceleration and strategic growth marketing.";
+  const defaultTitle = "Thái Phạm | Full Stack Developer & Digital Architect";
+  const defaultDescription = "Crafting high-performance web applications and digital solutions. Portfolio of Thái Phạm, Full Stack Developer specializing in modern web ecosystems.";
   const siteUrl = "https://ba-thai-portfolio.site";
   const fixedImage = "https://res.cloudinary.com/dpdzbuiml/image/upload/v1776841852/common/s8bn1t36h2eleg9jn9i6.webp";
 
