@@ -2,12 +2,18 @@ import { Variants } from "framer-motion";
 
 // Helper to determine if we should use high-performance transitions
 const isReducedMotion = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+const isSmallScreen = typeof window !== "undefined" ? window.matchMedia("(max-width: 1023px)").matches : false;
 
 export const fadeIn = (direction: "up" | "down" | "left" | "right" | "none" = "none", delay: number = 0, isMobile: boolean = false): Variants => {
-  if (isReducedMotion) {
+  const lightweightMotion = isReducedMotion || isMobile || isSmallScreen;
+
+  if (lightweightMotion) {
     return {
       hidden: { opacity: 0 },
-      show: { opacity: 1, transition: { duration: 0.5, delay } }
+      show: {
+        opacity: 1,
+        transition: { duration: 0.3, delay: Math.min(delay, 0.08), ease: "easeOut" }
+      }
     };
   }
 
@@ -37,8 +43,8 @@ export const staggerContainer = (staggerChildren?: number, delayChildren?: numbe
   hidden: {},
   show: {
     transition: {
-      staggerChildren: staggerChildren || 0.1,
-      delayChildren: delayChildren || 0,
+      staggerChildren: isSmallScreen ? 0 : (staggerChildren || 0.1),
+      delayChildren: isSmallScreen ? 0 : (delayChildren || 0),
     },
   },
 });

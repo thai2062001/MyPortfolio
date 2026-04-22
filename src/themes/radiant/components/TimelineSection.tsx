@@ -29,8 +29,8 @@ const TimelineSection = memo(() => {
   return (
     <section className="py-24 md:py-48 bg-background relative overflow-hidden" id="timeline" ref={sectionRef}>
       {/* Optimized Atmosphere Blurs */}
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-vibe-pink/5 rounded-full light-blob -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-vibe-sky/5 rounded-full light-blob translate-x-1/3 pointer-events-none" />
+      <div className="hidden md:block absolute top-0 left-0 w-[600px] h-[600px] bg-vibe-pink/5 rounded-full light-blob -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute top-1/2 right-0 w-[500px] h-[500px] bg-vibe-sky/5 rounded-full light-blob translate-x-1/3 pointer-events-none" />
 
       <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto relative z-10 px-6">
         {/* Editorial Header */}

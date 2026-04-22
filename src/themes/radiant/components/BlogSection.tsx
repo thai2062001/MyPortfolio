@@ -28,8 +28,8 @@ const BlogSection = memo(() => {
   return (
     <section id="blog" className="py-24 md:py-32 lg:py-48 relative overflow-hidden bg-stone-50/10">
       {/* Decorative background element consistent with Radiant theme */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-vibe-pink/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute bottom-0 left-0 w-[300px] h-[300px] bg-vibe-pink/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       
       <div className="container relative z-10 mx-auto px-6">
         <SectionHeader

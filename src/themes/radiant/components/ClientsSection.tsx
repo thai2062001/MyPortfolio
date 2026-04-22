@@ -40,8 +40,8 @@ const ClientsSection = memo(() => {
   return (
     <section ref={containerRef} className="py-16 md:py-32 lg:py-56 bg-white relative overflow-hidden" id="clients">
       {/* Dynamic Background Atmosphere */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibe-sky/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-sage/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibe-sky/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="hidden md:block absolute -top-20 -right-20 w-96 h-96 bg-sage/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-6 mb-10 md:mb-28 relative z-10">
         <motion.div

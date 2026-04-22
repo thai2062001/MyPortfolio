@@ -42,8 +42,8 @@ const ContactSection = memo(() => {
     <>
       <section className="py-24 md:py-48 bg-background relative overflow-hidden" id="contact">
         {/* Daylight Atmosphere Decor - Optimized with pointer-events-none */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-vibe-pink/10 rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-vibe-sky/10 rounded-full blur-[150px] pointer-events-none" />
+        <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-vibe-pink/10 rounded-full blur-[180px] pointer-events-none" />
+        <div className="hidden md:block absolute top-0 right-0 w-[500px] h-[500px] bg-vibe-sky/10 rounded-full blur-[150px] pointer-events-none" />
 
         <div className="container mx-auto px-6 max-w-5xl text-center relative z-10">
           <motion.div
