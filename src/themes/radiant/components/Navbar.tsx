@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/contexts/LangContext";
 import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ const Navbar = memo(() => {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollYRef = useRef(0);
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -84,6 +85,19 @@ const Navbar = memo(() => {
     setIsVisible(true);
   }, [isTablet, location.pathname]);
 
+  useEffect(() => {
+    if (!isMobile) return;
+    setIsMobileMenuOpen(false);
+  }, [isMobile, location.pathname]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, isMobileMenuOpen]);
+
   const handleLinkClick = useCallback((to: string) => {
     const [targetPath, hash] = to.split("#");
     const normalize = (p: string) => (p === "" || p === "/" ? "/" : p.endsWith("/") ? p.slice(0, -1) : p);
@@ -102,15 +116,8 @@ const Navbar = memo(() => {
   const isHomePage = location.pathname === "/";
   const { data: hero } = useHeroSettings();
   const heroData = hero as HeroSectionWithLayout | undefined;
-  const heroLayout = isHomePage ? (heroData?.selected_layout_key || "split-left-image-right") : null;
-  const isTransparent = isHomePage && !isScrolled;
-
-  const langLabel = lang === "en" ? "JA" : lang === "ja" ? "VN" : "EN";
-  const toggleLang = () => {
-    if (lang === "en") setLang("ja");
-    else if (lang === "ja") setLang("vi");
-    else setLang("en");
-  };
+  const isScrolledLocal = isScrolled;
+  const isTransparent = isHomePage && !isScrolledLocal;
 
   return (
     <>
@@ -123,12 +130,13 @@ const Navbar = memo(() => {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
           "fixed top-0 inset-x-0 z-[300] px-4 transition-all duration-500",
-          isScrolled ? "py-3" : "py-5"
+          isMobile && "hidden",
+          isScrolledLocal ? "py-3" : "py-5"
         )}
       >
         <div className={cn(
           "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
-          isTransparent && !isScrolled
+          isTransparent && !isScrolledLocal
             ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
             : isTablet
               ? "bg-white/92 dark:bg-[#1c1c19]/92 border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
@@ -183,7 +191,7 @@ const Navbar = memo(() => {
             {/* Actions */}
             <div className="flex items-center gap-6 md:gap-10 z-10">
               <button
-                onClick={() => handleLinkClick("/contact")}
+                onClick={() => handleLinkClick("/portfolio#contact")}
                 className={cn(
                   "px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl shadow-black/10 flex items-center gap-2",
                   isTransparent 
@@ -196,6 +204,87 @@ const Navbar = memo(() => {
             </div>
           </div>
         </motion.header>
+
+      {isMobile && (
+        <>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={cn(
+              "fixed top-4 right-4 z-[320] w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-500",
+              isMobileMenuOpen 
+                ? "bg-white text-[#1c1c19] border border-black/10" 
+                : "bg-[#1c1c19] text-white border border-white/10 shadow-xl"
+            )}
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          >
+            <div className="relative w-5 h-5 flex flex-col justify-center items-center">
+              <motion.span
+                animate={isMobileMenuOpen ? { rotate: 45, y: 0 } : { rotate: 0, y: -6 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute block w-full h-0.5 bg-current rounded-full"
+              />
+              <motion.span
+                animate={isMobileMenuOpen ? { opacity: 0, x: 10 } : { opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute block w-full h-0.5 bg-current rounded-full"
+              />
+              <motion.span
+                animate={isMobileMenuOpen ? { rotate: -45, y: 0 } : { rotate: 0, y: 6 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute block w-full h-0.5 bg-current rounded-full"
+              />
+            </div>
+          </button>
+
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-md"
+              >
+                <div className="h-full w-full px-6 pt-6 pb-10 flex flex-col">
+                  <div className="flex-1 flex flex-col justify-center items-center gap-8">
+                    {[
+                      { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
+                      { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
+                    ].map((link, i) => (
+                      <motion.button
+                        key={link.to}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 * i }}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleLinkClick(link.to);
+                        }}
+                        className="text-4xl md:text-5xl font-display text-[#1c1c19] hover:text-sage transition-colors"
+                      >
+                        {link.label}
+                      </motion.button>
+                    ))}
+                    
+                    <motion.button
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        handleLinkClick("/portfolio#contact");
+                      }}
+                      className="mt-8 w-full max-w-[280px] rounded-full bg-[#1c1c19] py-5 text-lg font-bold uppercase tracking-widest text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
+                    >
+                      {t("Contact", "お問い合わせ", "Liên hệ")}
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
 
       <TransitionCurtain isActive={!!pendingUrl} onComplete={() => navigate(pendingUrl!)} />
     </>
