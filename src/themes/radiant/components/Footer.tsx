@@ -89,7 +89,7 @@ export const Footer = memo(() => {
               >
                 <Link 
                   to="/portfolio#contact"
-                  className={`group relative inline-flex items-center gap-6 bg-heading text-white px-12 py-7 md:px-14 md:py-8 rounded-full font-sans text-[11px] tracking-[0.4em] uppercase font-black overflow-hidden transition-all duration-700 shadow-2xl shadow-heading/10 ${
+                  className={`group relative inline-flex items-center gap-6 bg-heading text-white px-12 py-7 md:px-14 md:py-8 rounded-full font-display text-[12px] tracking-[0.4em] uppercase font-bold overflow-hidden transition-all duration-700 shadow-2xl shadow-heading/10 ${
                     !isTablet ? "hover:scale-105 active:scale-95" : "active:scale-95"
                   }`}
                 >
@@ -118,13 +118,13 @@ export const Footer = memo(() => {
               </div>
 
               <div>
-                <h4 className="font-sans text-[10px] tracking-[0.5em] uppercase font-black text-heading/20 mb-10">{t("Navigation", "ナビゲーション")}</h4>
+                <h4 className="font-display text-[11px] tracking-[0.4em] uppercase font-bold text-heading/20 mb-10">{t("Navigation", "ナビゲーション")}</h4>
                 <ul className="space-y-5">
                   {footerLinks.map((link) => (
                     <li key={link.to}>
                       <Link 
                         to={link.to}
-                        className="group flex items-center gap-2 text-heading/50 hover:text-heading transition-all duration-300 font-sans text-[12px] tracking-[0.2em] uppercase font-bold"
+                        className="group flex items-center gap-2 text-heading/50 hover:text-heading transition-all duration-300 font-display text-[13px] tracking-[0.2em] uppercase font-bold"
                       >
                         <span className="w-0 group-hover:w-4 h-px bg-sage transition-all duration-300 overflow-hidden" />
                         {link.label}
@@ -135,7 +135,7 @@ export const Footer = memo(() => {
               </div>
 
               <div>
-                <h4 className="font-sans text-[10px] tracking-[0.5em] uppercase font-black text-heading/20 mb-10">{t("Connect", "接続")}</h4>
+                <h4 className="font-display text-[11px] tracking-[0.4em] uppercase font-bold text-heading/20 mb-10">{t("Connect", "接続")}</h4>
                 <div className="flex flex-wrap gap-5">
                   {!loading && socialLinks.length > 0 ? (
                     socialLinks.map((link: any) => (
@@ -178,7 +178,7 @@ export const Footer = memo(() => {
               </div>
 
               <div>
-                <h4 className="font-sans text-[10px] tracking-[0.5em] uppercase font-black text-heading/20 mb-10">{t("Status", "ステータス")}</h4>
+                <h4 className="font-display text-[11px] tracking-[0.4em] uppercase font-bold text-heading/20 mb-10">{t("Status", "ステータス")}</h4>
                 <div className="space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="relative">
@@ -203,10 +203,10 @@ export const Footer = memo(() => {
                   {(personalInfo?.full_name || "P")[0]}
                 </div>
                 <div className="flex flex-col gap-1">
-                   <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-heading/40">
+                   <span className="font-display text-[11px] tracking-[0.4em] uppercase font-bold text-heading/40">
                      © 2026 {personalInfo?.full_name || "Pham Ba thai"}
                    </span>
-                   <span className="font-sans text-[9px] tracking-[0.2em] uppercase text-heading/20">All Rights Reserved • Curated Excellence</span>
+                   <span className="font-display text-[10px] tracking-[0.2em] uppercase text-heading/20">All Rights Reserved • Curated Excellence</span>
                 </div>
               </div>
 
@@ -217,7 +217,7 @@ export const Footer = memo(() => {
                 <div className="w-14 h-14 rounded-full border border-heading/10 flex items-center justify-center group-hover:bg-heading group-hover:text-white group-hover:border-heading transition-all duration-700 shadow-xl shadow-heading/5">
                    <ArrowUp size={20} strokeWidth={1.5} />
                 </div>
-                <span className="font-sans text-[8px] tracking-[0.6em] uppercase font-black text-heading/20 group-hover:text-heading/60 transition-colors">
+                <span className="font-display text-[10px] tracking-[0.5em] uppercase font-bold text-heading/20 group-hover:text-heading/60 transition-colors">
                    {t("Rise to Sky", "トップへ")}
                 </span>
               </button>

@@ -102,7 +102,7 @@ const ContactSection = memo(({ customTitle, customDescription, customEyebrow }: 
                 }`}
               >
                 <div className="absolute inset-0 bg-heading transition-all duration-500" />
-                <span className="relative z-10 text-white text-[10px] md:text-[12px] tracking-[0.5em] uppercase font-black">
+                <span className="relative z-10 text-white text-[12px] md:text-[14px] tracking-[0.4em] uppercase font-display font-bold">
                    {fields.primary_button_label}
                 </span>
                 {!isTablet && (

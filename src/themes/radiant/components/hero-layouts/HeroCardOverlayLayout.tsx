@@ -74,7 +74,7 @@ export const HeroCardOverlayLayout = memo(({
 
           {/* Badge & Line */}
           <div className={`flex items-center gap-4 mb-10 ${isCentered ? "justify-center" : "justify-start"}`}>
-            <span className="font-sans text-[11px] md:text-xs tracking-[0.5em] uppercase text-sage font-black">
+            <span className="font-display text-[12px] md:text-sm tracking-[0.4em] uppercase text-sage font-bold">
               {fields.badge}
             </span>
              <div className="h-px w-10 bg-sage/30 md:w-20" />
@@ -96,7 +96,7 @@ export const HeroCardOverlayLayout = memo(({
             <div className={`flex flex-col sm:flex-row items-center gap-6 md:gap-8 pt-6 ${isCentered ? "justify-center" : "justify-start"}`}>
               <button
                 onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-                className="group relative px-12 py-5 bg-heading text-white font-sans text-[11px] tracking-[0.3em] uppercase font-black overflow-hidden transition-all duration-500 w-full sm:w-auto text-center rounded-full hover:scale-105 active:scale-95 shadow-2xl shadow-heading/20"
+                className="group relative px-12 py-5 bg-heading text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-500 w-full sm:w-auto text-center rounded-full hover:scale-105 active:scale-95 shadow-2xl shadow-heading/20"
               >
                 <span className="relative z-10">
                   {fields.primary_button_label}
@@ -106,7 +106,7 @@ export const HeroCardOverlayLayout = memo(({
               
               <button
                 onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                className="px-12 py-5 bg-transparent border border-heading/10 text-heading/40 font-sans text-[11px] tracking-[0.3em] uppercase font-black hover:bg-heading/5 hover:border-heading/30 hover:text-heading/80 transition-all duration-300 w-full sm:w-auto text-center rounded-full"
+                className="px-12 py-5 bg-transparent border border-heading/10 text-heading/60 font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-heading/5 hover:border-heading/30 hover:text-heading/80 transition-all duration-300 w-full sm:w-auto text-center rounded-full"
               >
                 {fields.secondary_button_label}
               </button>

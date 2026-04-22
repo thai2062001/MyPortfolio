@@ -90,7 +90,7 @@ export const HeroBackgroundLayout = memo(({
               className="flex items-center gap-4 mb-8"
             >
               <div className="h-px w-8 bg-gold md:w-12" />
-              <p className="font-sans text-[10px] md:text-sm tracking-[0.4em] uppercase text-gold font-bold">
+              <p className="font-display text-[12px] md:text-sm tracking-[0.4em] uppercase text-gold font-bold">
                 {fields.badge}
               </p>
             </motion.div>
@@ -138,7 +138,7 @@ export const HeroBackgroundLayout = memo(({
               {fields.primary_button_label && (
                 <button
                   onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-                  className="group relative px-12 py-5 bg-white text-[#0A0C0B] font-sans text-[11px] tracking-[0.3em] uppercase font-black overflow-hidden transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95 shadow-2xl shadow-black/20"
+                  className="group relative px-12 py-5 bg-white text-[#0A0C0B] font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95 shadow-2xl shadow-black/20"
                 >
                   <span className="relative z-10 group-hover:text-white transition-colors duration-500">
                     {fields.primary_button_label}
@@ -150,7 +150,7 @@ export const HeroBackgroundLayout = memo(({
               {fields.secondary_button_label && (
                 <button
                   onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                  className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-sans text-[11px] tracking-[0.3em] uppercase font-black hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
+                  className="px-12 py-5 bg-white/5 backdrop-blur-md border border-white/20 text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
                 >
                   {fields.secondary_button_label}
                 </button>

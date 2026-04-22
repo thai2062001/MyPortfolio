@@ -68,7 +68,7 @@ export const HeroSplitLayout = memo(({
                       ))}
                     </div>
                   )}
-                  <span className="text-white/80 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase font-sans">
+                  <span className="text-white/80 text-[12px] md:text-sm font-bold tracking-[0.3em] uppercase font-display">
                     {fields.badge}
                   </span>
                 </motion.div>
@@ -89,7 +89,7 @@ export const HeroSplitLayout = memo(({
             <motion.div variants={fadeIn("up", 0.4)} className="flex flex-wrap items-center gap-6 md:gap-10 pt-4">
               <button
                 onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-                className="group bg-white text-[#0a2923] px-8 py-5 rounded-full font-bold flex items-center gap-4 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-black/10 font-sans tracking-widest text-[10px] uppercase"
+                className="group bg-white text-[#0a2923] px-8 py-5 rounded-full font-bold flex items-center gap-4 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-black/10 font-display tracking-widest text-[12px] uppercase"
               >
                 {fields.primary_button_label}
                 <div className="bg-[#0a2923] text-white rounded-full p-1.5 group-hover:translate-x-1.5 transition-transform duration-500">
@@ -99,7 +99,7 @@ export const HeroSplitLayout = memo(({
               
               <button
                 onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                className="text-white font-black text-[10px] tracking-[0.3em] uppercase hover:text-white/70 transition-colors underline-offset-8 hover:underline decoration-white/20 font-sans cursor-pointer"
+                className="text-white font-bold text-[12px] tracking-[0.3em] uppercase hover:text-white/70 transition-colors underline-offset-8 hover:underline decoration-white/20 font-display cursor-pointer"
               >
                 {fields.secondary_button_label}
               </button>

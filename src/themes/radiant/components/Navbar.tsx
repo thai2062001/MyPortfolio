@@ -143,26 +143,35 @@ const Navbar = memo(() => {
                   { label: t("Home", "ホーム"), to: "/" },
                   { label: t("Portfolio", "ポートフォリオ"), to: "/portfolio" },
                 ].map((link) => (
-                  <button
+                  <motion.button
                     key={link.to}
                     onClick={() => handleLinkClick(link.to)}
+                    initial="initial"
+                    whileHover="hover"
+                    animate="animate"
                     className={cn(
-                      "relative text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-300 py-1 font-serif",
+                      "relative text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] transition-all duration-300 py-1 font-display",
                       isTransparent ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-sage"
                     )}
                   >
                     {link.label}
                     <motion.div
                       className={cn(
-                        "absolute -bottom-1 left-0 right-0 h-[1px]",
+                        "absolute -bottom-1 left-0 right-0 h-[1.5px]",
                         isTransparent ? "bg-white" : "bg-sage"
                       )}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: location.pathname === link.to ? 1 : 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
+                      variants={{
+                        initial: { scaleX: 0 },
+                        animate: { scaleX: location.pathname === link.to ? 1 : 0 },
+                        hover: { scaleX: 1 }
+                      }}
+                      style={{ transformOrigin: "left" }}
+                      transition={{ 
+                        duration: 0.4, 
+                        ease: [0.22, 1, 0.36, 1] 
+                      }}
                     />
-                  </button>
+                  </motion.button>
                 ))}
               </nav>
             )}
@@ -224,26 +233,50 @@ const Navbar = memo(() => {
                 transition={{ duration: 0.2 }}
                 className="fixed inset-0 z-[310] bg-[#fcfaf7]/95 backdrop-blur-md"
               >
-                <div className="h-full w-full px-6 pt-6 pb-10 flex flex-col">
-                  <div className="flex-1 flex flex-col justify-center items-center gap-8">
-                    {[
-                      { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
-                      { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
-                    ].map((link, i) => (
-                      <motion.button
-                        key={link.to}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 * i }}
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          handleLinkClick(link.to);
-                        }}
-                        className="text-4xl md:text-5xl font-display text-[#1c1c19] hover:text-sage transition-colors"
-                      >
-                        {link.label}
-                      </motion.button>
-                    ))}
+                <div className="h-full w-full px-8 pt-20 pb-10 flex flex-col relative overflow-y-auto">
+                  <div className="flex-1 flex flex-col justify-center items-center gap-12">
+                    {/* Mobile Logo Branding - Now part of the center stack */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05, duration: 0.5 }}
+                      onClick={() => {
+                         setIsMobileMenuOpen(false);
+                         handleLinkClick("/");
+                      }}
+                      className="mb-4"
+                    >
+                      <div className="font-artistic text-3xl tracking-tight">
+                        <ShinyText 
+                          text={personalInfo?.full_name || "Pham Ba Thai"} 
+                          disabled={false}
+                          speed={5} 
+                          color="#1c1c19" 
+                          shineColor="#ffffff"
+                        />
+                      </div>
+                    </motion.div>
+
+                    <div className="flex flex-col items-center gap-6">
+                      {[
+                        { label: t("Home", "ホーム", "Trang chủ"), to: "/" },
+                        { label: t("Portfolio", "ポートフォリオ", "Portfolio"), to: "/portfolio" },
+                      ].map((link, i) => (
+                        <motion.button
+                          key={link.to}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 * (i + 1) }}
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            handleLinkClick(link.to);
+                          }}
+                          className="text-4xl md:text-5xl font-display text-[#1c1c19] hover:text-sage transition-colors"
+                        >
+                          {link.label}
+                        </motion.button>
+                      ))}
+                    </div>
                     
                     <motion.button
                       initial={{ opacity: 0, y: 10 }}
@@ -253,7 +286,7 @@ const Navbar = memo(() => {
                         setIsMobileMenuOpen(false);
                         handleLinkClick("/portfolio#contact");
                       }}
-                      className="mt-8 w-full max-w-[280px] rounded-full bg-[#1c1c19] py-5 text-lg font-bold uppercase tracking-widest text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
+                      className="w-full max-w-[280px] rounded-full bg-[#1c1c19] py-5 text-lg font-bold uppercase tracking-widest text-white shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
                     >
                       {t("Contact", "お問い合わせ", "Liên hệ")}
                     </motion.button>
