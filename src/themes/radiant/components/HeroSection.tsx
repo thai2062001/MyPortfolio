@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLang } from "@/contexts/LangContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useHeroSettings } from "@/core/hooks/usePortfolio";
 import { getHeroLayout } from "./hero-layouts";
 import { optimizeCloudinary } from "@/lib/cloudinary";
@@ -10,6 +11,7 @@ const HeroSection = memo(() => {
   const { lang } = useLang();
   const navigate = useNavigate();
   const { data: hero, isLoading } = useHeroSettings();
+  const isMobile = useIsMobile();
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
   const layoutKey = hero?.selected_layout_key || "full-background";
@@ -52,8 +54,12 @@ const HeroSection = memo(() => {
         return;
       }
     }
+    if (isMobile) {
+      navigate(to);
+      return;
+    }
     setPendingUrl(to);
-  }, []);
+  }, [isMobile, navigate]);
 
 
   useEffect(() => {

@@ -99,7 +99,7 @@ const SkillsSection = memo(() => {
                 onClick={() => {
                   if (skill.category) {
                     const url = `/skills/${skill.category.slug}/${skill.slug}`;
-                    isTablet ? navigate(url) : setPendingUrl(url);
+                    (isTablet || isMobile) ? navigate(url) : setPendingUrl(url);
                   }
                 }}
                 className={`ethereal-glass group cursor-pointer relative rounded-[3.5rem] md:rounded-[4rem] xl:rounded-[5rem] overflow-hidden transition-[box-shadow,background-color,border-color] duration-500 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.04)] h-full will-change-transform ${

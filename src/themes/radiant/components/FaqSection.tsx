@@ -6,11 +6,12 @@ import { Plus, Minus, HelpCircle } from "lucide-react";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import SectionHeader from "./shared/SectionHeader";
 import { getLocalizedField, getLocalizedFields, SupportedLang } from "@/lib/content-utils";
-import { useIsTablet } from "@/hooks/use-mobile";
+import { useIsTablet, useIsMobile } from "@/hooks/use-mobile";
 
 const FaqSection = memo(() => {
   const { lang, t } = useLang();
   const currentLang = lang as SupportedLang;
+  const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { faqs: faqsQuery, faqSettings: settingsQuery } = usePortfolioData();
   
@@ -47,8 +48,8 @@ const FaqSection = memo(() => {
   return (
     <section id="faq" className="py-24 md:py-48 relative overflow-hidden bg-white">
       {/* Background Decor - Optimized opacity */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute top-0 right-0 w-[600px] h-[600px] bg-sage/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-4xl relative z-10">
         <SectionHeader
@@ -81,6 +82,42 @@ const FaqSection = memo(() => {
             const isOpen = openId === faq.id;
             const question = lang === "ja" && faq.question_ja ? faq.question_ja : faq.question_en;
             const answer = lang === "ja" && faq.answer_ja ? faq.answer_ja : faq.answer_en;
+
+            if (isMobile) {
+              return (
+                <div
+                  key={faq.id}
+                  className={`group rounded-2xl transition-all duration-300 ${
+                    isOpen
+                      ? "bg-gray-50 border-sage/20 ring-1 ring-sage/10"
+                      : "bg-white border border-gray-100"
+                  }`}
+                >
+                  <button
+                    onClick={() => toggleFaq(faq.id)}
+                    className="w-full px-5 py-4 flex items-center justify-between gap-4 text-left focus:outline-none"
+                  >
+                    <span className={`text-base font-bold transition-colors duration-200 ${
+                      isOpen ? "text-sage" : "text-gray-900"
+                    }`}>
+                      {question}
+                    </span>
+                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      isOpen ? "bg-sage text-white" : "bg-gray-100 text-gray-400"
+                    }`}>
+                      {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 pb-5 text-gray-600 leading-relaxed">
+                      <div className="h-px w-full bg-gray-200/50 mb-4" />
+                      <p className="whitespace-pre-line text-sm leading-relaxed opacity-85">{answer}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            }
 
             return (
               <motion.div

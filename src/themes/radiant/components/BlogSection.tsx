@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useIsTablet } from "@/hooks/use-mobile";
+import { useIsTablet, useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import { memo, useMemo } from "react";
 
 const BlogSection = memo(() => {
   const { data: posts = [], isLoading } = useBlogPosts(false);
   const { t } = useLang();
+  const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const navigate = useNavigate();
 
@@ -48,7 +49,7 @@ const BlogSection = memo(() => {
         />
 
         <motion.div 
-          variants={staggerContainer(0.1, 0.1)}
+          variants={staggerContainer(isMobile ? 0 : 0.1, 0.1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.1 }}
@@ -60,7 +61,7 @@ const BlogSection = memo(() => {
         </motion.div>
 
         <motion.div 
-          variants={fadeIn("up", 0.5)}
+          variants={fadeIn("up", isMobile ? 0.15 : 0.5, isMobile)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}

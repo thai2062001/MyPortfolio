@@ -1,12 +1,9 @@
 import { memo, useMemo } from "react";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Calendar, Clock, ArrowUpRight } from "lucide-react";
 import { useLang } from "@/contexts/LangContext";
 import { optimizeCloudinary } from "@/lib/cloudinary";
-import { fadeIn } from "@/lib/animations";
 import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface BlogCardProps {
   post: any;
@@ -16,7 +13,6 @@ interface BlogCardProps {
 const BlogCard = memo(({ post, index }: BlogCardProps) => {
   const { lang, t } = useLang();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const currentLang = lang as SupportedLang;
 
   const localization = useMemo(() => ({
@@ -35,10 +31,7 @@ const BlogCard = memo(({ post, index }: BlogCardProps) => {
   }, [post.published_at, post.created_at, lang]);
 
   return (
-    <motion.article 
-      variants={fadeIn("up", 0.1 * index, isMobile)}
-      className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-stone-200/60 overflow-hidden md:hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] md:hover:-translate-y-2 transition-all duration-500 md:duration-700 ease-[0.22,1,0.36,1] will-change-transform"
-    >
+    <article className="group flex flex-col h-full bg-white rounded-[2.5rem] border border-stone-200/60 overflow-hidden md:hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] md:hover:-translate-y-2 transition-all duration-500 md:duration-700 ease-[0.22,1,0.36,1] will-change-transform">
       <div 
         className="relative aspect-[16/10] overflow-hidden cursor-pointer bg-stone-100"
         onClick={() => navigate(`/blog/${post.slug}`)}
@@ -92,7 +85,7 @@ const BlogCard = memo(({ post, index }: BlogCardProps) => {
           </button>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 });
 

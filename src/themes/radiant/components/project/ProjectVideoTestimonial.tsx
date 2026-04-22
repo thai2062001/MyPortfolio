@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -87,12 +88,41 @@ const VideoPlayer = ({ url, poster }: { url: string; poster?: string }) => {
 };
 
 export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimonialProps) => {
+  const isMobile = useIsMobile();
   if (!testimonial) return null;
+
+  if (isMobile) {
+    return (
+      <section className="py-20 relative overflow-hidden bg-white/40">
+        <div className="container mx-auto px-6 max-w-3xl relative z-10 text-center space-y-10">
+          <div className="space-y-6">
+            <div className="flex flex-col items-center gap-4">
+              <span className="font-artistic text-3xl text-vibe-pink/40">Words of Trust</span>
+              <div className="w-px h-10 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
+            </div>
+
+            <blockquote className="font-display text-3xl text-heading tracking-tight leading-tight italic selection:bg-vibe-pink/20">
+              "{testimonial.quote}"
+            </blockquote>
+
+            <div className="flex flex-col items-center gap-2">
+              <p className="font-display text-xl text-heading">
+                {testimonial.name}
+              </p>
+              <p className="font-sans text-[10px] tracking-[0.3em] uppercase font-black text-heading/30">
+                {testimonial.title} / {testimonial.company}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-32 relative overflow-hidden bg-white/40">
       {/* Soft Atmosphere Accents */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibe-pink/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibe-pink/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-4xl relative z-10">
         <motion.div 

@@ -85,8 +85,14 @@ const Navbar = memo(() => {
       }
       return;
     }
+
+    if (isMobile) {
+      navigate(to);
+      return;
+    }
+
     setPendingUrl(to);
-  }, [location.pathname]);
+  }, [isMobile, location.pathname, navigate]);
 
   const isHomePage = location.pathname === "/";
   const isTransparent = isHomePage && !isScrolled;

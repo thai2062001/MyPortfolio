@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { memo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PageCurtainProps {
   isVisible: boolean;
@@ -16,6 +17,9 @@ const PageCurtain = memo(({
   zIndex = 10000,
   direction = "down",
 }: PageCurtainProps) => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) return null;
   
   const initialY = direction === "down" ? 0 : "100%";
   const animateY = direction === "down" ? "-100%" : 0;
@@ -61,23 +65,28 @@ export const EntranceCurtain = memo(({
 /**
  * Transition Curtain: Starts at 100%, animates to 0 (Upward cover)
  */
-export const TransitionCurtain = memo(({ 
+export const TransitionCurtain = memo(({
   isActive, 
   onComplete,
   color = "bg-[#fcfaf7]"
-}: { isActive: boolean, onComplete: () => void, color?: string }) => (
-  <AnimatePresence>
-    {isActive && (
-      <motion.div
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        exit={{ y: "-100%" }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        onAnimationComplete={onComplete}
-        className={`fixed inset-0 z-[9999] ${color}`}
-      />
-    )}
-  </AnimatePresence>
-));
+}: { isActive: boolean, onComplete: () => void, color?: string }) => {
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
+
+  return (
+    <AnimatePresence>
+      {isActive && (
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-100%" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          onAnimationComplete={onComplete}
+          className={`fixed inset-0 z-[9999] ${color}`}
+        />
+      )}
+    </AnimatePresence>
+  );
+});
 
 export default PageCurtain;

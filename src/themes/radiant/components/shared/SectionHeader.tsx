@@ -65,6 +65,54 @@ const SectionHeader = ({
     description: fadeIn("up", staggerDelay + 0.2, isMobile),
   };
 
+  if (isMobile) {
+    if (align === "between") {
+      return (
+        <div className={`${getAlignClass()} ${className} gap-8 md:gap-12`}>
+          <div className="space-y-6 md:space-y-8 flex-1">
+            {eyebrow && (
+              <div className={eyebrowClassName}>
+                {eyebrow}
+              </div>
+            )}
+            <h2 className={titleClassName}>
+              {renderTitle()}
+            </h2>
+          </div>
+          {description && (
+            <div className={`max-w-md shrink-0 ${descriptionClassName}`}>
+              {typeof description === 'string' ? (
+                <p>{description}</p>
+              ) : description}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={`flex flex-col ${getAlignClass()} ${className}`}>
+        {eyebrow && (
+          <span className={eyebrowClassName}>
+            {eyebrow}
+          </span>
+        )}
+        
+        <h2 className={titleClassName}>
+          {renderTitle()}
+        </h2>
+
+        {description && (
+          <div className={descriptionClassName}>
+            {typeof description === 'string' ? (
+              <p>{description}</p>
+            ) : description}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (align === "between") {
     return (
       <div className={`${getAlignClass()} ${className} gap-8 md:gap-12`}>

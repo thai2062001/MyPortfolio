@@ -2,6 +2,7 @@ import { motion, useMotionValue, animate, useInView } from "framer-motion";
 import { useEffect, useRef, memo } from "react";
 import { useLang } from "@/contexts/LangContext";
 import { usePortfolioData } from "@/core/hooks/usePortfolio";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 
 const Counter = ({ valueText }: { valueText: string }) => {
@@ -38,9 +39,21 @@ const Counter = ({ valueText }: { valueText: string }) => {
   );
 };
 
+const StaticCounter = ({ valueText }: { valueText: string }) => {
+  const match = valueText.match(/([\d,.]+)(.*)/);
+  if (!match) return <span>{valueText}</span>;
+  return (
+    <span className="tabular-nums font-headline italic">
+      {match[1].replace(/,/g, "")}
+      {match[2]}
+    </span>
+  );
+};
+
 const StatsSection = memo(() => {
   const { lang } = useLang();
   const { siteStats, siteStatsSettings } = usePortfolioData();
+  const isMobile = useIsMobile();
   
   const stats = siteStats.data || [];
   const settings = siteStatsSettings.data;
@@ -53,7 +66,7 @@ const StatsSection = memo(() => {
   return (
     <section id="stats" className="py-16 md:py-32 bg-surface relative overflow-hidden">
       {/* Optimized Background Element */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="hidden md:block absolute top-0 right-0 w-[500px] h-[500px] bg-sage/5 rounded-full blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       
       <div className="container mx-auto px-6 max-w-7xl 2xl:max-w-screen-2xl">
         <motion.div 
@@ -73,7 +86,7 @@ const StatsSection = memo(() => {
             >
               <div className="space-y-6">
                 <div className="text-5xl md:text-6xl lg:text-6xl xl:text-7xl 2xl:text-[10rem] font-headline italic text-heading tracking-tighter leading-none transition-transform duration-500 group-hover:scale-105 font-medium">
-                  <Counter valueText={stat.value_text} />
+                  {isMobile ? <StaticCounter valueText={stat.value_text} /> : <Counter valueText={stat.value_text} />}
                 </div>
                 
                 <div className="space-y-2">

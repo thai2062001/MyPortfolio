@@ -186,7 +186,7 @@ const AboutSection = memo(() => {
 
             <motion.div variants={fadeIn("up", 0.5, isMobile)} className="pt-0 flex flex-col sm:flex-row items-center gap-4 md:gap-4">
               <button
-                onClick={() => isTablet ? navigate("/portfolio") : setPendingUrl("/portfolio")}
+                onClick={() => (isTablet || isMobile) ? navigate("/portfolio") : setPendingUrl("/portfolio")}
                 className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-4 bg-heading text-white px-8 py-4 md:px-10 md:py-5 rounded-full font-display text-[12px] tracking-[0.4em] uppercase font-bold overflow-hidden transition-all duration-1000 hover:scale-105 active:scale-95 shadow-2xl shadow-heading/10"
               >
                 <span className="relative z-10 whitespace-nowrap">{localizationData.ctaPrimary || t("View Projects", "プロジェクトを見る", "Xem dự án")}</span>
