@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { User } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useLang } from "@/contexts/LangContext";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { useTestimonials, usePersonalInfo } from "@/core/hooks/usePortfolio";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import SectionHeader from "./shared/SectionHeader";
@@ -12,6 +12,7 @@ import AmbientAccent from "./shared/AmbientAccent";
 const TestimonialsSection = memo(() => {
   const { lang, t } = useLang();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const testimonialsQuery = useTestimonials();
   const { data: personalInfo } = usePersonalInfo();
   
@@ -45,12 +46,10 @@ const TestimonialsSection = memo(() => {
 
     emblaApi.on("select", handleStateChange);
     emblaApi.on("reInit", handleStateChange);
-    emblaApi.on("settle", handleStateChange);
 
     return () => {
       emblaApi.off("select", handleStateChange);
       emblaApi.off("reInit", handleStateChange);
-      emblaApi.off("settle", handleStateChange);
     };
   }, [emblaApi, updateButtons]);
 
@@ -83,7 +82,13 @@ const TestimonialsSection = memo(() => {
   return (
     <section className="py-24 md:py-48 bg-background relative overflow-hidden" id="kind-words">
       {/* Optimized Ambient Background */}
-      <AmbientAccent position="center-left" color="bg-vibe-pink" size={1000} opacity={0.05} blur={180} />
+      <AmbientAccent
+        position="center-left"
+        color="bg-vibe-pink"
+        size={isTablet ? 460 : 1000}
+        opacity={isTablet ? 0.025 : 0.05}
+        blur={isTablet ? 70 : 180}
+      />
       
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         {/* Section Header */}
@@ -201,7 +206,8 @@ const TestimonialsSection = memo(() => {
           {/* RIGHT: TESTIMONIALS GRID (PC) & CAROUSEL (Mobile) */}
           <div className="lg:col-span-8">
             {/* Desktop View: Pure Static Grid */}
-            <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
+            {!isTablet && (
+              <div className="lg:grid lg:grid-cols-2 lg:gap-6">
               {testimonials.map((testimonial, idx) => (
                 <motion.div 
                   key={testimonial.id}
@@ -221,7 +227,7 @@ const TestimonialsSection = memo(() => {
                        <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 group-hover:border-white/20 transition-colors duration-500 bg-black/5 flex items-center justify-center">
                           {testimonial.portrait_url ? (
                             <img 
-                              src={optimizeCloudinary(testimonial.portrait_url)} 
+                              src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
                               alt={testimonial.author_name} 
                               className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                             />
@@ -239,15 +245,17 @@ const TestimonialsSection = memo(() => {
                   </div>
                 </motion.div>
               ))}
-            </div>
+              </div>
+            )}
 
             {/* Mobile View: Swipable Carousel */}
-            <div className="lg:hidden flex flex-col gap-6">
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex -ml-6">
+            {isTablet && (
+              <div className="flex flex-col gap-6">
+              <div className="overflow-hidden touch-pan-y" ref={emblaRef}>
+                <div className="flex -ml-6 transform-gpu will-change-transform">
                   {testimonials.map((testimonial) => (
                     <div key={testimonial.id} className="flex-none pl-6 w-full h-full">
-                      <div className="bg-white/80 md:bg-white/50 md:backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:md:bg-sage transition-all duration-500 group h-full select-none">
+                      <div className="bg-white/85 md:bg-white/50 md:backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:md:bg-sage transition-colors duration-300 group h-full select-none">
                         <div className="space-y-6">
                            <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light group-hover:md:text-white/90 transition-colors duration-500">
                               "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
@@ -257,7 +265,7 @@ const TestimonialsSection = memo(() => {
                            <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 group-hover:md:border-white/20 transition-colors duration-500 bg-black/5 flex items-center justify-center">
                               {testimonial.portrait_url ? (
                                 <img 
-                                  src={optimizeCloudinary(testimonial.portrait_url)} 
+                                  src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
                                   alt={testimonial.author_name} 
                                   className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                                 />
@@ -310,6 +318,7 @@ const TestimonialsSection = memo(() => {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

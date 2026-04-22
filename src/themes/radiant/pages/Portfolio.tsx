@@ -3,7 +3,7 @@ import { useLang } from "@/contexts/LangContext";
 import { useSectionRenderer } from "@/core/hooks/useSectionRenderer";
 import { renderSectionsByOrder } from "@/lib/sectionRenderer";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageLayout from "@/themes/radiant/components/PageLayout";
 import { TransitionCurtain } from "../components/shared/PageCurtain";
@@ -13,6 +13,7 @@ const Portfolio = () => {
   const { lang } = useLang();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const { sections, isLoading } = useSectionRenderer("portfolio");
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
@@ -38,8 +39,12 @@ const Portfolio = () => {
       seoDescription="Explore a collection of high-impact digital projects focusing on performance marketing, brand strategy, and growth."
     >
       <div className="relative bg-background overflow-hidden min-h-screen pt-20">
-        <AmbientAccent position="top-right" color="bg-vibe-sky" size={1000} opacity={0.05} />
-        <AmbientAccent position="center-left" color="bg-vibe-pink" size={800} opacity={0.05} blur={150} />
+        {!isTablet && (
+          <>
+            <AmbientAccent position="top-right" color="bg-vibe-sky" size={1000} opacity={0.05} />
+            <AmbientAccent position="center-left" color="bg-vibe-pink" size={800} opacity={0.05} blur={150} />
+          </>
+        )}
         
         <div className="relative">
           {renderedSections}
