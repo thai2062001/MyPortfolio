@@ -14,6 +14,8 @@ export interface BaseEntity {
 
 export interface PersonalInfo extends BaseEntity {
   id: string; // Restricted to '1'
+  full_name: string | null;
+  bio: string | null;
   phone_number: string | null;
   email: string | null;
   address: string | null;
@@ -168,9 +170,14 @@ export interface TimelinePhase extends BaseEntity {
 // --- MISC ---
 
 export interface Testimonial extends BaseEntity {
-  name: string;
+  author_name: string;
+  name?: string; // Legacy
   role_en: string;
+  role_ja?: string;
+  role_vi?: string;
   quote_en: string;
+  quote_ja?: string;
+  quote_vi?: string;
   portrait_url: string | null;
   is_published: boolean;
   order_index: number;

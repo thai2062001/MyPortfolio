@@ -156,7 +156,7 @@ const AboutSection = memo(() => {
           <div className="lg:col-span-6 space-y-6 md:space-y-8 order-2 lg:order-2">
             <SectionHeader
                eyebrow={
-                 <div className="inline-flex items-center gap-3 bg-heading text-white px-6 py-2 rounded-full text-[10px] tracking-[0.3em] font-sans font-bold uppercase">
+                 <div className="inline-flex items-center gap-3 bg-heading text-white px-6 py-2 rounded-full text-[10px] tracking-[0.3em] font-display font-bold uppercase">
                     <span className="w-1.5 h-1.5 bg-sage rounded-full animate-pulse" />
                     {t("About Me", "私について", "Về tôi")}
                  </div>
@@ -164,7 +164,7 @@ const AboutSection = memo(() => {
                title={localizationData.title}
                description={localizationData.content}
                highlightWords={["code", "design", "growth"]}
-               eyebrowClassName="font-sans text-[11px] uppercase tracking-[0.3em] text-on-surface/40 font-bold"
+               eyebrowClassName="font-display text-[11px] uppercase tracking-[0.3em] text-on-surface/40 font-bold"
                titleClassName="font-display text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-6xl 2xl:text-8xl font-extrabold tracking-tight text-on-surface leading-tight md:leading-[1.05]"
                descriptionClassName="font-body text-base md:text-lg lg:text-base xl:text-lg text-on-surface-variant max-w-xl leading-relaxed italic"
                className="gap-2 lg:gap-4"

@@ -95,7 +95,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
             eyebrow={
                 <div className="flex items-center gap-4">
                   <span className="w-12 h-[1px] bg-foreground/20" />
-                  <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-bold text-sage">
+                  <span className="font-display text-[11px] tracking-[0.4em] uppercase font-bold text-sage">
                       {t("Works", "作品", "Dự án")}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
           >
             <button 
               onClick={() => navigate('/projects')}
-              className="font-sans text-[12px] tracking-[0.5em] uppercase font-bold text-heading hover:text-vibe-pink transition-all duration-300 border-b border-heading/20 hover:border-vibe-pink pb-2"
+              className="font-display text-[14px] tracking-[0.5em] uppercase font-bold text-heading hover:text-vibe-pink transition-all duration-300 border-b border-heading/20 hover:border-vibe-pink pb-2"
             >
               {t("View All Projects", "すべてのプロジェクトを表示", "Xem tất cả dự án")}
             </button>
