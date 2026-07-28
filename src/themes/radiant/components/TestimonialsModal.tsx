@@ -145,6 +145,7 @@ export const TestimonialsModal = memo(({ isOpen, onClose }: TestimonialsModalPro
                                 <img 
                                   src={optimizeCloudinary(testimonial.portrait_url)} 
                                   alt={testimonial.author_name} 
+                                  loading="lazy"
                                   className="w-full h-full object-cover"
                                 />
                               ) : (

@@ -153,6 +153,7 @@ export const Footer = memo(() => {
                           <img
                             src={optimizeCloudinary(link.icon_url)}
                             alt={link.display_name}
+                            loading="lazy"
                             className="w-6 h-6 object-contain group-hover:brightness-0 group-hover:invert transition-all duration-500 relative z-10"
                           />
                         ) : (

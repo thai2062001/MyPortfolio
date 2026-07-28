@@ -56,6 +56,7 @@ export const ToolCard = ({
               alt={tool.name}
               width={48}
               height={48}
+              loading="lazy"
               className="h-full w-full object-contain"
               onError={(e) => {
                 const target = e.currentTarget;

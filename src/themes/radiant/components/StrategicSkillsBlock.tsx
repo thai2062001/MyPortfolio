@@ -41,6 +41,7 @@ export const StrategicSkillsBlock = ({ skills }: StrategicSkillsBlockProps) => {
               <img 
                 src={optimizeCloudinary(skill.icon_url)} 
                 alt="" 
+                loading="lazy"
                 className="w-6 h-6 object-contain" 
               />
             ) : skill.icon_name ? (

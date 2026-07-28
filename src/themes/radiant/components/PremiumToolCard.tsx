@@ -26,6 +26,7 @@ const PremiumToolCard: React.FC<PremiumToolCardProps> = ({ tool }) => {
           <img
             src={optimizeCloudinary(tool.icon_url, { width: 200, height: 200, crop: 'fit' })}
             alt={tool.name}
+            loading="lazy"
             className="w-full h-full object-contain"
           />
         ) : (

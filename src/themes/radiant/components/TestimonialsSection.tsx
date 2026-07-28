@@ -231,6 +231,7 @@ const TestimonialsSection = memo(() => {
                             <img 
                               src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
                               alt={testimonial.author_name} 
+                              loading="lazy"
                               className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                             />
                           ) : (
@@ -269,6 +270,7 @@ const TestimonialsSection = memo(() => {
                                 <img 
                                   src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
                                   alt={testimonial.author_name} 
+                                  loading="lazy"
                                   className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
                                 />
                               ) : (
