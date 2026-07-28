@@ -88,10 +88,19 @@ export const ProjectGallery = ({
   // Prevent scroll when lightbox open
   useEffect(() => {
     if (selectedImageIndex !== null) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
   }, [selectedImageIndex]);
 
   if (!images || images.length === 0) return null;
@@ -124,7 +133,7 @@ export const ProjectGallery = ({
       <div className="w-full relative z-10">
         {/* Main Slider Area */}
         <div className="relative aspect-[3/4] md:aspect-[16/9] w-full rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl bg-[#111] cursor-pointer group isolate">
-          <AnimatePresence initial={false} custom={direction} mode="wait">
+          <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentIndex}
               custom={direction}
@@ -329,22 +338,30 @@ export const ProjectGallery = ({
                   }
                 }}
               >
-                <motion.img
-                  key={selectedImageIndex}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  src={optimizeCloudinary(sortedImages[selectedImageIndex].image_url, { quality: "best", width: 2400 })}
-                  alt={sortedImages[selectedImageIndex].alt_text}
-                  className="w-full max-w-full h-full max-h-[90vh] object-contain shadow-2xl"
-                />
+                <AnimatePresence>
+                  <motion.div
+                    key={selectedImageIndex}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4 }}
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-12"
+                  >
+                    <img
+                      src={optimizeCloudinary(sortedImages[selectedImageIndex].image_url, { quality: "best", width: 2400 })}
+                      alt={sortedImages[selectedImageIndex].alt_text}
+                      className="w-full max-w-full h-full max-h-[90vh] object-contain shadow-2xl"
+                    />
 
-                <div className="text-center space-y-6 max-w-4xl">
-                  {sortedImages[selectedImageIndex].caption && (
-                    <p className="font-display text-2xl md:text-3xl text-white/90 leading-tight italic">
-                      "{sortedImages[selectedImageIndex].caption}"
-                    </p>
-                  )}
-                </div>
+                    <div className="text-center space-y-6 max-w-4xl">
+                      {sortedImages[selectedImageIndex].caption && (
+                        <p className="font-display text-2xl md:text-3xl text-white/90 leading-tight italic">
+                          "{sortedImages[selectedImageIndex].caption}"
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </motion.div>
             </motion.div>
           )}
