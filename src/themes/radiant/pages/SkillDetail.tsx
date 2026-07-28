@@ -94,13 +94,16 @@ const ToolCardDesktop = ({ tool, index, currentLang }: { tool: any; index: numbe
       <div className="absolute inset-0 bg-sage/20 rounded-[2.5rem] translate-y-3 blur-[2px]" />
       
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ 
-          delay: index * 0.1, 
-          duration: 0.8,
-          ease: "easeOut"
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          show: { 
+            opacity: 1, 
+            y: 0,
+            transition: { 
+              duration: 0.8,
+              ease: "easeOut"
+            }
+          }
         }}
         style={{
           rotateX,
@@ -372,11 +375,25 @@ const SkillDetailPage = () => {
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/notebook.png')]" />
 
             <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10">
-              <div className="mb-32">
+              <motion.div 
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                className="mb-32"
+              >
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0 }
+                  }}
                   className="inline-flex items-center gap-4 mb-6"
                 >
                   <div className="w-12 h-px bg-white/40" />
@@ -385,15 +402,15 @@ const SkillDetailPage = () => {
                   </span>
                 </motion.div>
                 <motion.h3
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    show: { opacity: 1, y: 0 }
+                  }}
                   className="font-headline text-6xl md:text-8xl font-bold text-white tracking-tighter"
                 >
                   Key Highlights
                 </motion.h3>
-              </div>
+              </motion.div>
 
               <div className="flex flex-col gap-16 md:gap-32 lg:gap-64">
                 {highlights.map((h, i) => {
@@ -404,8 +421,19 @@ const SkillDetailPage = () => {
                   const isEven = i % 2 === 0;
 
                   return (
-                    <div
+                    <motion.div
                       key={i}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.15 }}
+                      variants={{
+                        hidden: {},
+                        show: {
+                          transition: {
+                            staggerChildren: 0.15
+                          }
+                        }
+                      }}
                       className="relative flex flex-col gap-12 md:gap-16"
                     >
                       <div className="absolute -top-16 -left-8 font-display text-[15rem] md:text-[25rem] font-black text-white/[0.03] leading-none select-none pointer-events-none hidden md:block">
@@ -413,10 +441,10 @@ const SkillDetailPage = () => {
                       </div>
 
                       <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        variants={{
+                          hidden: { opacity: 0, y: 30 },
+                          show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                        }}
                         className="w-full max-w-4xl relative z-20"
                       >
                         <div className="space-y-4 mb-6">
@@ -438,13 +466,9 @@ const SkillDetailPage = () => {
 
                       {/* Image Side - Full Width Majestic Viewing */}
                       <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        transition={{
-                          duration: 0.8,
-                          ease: "circOut",
-                          delay: 0.2,
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "circOut" } }
                         }}
                         className="w-full"
                       >
@@ -479,7 +503,7 @@ const SkillDetailPage = () => {
                           </div>
                         )}
                       </motion.div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -517,7 +541,18 @@ const SkillDetailPage = () => {
                 </p>
               </motion.div>
 
-              <div 
+              <motion.div 
+                variants={{
+                  hidden: {},
+                  show: {
+                    transition: {
+                      staggerChildren: 0.08
+                    }
+                  }
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.1 }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
                 style={{ perspective: "1500px" }}
               >
@@ -537,7 +572,7 @@ const SkillDetailPage = () => {
                     />
                   )
                 ))}
-              </div>
+              </motion.div>
             </div>
           </section>
         )}

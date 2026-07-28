@@ -268,8 +268,8 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
                 key={i} 
                 initial={isStatic ? { opacity: 1 } : { opacity: 0, y: 20 }} 
                 whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }} 
-                transition={{ delay: isStatic ? 0 : i * 0.1, duration: 0.8 }}
+                viewport={{ once: true, margin: "-50px" }} 
+                transition={{ delay: isStatic ? 0 : i * 0.08, duration: 0.6 }}
                 whileHover={!isStatic ? "hover" : undefined}
             className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-10 md:p-14 rounded-[3.5rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
               >
@@ -548,8 +548,8 @@ const ProjectDetail = () => {
                               key={i} 
                               initial={isTabletOrMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }} 
                               whileInView={{ opacity: 1, x: 0 }} 
-                              viewport={{ once: true }} 
-                              transition={{ delay: i * 0.1, duration: 0.8 }}
+                              viewport={{ once: true, margin: "-50px" }} 
+                              transition={{ delay: i * 0.08, duration: 0.6 }}
                               className="group relative p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-white border border-heading/5 hover:border-sage/20 transition-all duration-500 overflow-hidden"
                            >
                               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sage/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -583,11 +583,11 @@ const ProjectDetail = () => {
                               key={i} 
                               initial={isTabletOrMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} 
                               whileInView={{ opacity: 1, y: 0 }} 
-                              viewport={{ once: true }} 
-                              transition={{ delay: i * 0.1, duration: 0.8 }}
+                              viewport={{ once: true, margin: "-50px" }} 
+                              transition={{ delay: i * 0.08, duration: 0.6 }}
                               className={cn(
                                 "group relative p-12 md:p-16 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500",
-                "bg-white/80 md:bg-white/40 md:backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
+                                "bg-white/80 md:bg-white/40 md:backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
                                 i === 0 && results.length % 2 !== 0 ? 'sm:col-span-2' : ''
                               )}
                            >

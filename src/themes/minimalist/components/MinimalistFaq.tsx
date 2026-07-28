@@ -59,7 +59,20 @@ export const MinimalistFaq = ({ title, faqs, lang = 'en' }: MinimalistFaqProps) 
 
           {/* Right Side: Accordion */}
           <div className="lg:col-span-7">
-            <div className="space-y-6">
+            <motion.div 
+              variants={{
+                hidden: {},
+                show: {
+                  transition: {
+                    staggerChildren: 0.08
+                  }
+                }
+              }}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.1 }}
+              className="space-y-6"
+            >
               {faqs?.map((faq, idx) => {
                 const isActive = activeIndex === idx;
                 const question = lang === 'vi' ? (faq.question_vi || faq.question_en) : faq.question_en;
@@ -68,10 +81,10 @@ export const MinimalistFaq = ({ title, faqs, lang = 'en' }: MinimalistFaqProps) 
                 return (
                   <motion.div
                     key={faq.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ ...NORDIC_TRANSITION, delay: idx * 0.1 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      show: { opacity: 1, y: 0, transition: { ...NORDIC_TRANSITION } }
+                    }}
                     className={`rounded-[32px] overflow-hidden transition-all duration-700 border ${
                       isActive ? 'bg-surface-sand/40 border-primary/20 shadow-xl' : 'bg-white border-main/5 hover:border-primary/10'
                     }`}
@@ -119,7 +132,7 @@ export const MinimalistFaq = ({ title, faqs, lang = 'en' }: MinimalistFaqProps) 
                   </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
 
         </div>

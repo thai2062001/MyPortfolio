@@ -24,15 +24,32 @@ const SkillIcon = ({ iconName }: { iconName: string }) => {
 export const StrategicSkillsBlock = ({ skills }: StrategicSkillsBlockProps) => {
   const { lang } = useLang();
 
+  const containerVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div className="space-y-6">
-      {skills.map((skill, index) => (
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.1 }}
+      className="space-y-6"
+    >
+      {skills.map((skill) => (
         <motion.div
           key={skill.id}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
+          variants={itemVariants}
           className="flex items-center gap-5"
         >
           {/* Icon */}
@@ -68,6 +85,6 @@ export const StrategicSkillsBlock = ({ skills }: StrategicSkillsBlockProps) => {
           </div>
         </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };

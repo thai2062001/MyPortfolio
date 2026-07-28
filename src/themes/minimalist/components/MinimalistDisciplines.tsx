@@ -34,15 +34,24 @@ export const MinimalistDisciplines = ({ title, subtitle, disciplines }: Minimali
         </div>
 
         {/* Disciplines Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <motion.div 
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+        >
           {disciplines?.map((item: any, idx) => (
             <motion.div
               key={item.id}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
               variants={FADE_UP_VARIANTS}
-              custom={idx % 3}
             >
               <Link
                 to={`/skill/${item.slug}`}
@@ -99,7 +108,7 @@ export const MinimalistDisciplines = ({ title, subtitle, disciplines }: Minimali
               </Link>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

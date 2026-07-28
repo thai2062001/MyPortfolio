@@ -42,19 +42,28 @@ export const MinimalistMilestones = ({ title, milestones }: MinimalistMilestones
           <h2 className="text-display font-display text-main">{title}</h2>
         </motion.div>
 
-        <div className="space-y-12">
-          {milestones?.map((item, idx) => {
+        <motion.div 
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="space-y-12"
+        >
+          {milestones?.map((item) => {
             const hasImages = item.images && item.images.length > 0;
             const coverImage = item.images?.find(img => img.is_cover) || item.images?.[0];
 
             return (
               <motion.div
                 key={item.id}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
                 variants={FADE_UP_VARIANTS}
-                custom={idx}
                 className="group nordic-card flex flex-col lg:flex-row gap-12 p-10 lg:p-14 bg-white"
               >
                 {/* Visual Side - Gallery Slider Placeholder (Can be interactive Swiper) */}
@@ -117,7 +126,7 @@ export const MinimalistMilestones = ({ title, milestones }: MinimalistMilestones
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
