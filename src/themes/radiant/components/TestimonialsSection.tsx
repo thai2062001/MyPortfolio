@@ -9,6 +9,7 @@ import { optimizeCloudinary } from "@/lib/cloudinary";
 import SectionHeader from "./shared/SectionHeader";
 import AmbientAccent from "./shared/AmbientAccent";
 import { TestimonialsModal } from "./TestimonialsModal";
+import { fadeIn, staggerContainer } from "@/lib/animations";
 
 const TestimonialsSection = memo(() => {
   const { lang, t } = useLang();
@@ -209,14 +210,17 @@ const TestimonialsSection = memo(() => {
           <div className="lg:col-span-8">
             {/* Desktop View: Pure Static Grid */}
             {!isTablet && (
-              <div className="lg:grid lg:grid-cols-2 lg:gap-6">
+              <motion.div 
+                variants={staggerContainer(0.08, 0)}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.1 }}
+                className="lg:grid lg:grid-cols-2 lg:gap-6"
+              >
               {testimonials.map((testimonial, idx) => (
                 <motion.div 
                   key={testimonial.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
+                  variants={fadeIn("up", 0.2)}
                 >
                   <div className="bg-white/50 backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:bg-sage hover:shadow-2xl hover:border-sage transition-all duration-500 group h-full cursor-default select-none">
                     <div className="space-y-6">
@@ -248,7 +252,7 @@ const TestimonialsSection = memo(() => {
                   </div>
                 </motion.div>
               ))}
-              </div>
+              </motion.div>
             )}
 
             {/* Mobile View: Swipable Carousel */}

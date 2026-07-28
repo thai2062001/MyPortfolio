@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Project } from "@/core/types/database";
 import { Link } from "react-router-dom";
-import { FADE_UP_VARIANTS, NORDIC_TRANSITION } from "../constants/animations";
+import { FADE_UP_VARIANTS, NORDIC_TRANSITION, NORDIC_STAGGER_CONTAINER, NORDIC_FADE_UP } from "../constants/animations";
 import { MinimalButton } from "./shared/MinimalButton";
 
 interface MinimalistFeaturedWorkProps {
@@ -49,8 +49,13 @@ export const MinimalistFeaturedWork = ({ title, subtitle, projects, viewAllText 
           </motion.div>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
+        <motion.div 
+          variants={NORDIC_STAGGER_CONTAINER}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24"
+        >
           {projects?.slice(0, 4)?.map((project, idx) => {
             // Hiển thị tên danh mục từ object project_categories nếu có
             const categoryName = project.project_categories?.name || "Premium Project";
@@ -58,11 +63,7 @@ export const MinimalistFeaturedWork = ({ title, subtitle, projects, viewAllText 
             return (
               <motion.div
                 key={project.id}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={FADE_UP_VARIANTS}
-                custom={idx % 2}
+                variants={NORDIC_FADE_UP}
                 className={`${idx % 2 === 1 ? "md:mt-24" : ""}`}
               >
                 <Link 
@@ -98,7 +99,7 @@ export const MinimalistFeaturedWork = ({ title, subtitle, projects, viewAllText 
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -331,9 +331,16 @@ const EditorialHome: React.FC = () => {
             <p className="editorial-body" style={{ marginTop: '24px' }}>Expertly curated selection of our most impactful strategic transformations.</p>
           </div>
 
-          <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '48px' }}>
+          <motion.div 
+            variants={staggerContainer(0.08, 0)}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
+            className="blog-grid" 
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '48px' }}
+          >
             {featuredProjects.map((post, idx) => (
-              <motion.div key={idx} variants={fadeIn('up', 0.2)} initial="hidden" whileInView="show" viewport={{ once: true }} className="blog-card">
+              <motion.div key={idx} variants={fadeIn('up', 0.2)} className="blog-card">
                 <Link to={`/project/${post.slug}`} className="blog-image-wrapper" style={{ overflow: 'hidden', borderRadius: '24px', display: 'block' }}>
                   <img src={post.image} alt={post.title} style={{ width: '100%', height: '360px', objectFit: 'cover' }} />
                 </Link>
@@ -346,7 +353,7 @@ const EditorialHome: React.FC = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

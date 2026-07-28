@@ -33,6 +33,29 @@ export const FADE_UP_VARIANTS = {
   }),
 };
 
+export const NORDIC_STAGGER_CONTAINER = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+export const NORDIC_FADE_UP = {
+  hidden: { 
+    opacity: 0, 
+    y: 20,
+    scale: 0.98 
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: NORDIC_TRANSITION,
+  },
+};
+
 export const REVEAL_VARIANTS = {
   hidden: { opacity: 0, x: -10 },
   visible: {
