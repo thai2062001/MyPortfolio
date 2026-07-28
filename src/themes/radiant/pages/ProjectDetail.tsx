@@ -335,9 +335,15 @@ const ProjectDetail = () => {
   
   const [isReady, setIsReady] = useState(false);
   const [allProjects, setAllProjects] = useState<any[]>([]);
-  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
   const { data: project, isLoading: isProjectLoading } = useProjectDetails(slug!);
+
+  const handleNavigate = useCallback((targetSlug: string) => {
+    setIsReady(false);
+    setTimeout(() => {
+      navigate(`/project/${targetSlug}`);
+    }, 600);
+  }, [navigate]);
 
   // Fetch navigation data only once
   useEffect(() => {
@@ -424,7 +430,7 @@ const ProjectDetail = () => {
         )}
       </AnimatePresence>
 
-      <motion.div initial={{ y: 0 }} animate={{ y: isActuallyLoading ? 0 : "-100%" }} transition={{ duration: isTabletOrMobile ? 0.4 : 1, ease: [0.22, 1, 0.36, 1] }} className="fixed inset-0 z-[10000] bg-[#fcfaf7] pointer-events-none" />
+      <motion.div initial={{ y: 0 }} animate={{ y: isActuallyLoading ? 0 : "-100%" }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="fixed inset-0 z-[10000] bg-[#fcfaf7] pointer-events-none" />
 
       {project && (
         <main className="bg-[#fcfaf7] relative overflow-hidden min-h-screen selection:bg-sage/20">
@@ -643,7 +649,7 @@ const ProjectDetail = () => {
                   <ProjectNavigation 
                     prevProject={prevProject} 
                     nextProject={nextProject} 
-                    onNavigate={(targetSlug) => isMobile ? navigate(`/project/${targetSlug}`) : setPendingUrl(`/project/${targetSlug}`)} 
+                    onNavigate={handleNavigate} 
                     t={t} 
                   />
                </div>
@@ -652,9 +658,6 @@ const ProjectDetail = () => {
         </main>
       )}
 
-      {pendingUrl && (
-        <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.6 }} onAnimationComplete={() => { navigate(pendingUrl); setPendingUrl(null); }} className="fixed inset-0 z-[99999] bg-[#fcfaf7]" />
-      )}
       <Footer />
     </>
   );
