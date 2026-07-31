@@ -372,12 +372,14 @@ const ProjectDetail = () => {
     setTimeout(() => setIsReady(true), 150);
   }, []);
 
-  // Memoized derived data
   const { prevProject, nextProject } = useMemo(() => {
+    if (allProjects.length <= 1) return { prevProject: null, nextProject: null };
     const idx = allProjects.findIndex((p: any) => p.slug === slug);
+    if (idx === -1) return { prevProject: null, nextProject: null };
+    
     return {
-      prevProject: idx > 0 ? allProjects[idx - 1] : null,
-      nextProject: idx < allProjects.length - 1 ? allProjects[idx + 1] : null
+      prevProject: idx > 0 ? allProjects[idx - 1] : allProjects[allProjects.length - 1],
+      nextProject: idx < allProjects.length - 1 ? allProjects[idx + 1] : allProjects[0]
     };
   }, [allProjects, slug]);
 
