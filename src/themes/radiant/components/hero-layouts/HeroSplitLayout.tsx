@@ -89,19 +89,25 @@ export const HeroSplitLayout = memo(({
             <motion.div variants={fadeIn("up", 0.4)} className="flex flex-wrap items-center gap-6 md:gap-10 pt-4">
               <button
                 onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-                className="group bg-white text-[#0a2923] px-8 py-5 rounded-full font-bold flex items-center gap-4 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-black/10 font-display tracking-widest text-[12px] uppercase"
+                className="group relative bg-white text-[#0a2923] px-8 py-5 rounded-full font-bold flex items-center gap-4 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-black/10 font-display tracking-widest text-[12px] uppercase overflow-hidden"
               >
-                {fields.primary_button_label}
-                <div className="bg-[#0a2923] text-white rounded-full p-1.5 group-hover:translate-x-1.5 transition-transform duration-500">
-                  <ArrowRight size={16} />
-                </div>
+                <span className="relative z-10 group-hover:text-white transition-colors duration-500 flex items-center gap-4">
+                  {fields.primary_button_label}
+                  <div className="bg-[#0a2923] group-hover:bg-white/20 text-white rounded-full p-1.5 group-hover:translate-x-1.5 transition-all duration-500">
+                    <ArrowRight size={16} />
+                  </div>
+                </span>
+                <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </button>
               
               <button
                 onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                className="text-white font-bold text-[12px] tracking-[0.3em] uppercase hover:text-white/70 transition-colors underline-offset-8 hover:underline decoration-white/20 font-display cursor-pointer"
+                className="group relative bg-transparent border border-white/20 text-white/80 px-8 py-5 rounded-full font-bold transition-all hover:scale-105 active:scale-95 font-display tracking-widest text-[12px] uppercase overflow-hidden"
               >
-                {fields.secondary_button_label}
+                <span className="relative z-10 group-hover:text-[#0a2923] transition-colors duration-500">
+                  {fields.secondary_button_label}
+                </span>
+                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </button>
             </motion.div>
           </motion.div>

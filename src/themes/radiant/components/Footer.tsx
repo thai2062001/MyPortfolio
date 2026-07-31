@@ -89,11 +89,11 @@ export const Footer = memo(() => {
               >
                 <Link 
                   to="/portfolio#contact"
-                  className={`group relative inline-flex items-center gap-6 bg-heading text-white px-12 py-7 md:px-14 md:py-8 rounded-full font-display text-[12px] tracking-[0.4em] uppercase font-bold overflow-hidden transition-all duration-700 shadow-2xl shadow-heading/10 ${
+                  className={`group relative inline-flex items-center gap-6 bg-heading text-white px-12 py-7 md:px-14 md:py-8 rounded-full font-display text-[12px] tracking-[0.4em] uppercase font-bold overflow-hidden transition-all duration-700 shadow-2xl shadow-heading/10 whitespace-nowrap ${
                     !isTablet ? "hover:scale-105 active:scale-95" : "active:scale-95"
                   }`}
                 >
-                  <span className="relative z-10">{t("Start a Project", "プロジェクトを開始")}</span>
+                  <span className="relative z-10 whitespace-nowrap">{t("Start a Project", "プロジェクトを開始")}</span>
                   <ArrowUpRight size={20} className="relative z-10 group-hover:rotate-45 transition-transform duration-700" />
                   {!isTablet && (
                     <div className="absolute inset-0 bg-sage scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ease-out" />

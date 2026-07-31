@@ -94,22 +94,29 @@ export const HeroCardOverlayLayout = memo(({
             </p>
 
             <div className={`flex flex-col sm:flex-row items-center gap-6 md:gap-8 pt-6 ${isCentered ? "justify-center" : "justify-start"}`}>
-              <button
-                onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
-                className="group relative px-12 py-5 bg-heading text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-500 w-full sm:w-auto text-center rounded-full hover:scale-105 active:scale-95 shadow-2xl shadow-heading/20"
-              >
-                <span className="relative z-10">
-                  {fields.primary_button_label}
-                </span>
-                <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-              </button>
+              {fields.primary_button_label && (
+                <button
+                  onClick={() => onNavigate(content.primary_button_url || "/portfolio")}
+                  className="group relative px-12 py-5 bg-heading text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-500 w-full sm:w-auto text-center rounded-full hover:scale-105 active:scale-95 shadow-2xl shadow-heading/20"
+                >
+                  <span className="relative z-10">
+                    {fields.primary_button_label}
+                  </span>
+                  <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                </button>
+              )}
               
-              <button
-                onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                className="px-12 py-5 bg-transparent border border-heading/10 text-heading/60 font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-heading/5 hover:border-heading/30 hover:text-heading/80 transition-all duration-300 w-full sm:w-auto text-center rounded-full"
-              >
-                {fields.secondary_button_label}
-              </button>
+              {fields.secondary_button_label && (
+                <button
+                  onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
+                  className="group relative px-12 py-5 bg-transparent border border-heading/20 text-heading font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-500 w-full sm:w-auto text-center rounded-full hover:scale-105 active:scale-95"
+                >
+                  <span className="relative z-10 group-hover:text-white transition-colors duration-500">
+                    {fields.secondary_button_label}
+                  </span>
+                  <div className="absolute inset-0 bg-heading translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                </button>
+              )}
             </div>
           </div>
         </motion.div>
@@ -121,4 +128,3 @@ export const HeroCardOverlayLayout = memo(({
 });
 
 HeroCardOverlayLayout.displayName = "HeroCardOverlayLayout";
-

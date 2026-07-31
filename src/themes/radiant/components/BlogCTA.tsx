@@ -36,20 +36,26 @@ const BlogCTA: React.FC = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <Button 
+          <button 
             onClick={() => navigate("/portfolio#contact")}
-            className="w-full sm:w-auto rounded-full bg-sage hover:bg-sage/90 text-white px-8 md:px-10 h-12 md:h-14 text-[10px] md:text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-sage/20 transition-all hover:scale-105 active:scale-95"
+            className="group relative w-full sm:w-auto rounded-full bg-sage text-white px-8 md:px-10 h-12 md:h-14 text-[10px] md:text-[11px] font-bold uppercase tracking-widest shadow-xl shadow-sage/20 transition-all hover:scale-105 active:scale-95 overflow-hidden"
           >
-            Start a Project
-            <ArrowRight size={16} className="ml-2" />
-          </Button>
-          <Button 
-            variant="ghost"
+            <span className="relative z-10 group-hover:text-black transition-colors duration-500 flex items-center justify-center">
+              Start a Project
+              <ArrowRight size={16} className="ml-2" />
+            </span>
+            <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+          </button>
+          
+          <button 
             onClick={() => navigate("/portfolio")}
-            className="w-full sm:w-auto rounded-full border border-white/20 bg-white/5 hover:bg-white text-white hover:text-heading px-8 md:px-10 h-12 md:h-14 text-[10px] md:text-[11px] font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+            className="group relative w-full sm:w-auto rounded-full border border-white/20 bg-white/5 text-white px-8 md:px-10 h-12 md:h-14 text-[10px] md:text-[11px] font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 overflow-hidden"
           >
-            View Projects
-          </Button>
+            <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+              View Projects
+            </span>
+            <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+          </button>
         </div>
       </div>
     </motion.section>

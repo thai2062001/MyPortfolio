@@ -38,7 +38,6 @@ export const HeroBackgroundLayout = memo(({
 
   const textAlign = config.textAlign || "left";
   const isCentered = textAlign === "center";
-  const overlayOpacity = config.overlayOpacity ?? 0.6;
 
   return (
     <section className="relative min-h-screen min-h-[100svh] w-full flex items-center overflow-hidden bg-[#0A0C0B]">
@@ -66,17 +65,18 @@ export const HeroBackgroundLayout = memo(({
         )}
       </div>
 
-      {/* Layered Overlays */}
+      {/* Layered Overlays - Commented out to check layout without overlay */}
+      {/* 
       <div
         className="absolute inset-0 z-10 bg-black/30 transition-opacity duration-1000"
-        style={{ opacity: overlayOpacity }}
+        style={{ opacity: config.overlayOpacity ?? 0.6 }}
       />
-
       <div
         className={`absolute inset-0 z-10 bg-gradient-to-r from-black/80 via-black/40 to-transparent ${
           isCentered ? "md:bg-gradient-to-b md:from-black/60 md:via-transparent md:to-black/60" : ""
         }`}
       />
+      */}
 
       {/* Text/CTA Content - Renders Immediately */}
       <div className="container mx-auto px-6 md:px-12 lg:px-20 relative z-20">
@@ -143,16 +143,19 @@ export const HeroBackgroundLayout = memo(({
                   <span className="relative z-10 group-hover:text-white transition-colors duration-500">
                     {fields.primary_button_label}
                   </span>
-                  <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                 </button>
               )}
 
               {fields.secondary_button_label && (
                 <button
                   onClick={() => onNavigate(content.secondary_button_url || "/#contact")}
-                  className="px-12 py-5 bg-white/15 md:bg-white/5 backdrop-blur-none md:backdrop-blur-md border border-white/20 text-white font-display text-[12px] tracking-[0.3em] uppercase font-bold hover:bg-white/15 hover:border-white/40 transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
+                  className="group relative px-12 py-5 bg-white/10 text-white border border-white/20 font-display text-[12px] tracking-[0.3em] uppercase font-bold overflow-hidden transition-all duration-300 w-full sm:w-auto text-center hover:scale-105 active:scale-95"
                 >
-                  {fields.secondary_button_label}
+                  <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+                    {fields.secondary_button_label}
+                  </span>
+                  <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                 </button>
               )}
             </motion.div>
@@ -166,4 +169,3 @@ export const HeroBackgroundLayout = memo(({
 });
 
 HeroBackgroundLayout.displayName = "HeroBackgroundLayout";
-

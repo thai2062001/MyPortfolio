@@ -105,9 +105,7 @@ const ContactSection = memo(({ customTitle, customDescription, customEyebrow }: 
                 <span className="relative z-10 text-white text-[12px] md:text-[14px] tracking-[0.4em] uppercase font-display font-bold">
                    {fields.primary_button_label}
                 </span>
-                {!isTablet && (
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                )}
+                <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </button>
             </motion.div>
           </motion.div>

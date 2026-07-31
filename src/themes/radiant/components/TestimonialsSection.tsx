@@ -239,45 +239,22 @@ const TestimonialsSection = memo(() => {
               <div className="pt-12 w-full px-4">
                 <motion.button 
                   onClick={handleOpenTestimonials}
-                  initial="initial"
-                  whileHover={!isMobile ? "hover" : undefined}
-                  whileTap={!isMobile ? "tap" : undefined}
-                  variants={{
-                    initial: { y: 0 },
-                    hover: { 
-                      y: -4,
-                      boxShadow: "0 20px 40px rgba(0,0,0,0.2)"
-                    },
-                    tap: { scale: 0.98, y: 0 }
-                  }}
-                  className="w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full transition-all duration-300 relative overflow-hidden group/btn"
+                  whileHover={!isMobile ? { y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" } : undefined}
+                  whileTap={!isMobile ? { scale: 0.98, y: 0 } : undefined}
+                  className="group relative w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full transition-all duration-300 overflow-hidden text-center"
                 >
-                  {/* The White Background Fill Layer */}
+                  {/* The Sage Background Fill Layer */}
                   {!isMobile && (
-                    <motion.div 
-                      variants={{
-                        initial: { x: "-100%" },
-                        hover: { x: 0 }
-                      }}
-                      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute inset-0 bg-white"
-                    />
+                    <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                   )}
 
                   {/* Button Text */}
-                  <motion.span 
-                    variants={{
-                      initial: { color: "rgba(255, 255, 255, 1)" },
-                      hover: { color: "#00170b" }
-                    }}
-                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative z-10 transition-colors duration-300 font-display text-xl md:text-2xl tracking-tight normal-case"
-                  >
+                  <span className="relative z-10 transition-colors duration-500 font-display text-xl md:text-2xl tracking-tight normal-case text-white">
                     {lang === "en" ? "View All Reviews" : lang === "ja" ? "すべてのレビューを表示" : "Xem tất cả đánh giá"}
-                  </motion.span>
+                  </span>
                   
                   {/* Subtle glass reflection on top */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none opacity-50 group-hover/btn:opacity-0 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none opacity-50 group-hover:opacity-0 transition-opacity duration-300" />
                 </motion.button>
               </div>
             </div>

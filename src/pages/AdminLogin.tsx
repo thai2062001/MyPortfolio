@@ -89,7 +89,7 @@ const AdminLogin = () => {
           >
             <div className="space-y-1">
                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Ownership</p>
-               <p className="text-sm font-serif italic text-white/80">Phạm Thị Hải Yến</p>
+               <p className="text-sm font-serif italic text-white/80">Thái Phạm</p>
             </div>
             <div className="text-right space-y-1">
                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Specialization</p>
