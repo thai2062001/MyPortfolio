@@ -628,7 +628,7 @@ const ProjectDetail = () => {
                      <span className="font-sans text-[10px] tracking-[0.6em] uppercase font-bold text-white/30 italic">Archive</span>
                      <h2 className="font-display text-5xl md:text-9xl tracking-tighter leading-none text-white italic">Curated <span className="text-vibe-pink">Visuals.</span></h2>
                    </div>
-                   <ProjectGallery images={project.project_images.slice(2)} isMobile={isMobile} t={t} />
+                   <ProjectGallery images={project.project_images.slice(2)} isMobile={isTabletOrMobile} t={t} />
                 </div>
              </section>
           )}
