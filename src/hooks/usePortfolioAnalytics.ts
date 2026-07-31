@@ -12,7 +12,7 @@ import { getDeviceType } from '@/lib/analytics/device';
 import { getPageKey } from '@/lib/analytics/page-key';
 import { insertVisitEvent, updateVisitEvent } from '@/lib/analytics/service';
 import { AnalyticsEventData } from '@/lib/analytics/types';
-import { getExistingPageEventId, addPageToHistory } from '@/lib/analytics/page-history';
+
 
 interface TrackingState {
     eventId: string | null;
@@ -70,17 +70,6 @@ export const usePortfolioAnalytics = () => {
 
             const pageKey = getPageKey(location.pathname);
 
-            // Check if this page was already visited in this session
-            const existingEventId = getExistingPageEventId(pageKey);
-
-            if (existingEventId) {
-                // Page already visited in this session, just update the existing event
-                trackingStateRef.current.eventId = existingEventId;
-                trackingStateRef.current.startTime = Date.now();
-                trackingStateRef.current.maxScrollPercent = 0;
-                return;
-            }
-
             // New page visit, create new event
             const visitorId = getVisitorId();
             const sessionId = getSessionId();
@@ -112,9 +101,6 @@ export const usePortfolioAnalytics = () => {
                 console.error('Failed to insert analytics event');
                 return;
             }
-
-            // Add to page history to track that we've visited this page
-            addPageToHistory(pageKey, eventId);
 
             trackingStateRef.current.eventId = eventId;
             trackingStateRef.current.startTime = Date.now();
