@@ -567,54 +567,167 @@ const ProjectDetail = () => {
                 )}
                 {results.length > 0 && (
                   <div className="space-y-16">
-                     <div className="space-y-6 text-left">
-                        <div className="flex items-center gap-4 justify-start">
-                           <span className="w-12 h-px bg-vibe-pink/30" />
-                           <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-vibe-pink/60">{t("Outcome", "成果", "Thành quả")}</span>
-                        </div>
-                        <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
-                          {t("The", "その", "Những")} <span className="text-vibe-pink">Results.</span>
-                        </h2>
-                     </div>
-                     
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-                        {results.map((r: any, i: number) => (
-                           <motion.div 
-                              key={i} 
-                              initial={isTabletOrMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} 
-                              whileInView={{ opacity: 1, y: 0 }} 
-                              viewport={{ once: true, margin: "-50px" }} 
-                              transition={{ delay: i * 0.08, duration: 0.6 }}
-                              className={cn(
-                                "group relative p-12 md:p-16 rounded-[3rem] md:rounded-[4rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500",
-                                "bg-white/80 md:bg-white/40 md:backdrop-blur-md border border-heading/5 hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5",
-                                i === 0 && results.length % 2 !== 0 ? 'sm:col-span-2' : ''
-                              )}
-                           >
-                              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-vibe-pink/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                              
-                              {r.value ? (
-                                <>
-                                  <p className="font-display text-6xl md:text-8xl text-vibe-pink mb-6 tracking-tighter group-hover:scale-105 transition-transform duration-500">{r.value}</p>
-                                  <div className="w-8 h-1 bg-vibe-pink/10 mb-6 group-hover:w-16 transition-all duration-500" />
-                                  <p className="font-sans text-[11px] md:text-[13px] tracking-[0.1em] uppercase font-bold text-heading px-4 leading-relaxed">{r.label}</p>
-                                </>
-                              ) : (
-                                <div className="space-y-6">
-                                  <div className="w-12 h-12 rounded-2xl bg-vibe-pink/5 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-500">
-                                    {(() => {
-                                      const Icon = resultIcons[i % resultIcons.length];
-                                      return <Icon className="text-vibe-pink/60" size={24} />;
-                                    })()}
+                      <div className="space-y-6 text-left">
+                         <div className="flex items-center gap-4 justify-start">
+                            <span className="w-12 h-px bg-vibe-pink/30" />
+                            <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-vibe-pink/60">{t("Outcome", "成果", "Thành quả")}</span>
+                         </div>
+                         <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
+                           {t("The", "その", "Những")} <span className="text-vibe-pink">Results.</span>
+                         </h2>
+                      </div>
+                      
+                      {/* BEFORE/AFTER COMPARISON WIDGET */}
+                      {results.some(r => r.value?.includes('|') || r.value?.includes('->') || r.value?.includes('→') || r.label?.includes('|') || r.label?.includes('->') || r.label?.includes('→')) ? (
+                        <div className="max-w-4xl mx-auto bg-white border border-black/[0.03] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.06)] rounded-[2rem] overflow-hidden grid grid-cols-2">
+                          
+                          {/* LEFT COLUMN: BEFORE */}
+                          <div className="p-6 md:p-16 space-y-12 bg-white text-left">
+                            <span className="font-display text-3xl md:text-4xl text-heading/60 italic block leading-none">
+                              Before
+                            </span>
+                            
+                            <div className="space-y-10 md:space-y-12">
+                              {results.map((r: any, idx: number) => {
+                                const splitBeforeAfter = (text: string) => {
+                                  if (!text) return ["", ""];
+                                  if (text.includes('|')) return text.split('|').map(s => s.trim());
+                                  if (text.includes('->')) return text.split('->').map(s => s.trim());
+                                  if (text.includes('→')) return text.split('→').map(s => s.trim());
+                                  return [text.trim(), ""];
+                                };
+                                const [beforeVal] = splitBeforeAfter(r.value);
+                                const [beforeLbl] = splitBeforeAfter(r.label);
+                                
+                                return (
+                                  <div key={idx} className="space-y-1 md:space-y-2">
+                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading font-light tracking-tight">
+                                      {beforeVal}
+                                    </p>
+                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-heading/45 font-light leading-relaxed">
+                                      {beforeLbl}
+                                    </p>
                                   </div>
-                                  <p className="font-serif text-xl md:text-2xl text-heading/80 leading-relaxed italic group-hover:text-heading transition-colors duration-500">
-                                    {r.label}
-                                  </p>
-                                </div>
-                              )}
-                           </motion.div>
-                        ))}
-                     </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                          
+                          {/* RIGHT COLUMN: AFTER */}
+                          <div className="p-6 md:p-16 bg-vibe-pink/[0.04] border-l border-vibe-pink/10 space-y-12 text-left">
+                            <span className="font-display text-3xl md:text-4xl text-vibe-pink italic block leading-none">
+                              After
+                            </span>
+                            
+                            <div className="space-y-10 md:space-y-12">
+                              {results.map((r: any, idx: number) => {
+                                const splitBeforeAfter = (text: string) => {
+                                  if (!text) return ["", ""];
+                                  if (text.includes('|')) return text.split('|').map(s => s.trim());
+                                  if (text.includes('->')) return text.split('->').map(s => s.trim());
+                                  if (text.includes('→')) return text.split('→').map(s => s.trim());
+                                  return [text.trim(), ""];
+                                };
+                                const [beforeVal] = splitBeforeAfter(r.value);
+                                const [beforeLbl] = splitBeforeAfter(r.label);
+                                const [, afterVal] = splitBeforeAfter(r.value);
+                                const [, afterLbl] = splitBeforeAfter(r.label);
+                                
+                                return (
+                                  <div key={idx} className="space-y-1 md:space-y-2">
+                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#3b1c21] font-light tracking-tight">
+                                      {afterVal || beforeVal}
+                                    </p>
+                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-[#70494f] font-light leading-relaxed">
+                                      {afterLbl || beforeLbl}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                          
+                        </div>
+                      ) : (
+                        // Standard Grid Cards (if no splits)
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
+                           {results.map((r: any, i: number) => {
+                              let rawLabel = r.label || "";
+                              let mainLabel = rawLabel;
+                              let subDesc = "";
+                              
+                              const pipeParts = rawLabel.split('|');
+                              if (pipeParts.length > 1) {
+                                mainLabel = pipeParts[0].trim();
+                                subDesc = pipeParts[1].trim();
+                              } else {
+                                const newlineParts = rawLabel.split('\n');
+                                if (newlineParts.length > 1) {
+                                  mainLabel = newlineParts[0].trim();
+                                  subDesc = newlineParts[1].trim();
+                                } else {
+                                  const commaIndex = rawLabel.indexOf(', ');
+                                  if (commaIndex !== -1) {
+                                    mainLabel = rawLabel.substring(0, commaIndex).trim();
+                                    subDesc = rawLabel.substring(commaIndex + 2).trim();
+                                  }
+                                }
+                              }
+
+                              const Icon = resultIcons[i % resultIcons.length];
+
+                              return (
+                                 <motion.div 
+                                    key={i} 
+                                    initial={isTabletOrMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }} 
+                                    whileInView={{ opacity: 1, y: 0 }} 
+                                    viewport={{ once: true, margin: "-50px" }} 
+                                    transition={{ delay: i * 0.08, duration: 0.6 }}
+                                    className="group relative py-16 px-8 md:py-24 md:px-12 min-h-[380px] md:min-h-[480px] lg:min-h-[520px] rounded-[3rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 bg-white border border-black/[0.03] shadow-[0_20px_50px_-25px_rgba(0,0,0,0.05)] hover:border-vibe-pink/20 hover:shadow-2xl hover:shadow-vibe-pink/5"
+                                 >
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-vibe-pink/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                    
+                                    {/* Center Icon */}
+                                    <div className="w-10 h-10 rounded-full bg-vibe-pink/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
+                                       <Icon className="text-vibe-pink" size={18} />
+                                    </div>
+                                    
+                                    {r.value ? (
+                                      <>
+                                        {/* Large Serif metric value - dark text color */}
+                                        <p className="font-display text-5xl md:text-6xl lg:text-7xl text-heading mb-6 tracking-tighter group-hover:scale-105 transition-transform duration-500">
+                                          {r.value}
+                                        </p>
+                                        
+                                        {/* Main Label */}
+                                        <p className="font-body text-base font-semibold text-heading/80 px-4 leading-relaxed mb-2">
+                                          {mainLabel}
+                                        </p>
+                                        
+                                        {/* Sub-description */}
+                                        {subDesc && (
+                                          <p className="font-body text-xs text-heading/45 px-4 leading-relaxed font-light">
+                                            {subDesc}
+                                          </p>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <div className="space-y-6">
+                                        <p className="font-serif text-2xl sm:text-3xl md:text-[2.2rem] lg:text-[2.4rem] text-heading/80 leading-[1.3] md:leading-[1.25] italic font-light px-2 group-hover:text-heading transition-colors duration-500">
+                                          {mainLabel}
+                                        </p>
+                                        {subDesc && (
+                                          <p className="font-body text-xs text-heading/45 px-4 leading-relaxed font-light">
+                                            {subDesc}
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
+                                 </motion.div>
+                              );
+                           })}
+                        </div>
+                      )}
                   </div>
                 )}
              </div>
