@@ -11,17 +11,8 @@ import AmbientAccent from "./shared/AmbientAccent";
 import { TestimonialsModal } from "./TestimonialsModal";
 import { fadeIn, staggerContainer } from "@/lib/animations";
 
-const TestimonialsSection = memo(() => {
-  const { lang, t } = useLang();
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  const testimonialsQuery = useTestimonials();
-  const { data: personalInfo } = usePersonalInfo();
-  const [isTestimonialsModalOpen, setIsTestimonialsModalOpen] = useState(false);
-  
-  const testimonials = testimonialsQuery.data || [];
-  const loading = testimonialsQuery.isLoading;
-
+// --- Isolated Mobile Carousel Component for Performance ---
+const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang: string }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     skipSnaps: false,
@@ -58,6 +49,92 @@ const TestimonialsSection = memo(() => {
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="overflow-hidden touch-pan-y" ref={emblaRef}>
+        <div className="flex -ml-6 transform-gpu will-change-transform">
+          {testimonials.map((testimonial: any) => (
+            <div key={testimonial.id} className="flex-none pl-6 w-full h-full transform-gpu">
+              <div className="bg-white/85 border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group h-full select-none">
+                <div className="space-y-6">
+                   <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light">
+                      "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : testimonial.quote_vi || testimonial.quote_en}"
+                   </p>
+                </div>
+                <div className="flex items-center gap-4 mt-10">
+                   <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 bg-black/5 flex items-center justify-center">
+                      {testimonial.portrait_url ? (
+                        <img 
+                          src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
+                          alt={testimonial.author_name} 
+                          loading="lazy"
+                          className="w-full h-full object-cover pointer-events-none"
+                        />
+                      ) : (
+                        <User className="w-6 h-6 text-heading/20" strokeWidth={1.5} />
+                      )}
+                   </div>
+                   <div className="flex flex-col">
+                      <span className="font-display text-lg text-heading leading-none mb-1">{testimonial.author_name}</span>
+                      <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30">
+                        {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : testimonial.role_vi || testimonial.role_en}
+                      </span>
+                   </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile Navigation Controls */}
+      <div className="flex items-center justify-between px-2 mt-2">
+        <div className="flex gap-1.5">
+          {testimonials.slice(0, 5).map((_: any, i: number) => (
+            <div 
+              key={i} 
+              className="w-1.5 h-1.5 rounded-full bg-sage/20" 
+            />
+          ))}
+        </div>
+        <div className="flex gap-3">
+          <button 
+            onClick={scrollPrev}
+            disabled={!canScrollPrev}
+            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${canScrollPrev ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <button 
+            onClick={scrollNext}
+            disabled={!canScrollNext}
+            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${canScrollNext ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+MobileCarousel.displayName = "MobileCarousel";
+
+const TestimonialsSection = memo(() => {
+  const { lang, t } = useLang();
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const testimonialsQuery = useTestimonials();
+  const { data: personalInfo } = usePersonalInfo();
+  const [isTestimonialsModalOpen, setIsTestimonialsModalOpen] = useState(false);
+  
+  const testimonials = testimonialsQuery.data || [];
+  const loading = testimonialsQuery.isLoading;
 
   if (loading) {
     return (
@@ -257,75 +334,10 @@ const TestimonialsSection = memo(() => {
 
             {/* Mobile View: Swipable Carousel */}
             {isTablet && (
-              <div className="flex flex-col gap-6">
-              <div className="overflow-hidden touch-pan-y" ref={emblaRef}>
-                <div className="flex -ml-6 transform-gpu will-change-transform">
-                  {testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="flex-none pl-6 w-full h-full">
-                      <div className="bg-white/85 md:bg-white/50 md:backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:md:bg-sage transition-colors duration-300 group h-full select-none">
-                        <div className="space-y-6">
-                           <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light group-hover:md:text-white/90 transition-colors duration-500">
-                              "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
-                           </p>
-                        </div>
-                        <div className="flex items-center gap-4 mt-10">
-                           <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 group-hover:md:border-white/20 transition-colors duration-500 bg-black/5 flex items-center justify-center">
-                              {testimonial.portrait_url ? (
-                                <img 
-                                  src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
-                                  alt={testimonial.author_name} 
-                                  loading="lazy"
-                                  className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
-                                />
-                              ) : (
-                                <User className="w-6 h-6 text-heading/20 group-hover:md:text-white transition-colors duration-500" strokeWidth={1.5} />
-                              )}
-                           </div>
-                           <div className="flex flex-col">
-                              <span className="font-display text-lg text-heading leading-none mb-1 group-hover:md:text-white transition-colors duration-500">{testimonial.author_name}</span>
-                              <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30 group-hover:md:text-white/60 transition-colors duration-500">
-                                {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : (testimonial as any).role_vi || testimonial.role_en}
-                              </span>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mobile Navigation Controls */}
-              <div className="flex items-center justify-between px-2 mt-2">
-                <div className="flex gap-1.5">
-                  {testimonials.slice(0, 5).map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="w-1.5 h-1.5 rounded-full bg-sage/20" 
-                    />
-                  ))}
-                </div>
-                <div className="flex gap-3">
-                  <button 
-                    onClick={scrollPrev}
-                    disabled={!canScrollPrev}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-500 ${canScrollPrev ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m15 18-6-6 6-6"/>
-                    </svg>
-                  </button>
-                  <button 
-                    onClick={scrollNext}
-                    disabled={!canScrollNext}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-500 ${canScrollNext ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+              <MobileCarousel
+                testimonials={testimonials}
+                lang={lang}
+              />
             )}
           </div>
         </div>

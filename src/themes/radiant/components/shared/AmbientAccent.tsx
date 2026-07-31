@@ -37,7 +37,7 @@ const AmbientAccent = memo(({
     height: typeof size === 'number' ? `${size}px` : size,
     opacity: opacity,
     filter: `blur(${isTablet ? Math.min(Number(blur), 80) : blur}px)`,
-    willChange: 'auto',
+    willChange: 'transform',
   };
 
   return (
