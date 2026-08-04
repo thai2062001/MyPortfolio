@@ -55,6 +55,7 @@ BreadcrumbNav.displayName = "BreadcrumbNav";
 const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt: string; onReady?: () => void; isStatic: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const isMobileOrTablet = useIsTablet();
   const { scrollYProgress } = useScroll({ 
     target: containerRef, 
     offset: ["start end", "end start"]
@@ -74,7 +75,7 @@ const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt:
     >
       <motion.img 
         style={(!prefersReducedMotion && !isStatic) ? { y, scale } : {}} 
-        src={optimizeCloudinary(src, { width: 1600, quality: "best" })} 
+        src={optimizeCloudinary(src, { width: isMobileOrTablet ? 800 : 1600, quality: "best" })} 
         alt={alt} 
         onLoad={onReady} 
         className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96]" 
@@ -87,10 +88,11 @@ const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt:
 ParallaxCover.displayName = "ParallaxCover";
 
 const StaticCover = memo(({ src, alt, onReady }: { src: string; alt: string; onReady?: () => void }) => {
+  const isMobileOrTablet = useIsTablet();
   return (
     <div className="relative w-full h-[400px] md:h-[800px] rounded-[2.5rem] md:rounded-[5rem] overflow-hidden bg-[#111] shadow-2xl">
       <img
-        src={optimizeCloudinary(src, { width: 1600, quality: "best" })}
+        src={optimizeCloudinary(src, { width: isMobileOrTablet ? 800 : 1600, quality: "best" })}
         alt={alt}
         onLoad={onReady}
         className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96]"
@@ -193,7 +195,7 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
         </motion.button>
 
         <motion.div initial={!isStatic ? { scale: 1.15 } : { scale: 1 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: isStatic ? 0.3 : 2.5 }} className="absolute inset-0 z-0">
-          <img src={optimizeCloudinary(project.project_images[1].image_url, { width: 1920, quality: "best" })} alt="" className="w-full h-full object-cover opacity-40 grayscale-[0.3]" />
+          <img src={optimizeCloudinary(project.project_images[1].image_url, { width: isStatic ? 960 : 1920, quality: "best" })} alt="" className="w-full h-full object-cover opacity-40 grayscale-[0.3]" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#111] via-transparent to-[#111] opacity-95" />
           {!isStatic && <div className="absolute inset-0 backdrop-blur-[4px]" />}
         </motion.div>
@@ -443,7 +445,7 @@ const ProjectDetail = () => {
           <ScrollProgress />
 
           {/* 1. Hero Reveal Section */}
-          <section className="pt-56 md:pt-72 pb-16 md:pb-20 relative z-10 overflow-hidden">
+          <section className="pt-12 md:pt-72 pb-16 md:pb-20 relative z-10 overflow-hidden">
             <div className="container mx-auto px-6 max-w-5xl flex flex-col items-center">
               
               {/* Left-Aligned Breadcrumb relative to the 5xl container */}
@@ -511,7 +513,7 @@ const ProjectDetail = () => {
                  <motion.div initial={isTabletOrMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="w-full">
                     {project.project_images?.[0] ? (
                       <div className="rounded-[2.5rem] md:rounded-[4.5rem] overflow-hidden shadow-2xl aspect-video bg-[#111]">
-                         <img src={optimizeCloudinary(project.project_images[0].image_url, { width: 1400 })} alt="Strategy" className="w-full h-full object-cover scale-[1.01] brightness-[0.98]" />
+                         <img src={optimizeCloudinary(project.project_images[0].image_url, { width: isTabletOrMobile ? 700 : 1400 })} alt="Strategy" className="w-full h-full object-cover scale-[1.01] brightness-[0.98]" />
                       </div>
                     ) : (
                       <div className="rounded-[2.5rem] md:rounded-[4.5rem] bg-[#1a1a1a] aspect-video w-full flex items-center justify-center">

@@ -111,7 +111,7 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
               <p className="font-display text-xl text-heading">
                 {testimonial.name}
               </p>
-              <p className="font-sans text-[10px] tracking-[0.3em] uppercase font-black text-heading/30">
+              <p className="font-display text-base text-heading/50 italic">
                 {testimonial.title} / {testimonial.company}
               </p>
             </div>
@@ -150,7 +150,7 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
               </p>
               <div className="flex items-center gap-3">
                  <div className="w-6 h-px bg-heading/10" />
-                 <p className="font-sans text-[10px] tracking-[0.3em] uppercase font-black text-heading/30">
+                 <p className="font-display text-lg text-heading/50 italic">
                    {testimonial.title} / {testimonial.company}
                  </p>
                  <div className="w-6 h-px bg-heading/10" />
