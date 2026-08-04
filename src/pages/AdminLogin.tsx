@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Mail, ArrowRight, Sparkles, ShieldCheck, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePersonalInfo } from "@/core/hooks/usePortfolio";
 
 const AdminLogin = () => {
   const { signIn } = useAuth();
@@ -12,6 +13,7 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { data: personalInfo } = usePersonalInfo();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +91,7 @@ const AdminLogin = () => {
           >
             <div className="space-y-1">
                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Ownership</p>
-               <p className="text-sm font-serif italic text-white/80">Thái Phạm</p>
+               <p className="text-sm font-display italic text-white/80">{personalInfo?.full_name || "Thái Phạm"}</p>
             </div>
             <div className="text-right space-y-1">
                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Specialization</p>
@@ -119,7 +121,7 @@ const AdminLogin = () => {
             </motion.div>
             <h1 className="text-4xl font-serif font-bold text-heading tracking-tight leading-tight">
               Welcome back, <br/>
-              <span className="italic text-sage">Ms. Hải Yến</span>
+              <span className="font-display italic text-sage text-5xl mt-2 block">{personalInfo?.full_name || "Thái Phạm"}</span>
             </h1>
             <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-[0.2em]">
               Elevating the Digital Portfolio Narrative
