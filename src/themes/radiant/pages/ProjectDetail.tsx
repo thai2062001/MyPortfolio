@@ -266,14 +266,14 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
             {structuredData.map((item: any, i: number) => (
               <motion.div 
                 key={i} 
-                initial={isStatic ? { opacity: 1 } : { opacity: 0, y: 20 }} 
+                initial={isStatic ? { opacity: 1 } : { opacity: 0, y: 15 }} 
                 whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true, margin: "-50px" }} 
-                transition={{ delay: isStatic ? 0 : i * 0.08, duration: 0.6 }}
+                viewport={{ once: true, margin: "-20px" }} 
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 whileHover={!isStatic ? "hover" : undefined}
-                className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-6 md:p-8 xl:p-10 rounded-[2.5rem] xl:rounded-[3rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
+                className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-6 md:p-8 xl:p-10 rounded-[2.5rem] xl:rounded-[3rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 xl:hover:border-vibe-pink/30 xl:hover:bg-white/60 xl:hover:shadow-2xl xl:hover:shadow-vibe-pink/5"
               >
-                <div className="absolute inset-0 rounded-[2.5rem] xl:rounded-[3rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                <div className="absolute inset-0 rounded-[2.5rem] xl:rounded-[3rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
                 <div className="flex items-center gap-4 mb-10 relative z-10">
                   <motion.div 
@@ -306,7 +306,7 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
                   {cleanNumbering(item.title || "")}
                 </motion.h4>
                 
-                <p className="font-body text-sm md:text-base xl:text-lg text-heading/70 leading-relaxed font-light relative z-10 group-hover:text-heading transition-colors duration-500">
+                <p className="font-body text-sm md:text-base xl:text-lg text-heading/70 leading-relaxed font-light relative z-10 xl:group-hover:text-heading transition-colors duration-500">
                   {cleanNumbering(item.content || "")}
                 </p>
               </motion.div>
@@ -548,17 +548,17 @@ const ProjectDetail = () => {
                         {approaches.map((step: any, i: number) => (
                            <motion.div 
                               key={i} 
-                              initial={isTabletOrMobile ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }} 
-                              whileInView={{ opacity: 1, x: 0 }} 
-                              viewport={{ once: true, margin: "-50px" }} 
-                              transition={{ delay: i * 0.08, duration: 0.6 }}
-                              className="group relative p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-white border border-heading/5 hover:border-sage/20 transition-all duration-500 overflow-hidden"
+                              initial={isTabletOrMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }} 
+                              whileInView={{ opacity: 1, y: 0 }} 
+                              viewport={{ once: true, margin: "-20px" }} 
+                              transition={{ duration: 0.4, ease: "easeOut" }}
+                              className="group relative p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-white border border-heading/5 xl:hover:border-sage/20 transition-all duration-500 overflow-hidden"
                            >
-                              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sage/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sage/5 to-transparent rounded-bl-full opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700" />
                               
                               <div className="flex items-start gap-6 md:gap-8">
-                                 <span className="font-display text-4xl md:text-5xl text-sage/30 group-hover:text-sage transition-colors duration-500 shrink-0">0{i+1}.</span>
-                                 <p className="font-serif text-lg md:text-xl text-heading/80 leading-relaxed italic group-hover:text-heading transition-colors duration-500">
+                                 <span className="font-display text-4xl md:text-5xl text-sage shrink-0">0{i+1}.</span>
+                                 <p className="font-serif text-lg md:text-xl text-heading leading-relaxed italic">
                                     {step.content}
                                  </p>
                               </div>
