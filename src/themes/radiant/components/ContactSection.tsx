@@ -49,7 +49,8 @@ const ContactSection = memo(({ customTitle, customDescription, customEyebrow }: 
       eyebrow: customEyebrow || defaultFields.eyebrow,
       title_line_1: customTitle || defaultFields.title_line_1,
       title_line_2: customTitle ? "" : defaultFields.title_line_2, // Clear line 2 if custom title provided
-      description: customDescription || defaultFields.description
+      description: customDescription || defaultFields.description,
+      primary_button_label: defaultFields.primary_button_label
     };
   }, [contactContent, currentLang, customTitle, customDescription, customEyebrow]);
 
