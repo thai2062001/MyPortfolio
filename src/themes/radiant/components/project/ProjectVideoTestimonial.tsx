@@ -87,18 +87,20 @@ const VideoPlayer = ({ url, poster }: { url: string; poster?: string }) => {
   );
 };
 
+
+
 export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimonialProps) => {
   const isMobile = useIsMobile();
   if (!testimonial) return null;
 
   if (isMobile) {
     return (
-      <section className="py-20 relative overflow-hidden bg-white/40">
-        <div className="container mx-auto px-6 max-w-3xl relative z-10 text-center space-y-10">
+      <section className="py-16 relative overflow-hidden bg-white/40">
+        <div className="container mx-auto px-6 max-w-3xl relative z-10 text-center space-y-8">
           <div className="space-y-6">
             <div className="flex flex-col items-center gap-4">
               <span className="font-artistic text-3xl text-vibe-pink/40">Words of Trust</span>
-              <div className="w-px h-10 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
+              <div className="w-px h-8 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
             </div>
 
             <blockquote className="font-display text-3xl text-heading tracking-tight leading-tight italic selection:bg-vibe-pink/20">
@@ -120,7 +122,7 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
   }
 
   return (
-    <section className="py-32 relative overflow-hidden bg-white/40">
+    <section className="py-24 relative overflow-hidden bg-white/40">
       {/* Soft Atmosphere Accents */}
       <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-vibe-pink/5 rounded-full blur-[150px] pointer-events-none" />
 
@@ -130,12 +132,12 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true }}
            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-           className="text-center space-y-16"
+           className="text-center space-y-12"
         >
-          <div className="space-y-8">
-            <div className="flex flex-col items-center gap-6">
+          <div className="space-y-6">
+            <div className="flex flex-col items-center gap-4">
                <span className="font-artistic text-4xl text-vibe-pink/40">Words of Trust</span>
-               <div className="w-px h-12 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
+               <div className="w-px h-8 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
             </div>
             
             <blockquote className="font-display text-4xl md:text-5xl text-heading tracking-tight leading-tight italic selection:bg-vibe-pink/20">

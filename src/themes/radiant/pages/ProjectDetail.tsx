@@ -161,11 +161,11 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden">
             {structuredChallenge.map((item: any, i: number) => (
-              <div key={i} className={`bg-[#141414] p-10 md:p-20 transition-all duration-700 border-white/5 border ${!isStatic ? 'group hover:bg-white/[0.01]' : ''}`}>
-                <div className="space-y-8">
+              <div key={i} className={`bg-[#141414] p-8 md:p-12 transition-all duration-700 border-white/5 border ${!isStatic ? 'group hover:bg-white/[0.01]' : ''}`}>
+                <div className="space-y-4">
                   <span className="font-mono text-[11px] text-vibe-pink/60">0{i+1}</span>
-                  <h4 className="font-serif text-2xl md:text-4xl text-white tracking-tight">{cleanNumbering(item.title || "")}</h4>
-                  <p className="font-body text-lg text-white/50 leading-relaxed font-light">{cleanNumbering(item.content || "")}</p>
+                  <h4 className="font-serif text-xl md:text-2xl text-white tracking-tight">{cleanNumbering(item.title || "")}</h4>
+                  <p className="font-body text-sm md:text-base text-white/60 leading-relaxed font-light">{cleanNumbering(item.content || "")}</p>
                 </div>
               </div>
             ))}
@@ -254,7 +254,7 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
   return (
     <section id="solution-section" className="py-20 md:py-48 relative bg-vibe-pink/[0.02] border-y border-vibe-pink/10 overflow-hidden">
       <div className="w-full px-6 md:px-12 lg:px-20 mx-auto max-w-[1920px] relative z-10 text-center md:text-left">
-        <motion.div initial={isStatic ? { opacity: 1 } : { opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="flex flex-col items-center md:items-start gap-6 mb-20 md:mb-24 text-center md:text-left w-full">
+        <motion.div initial={isStatic ? { opacity: 1 } : { opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="flex flex-col items-center md:items-start gap-6 mb-12 md:mb-16 text-center md:text-left w-full">
            <div className="w-full flex flex-col items-center gap-6">
               <span className="font-artistic text-3xl md:text-5xl text-vibe-pink block italic">{t("The Synthesis", "解決策", "Giải pháp Sáng tạo")}</span>
               <div className="w-px h-16 bg-vibe-pink/20" />
@@ -262,7 +262,7 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
         </motion.div>
 
         {structuredData ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
             {structuredData.map((item: any, i: number) => (
               <motion.div 
                 key={i} 
@@ -271,9 +271,9 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
                 viewport={{ once: true, margin: "-50px" }} 
                 transition={{ delay: isStatic ? 0 : i * 0.08, duration: 0.6 }}
                 whileHover={!isStatic ? "hover" : undefined}
-            className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-10 md:p-14 rounded-[3.5rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
+                className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-6 md:p-8 xl:p-10 rounded-[2.5rem] xl:rounded-[3rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 hover:border-vibe-pink/30 hover:bg-white/60 hover:shadow-2xl hover:shadow-vibe-pink/5"
               >
-                <div className="absolute inset-0 rounded-[3.5rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                <div className="absolute inset-0 rounded-[2.5rem] xl:rounded-[3rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
                 <div className="flex items-center gap-4 mb-10 relative z-10">
                   <motion.div 
@@ -301,12 +301,12 @@ const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => 
                   variants={{
                     hover: { y: -5 }
                   }}
-                  className="font-serif text-2xl md:text-3xl text-heading mb-6 relative z-10 transition-transform duration-500"
+                  className="font-serif text-xl md:text-2xl xl:text-3xl text-heading mb-6 relative z-10 transition-transform duration-500"
                 >
                   {cleanNumbering(item.title || "")}
                 </motion.h4>
                 
-                <p className="font-body text-lg text-heading/70 leading-relaxed font-light relative z-10 group-hover:text-heading transition-colors duration-500">
+                <p className="font-body text-sm md:text-base xl:text-lg text-heading/70 leading-relaxed font-light relative z-10 group-hover:text-heading transition-colors duration-500">
                   {cleanNumbering(item.content || "")}
                 </p>
               </motion.div>
