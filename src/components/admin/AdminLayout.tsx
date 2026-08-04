@@ -7,6 +7,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { AdminHeader } from "./layout/AdminHeader";
 import { AdminSidebar } from "./layout/AdminSidebar";
 import { getAdminMenu, MenuItem } from "@/config/adminMenu";
+import { useQuery } from "@tanstack/react-query";
+import { getMediaFolders } from "@/lib/supabase-media";
+import { Folder } from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -23,7 +26,36 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
 
-  const menuItems = useMemo(() => getAdminMenu(translations, lang), [translations, lang]);
+  const { data: folders = [] } = useQuery({
+    queryKey: ["media-folders"],
+    queryFn: getMediaFolders,
+  });
+
+  const menuItems = useMemo(() => {
+    const baseMenu = getAdminMenu(translations, lang);
+    const mediaIndex = baseMenu.findIndex((item) => item.path === "/admin/media");
+    if (mediaIndex !== -1 && folders.length > 0) {
+      const mediaItem = baseMenu[mediaIndex];
+      baseMenu[mediaIndex] = {
+        labelKey: mediaItem.labelKey,
+        icon: mediaItem.icon,
+        groupId: "media",
+        children: [
+          {
+            labelKey: translations[lang].allResources || (lang === "vi" ? "Tất cả tài nguyên" : lang === "ja" ? "すべてのリソース" : "All Resources"),
+            path: "/admin/media",
+            icon: mediaItem.icon,
+          },
+          ...folders.map((f) => ({
+            labelKey: f.name,
+            path: `/admin/media?folder=${f.id}`,
+            icon: Folder,
+          })),
+        ],
+      };
+    }
+    return baseMenu;
+  }, [translations, lang, folders]);
 
   // Sync with window size for Laptop breakpoint
   useEffect(() => {
@@ -60,7 +92,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   // Sync expanded groups with current route
   useEffect(() => {
     const activeGroup = menuItems.find(item => 
-      item.children?.some(child => child.path === location.pathname)
+      item.children?.some(child => {
+        if (!child.path) return false;
+        if (child.path.includes("?")) {
+          return child.path.split("?")[0] === location.pathname;
+        }
+        return child.path === location.pathname;
+      })
     )?.groupId;
 
     if (activeGroup && !expandedGroups.includes(activeGroup)) {
@@ -73,7 +111,17 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     navigate("/admin/login");
   };
 
-  const isActive = (path?: string) => path && location.pathname === path;
+  const isActive = (path?: string) => {
+    if (!path) return false;
+    if (path.includes("?")) {
+      const [pathname, search] = path.split("?");
+      return location.pathname === pathname && location.search.includes(search);
+    }
+    if (path === "/admin/media") {
+      return location.pathname === "/admin/media" && !location.search.includes("folder=");
+    }
+    return location.pathname === path;
+  };
   const isGroupActive = (children?: MenuItem[]) => children?.some((child) => isActive(child.path)) ?? false;
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => prev.includes(groupId) ? prev.filter(id => id !== groupId) : [...prev, groupId]);

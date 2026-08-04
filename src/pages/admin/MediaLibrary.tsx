@@ -30,6 +30,7 @@ import {
   AlertTriangle,
   MoveRight,
   BarChart3,
+  Grid,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -59,6 +60,8 @@ import { BulkMoveDialog } from "@/components/admin/media/library/BulkMoveDialog"
 import { StorageStatsCard } from "@/components/admin/media/library/StorageStatsCard";
 import { BatchProcessDialog } from "@/components/admin/media/library/BatchProcessDialog";
 import { useLang } from "@/contexts/LangContext";
+import { useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { BulkActionToolbar } from "@/components/admin/shared/BulkActionToolbar";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
@@ -70,9 +73,18 @@ import {
 
 const MediaLibrary = () => {
   const { t } = useLang();
+  const queryClient = useQueryClient();
   const [folders, setFolders] = useState<MediaFolder[]>([]);
   const [assets, setAssets] = useState<MediaAsset[]>([]);
-  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedFolderId = searchParams.get("folder");
+  const setSelectedFolderId = (id: string | null) => {
+    if (id) {
+      setSearchParams({ folder: id });
+    } else {
+      setSearchParams({});
+    }
+  };
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -119,6 +131,27 @@ const MediaLibrary = () => {
 
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const selectedAsset = assets.find((a) => a.id === selectedAssetId);
+  const selectedFolder = folders.find((f) => f.id === selectedFolderId);
+  const folderActions = selectedFolder && !selectedFolder.is_system ? [
+    {
+      label: t("Edit Folder", "フォルダーを編集", "Sửa thư mục"),
+      onClick: () => {
+        setEditingFolderId(selectedFolder.id);
+        setFolderFormData({
+          name: selectedFolder.name,
+          description: selectedFolder.description || "",
+          parent_id: selectedFolder.parent_id,
+        });
+        setIsFolderDialogOpen(true);
+      },
+      icon: FolderPlus,
+    },
+    {
+      label: t("Delete Folder", "フォルダーを削除", "Xóa thư mục"),
+      onClick: () => deleteConfirm.openConfirm(selectedFolder.id, selectedFolder.name),
+      icon: Trash2,
+    }
+  ] : [];
   const [isEditingAsset, setIsEditingAsset] = useState(false);
   const [assetFormData, setAssetFormData] = useState({
     title: "",
@@ -217,6 +250,7 @@ const MediaLibrary = () => {
       setIsFolderDialogOpen(false);
       const fetchedFolders = await getMediaFolders();
       setFolders(fetchedFolders);
+      queryClient.invalidateQueries({ queryKey: ["media-folders"] });
     } catch (error: any) {
       if (error.code === "23505")
         toast.error(
@@ -251,6 +285,7 @@ const MediaLibrary = () => {
       setIsFolderDialogOpen(false);
       const fetchedFolders = await getMediaFolders();
       setFolders(fetchedFolders);
+      queryClient.invalidateQueries({ queryKey: ["media-folders"] });
     } catch (error) {
       toast.error(
         t(
@@ -279,6 +314,7 @@ const MediaLibrary = () => {
       deleteConfirm.closeConfirm();
       const fetchedFolders = await getMediaFolders();
       setFolders(fetchedFolders);
+      queryClient.invalidateQueries({ queryKey: ["media-folders"] });
       if (selectedFolderId === deleteConfirm.itemId)
         setSelectedFolderId(common.id);
     } catch (error) {
@@ -650,10 +686,10 @@ const MediaLibrary = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-4 md:space-y-6 animate-in fade-in duration-700 h-auto md:h-[calc(100vh-140px)] min-h-[700px] flex flex-col">
+      <div className="space-y-4 md:space-y-6 animate-in fade-in duration-700 w-full flex flex-col h-auto lg:h-[calc(100vh-180px)] min-h-0">
         <AdminPageHeader
-          title={t("Media Library", "メディアライブラリ", "Thư viện Media")}
-          description={t(
+          title={selectedFolder ? `${t("Media Library", "メディアライブラリ", "Thư viện Media")} / ${selectedFolder.name}` : t("Media Library", "メディアライブラリ", "Thư viện Media")}
+          description={selectedFolder?.description || t(
             "Centralized resource management and deployment hub.",
             "リソース管理とデプロイの中心。機器の管理を行います。",
             "Trung tâm quản lý và triển khai tài nguyên tập trung.",
@@ -682,6 +718,7 @@ const MediaLibrary = () => {
             icon: FolderPlus,
           }}
           secondaryActions={[
+            ...folderActions,
             {
               label: t("Batch Process", "バッチ処理", "Xử lý hàng loạt"),
               onClick: () => setIsBatchProcessDialogOpen(true),
@@ -764,6 +801,18 @@ const MediaLibrary = () => {
 
         {/* Mobile Folder Selector Pattern (Consistent with Picker) */}
         <div className="md:hidden flex items-center gap-2 p-1 overflow-x-auto no-scrollbar pb-2">
+          <button
+            onClick={() => setSelectedFolderId(null)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-xl transition-all font-bold text-[10px] whitespace-nowrap shrink-0",
+              selectedFolderId === null
+                ? "bg-heading text-white shadow-md"
+                : "text-muted-foreground bg-white/50 border border-sage/5 hover:bg-sage/10",
+            )}
+          >
+            <Grid size={12} />
+            {t("All", "すべて", "Tất cả")}
+          </button>
           {folders.map((f) => (
             <button
               key={f.id}
@@ -783,23 +832,7 @@ const MediaLibrary = () => {
 
         {/* Browser Layout */}
         <div className="flex-1 border border-white/40 bg-white/40 backdrop-blur-xl rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row shadow-sm">
-          <div className="hidden md:block">
-            <MediaFolderSidebar
-              folders={folders}
-              selectedFolderId={selectedFolderId}
-              onSelectFolder={setSelectedFolderId}
-              onEditFolder={(f) => {
-                setEditingFolderId(f.id);
-                setFolderFormData({
-                  name: f.name,
-                  description: f.description || "",
-                  parent_id: f.parent_id,
-                });
-                setIsFolderDialogOpen(true);
-              }}
-              onDeleteFolder={deleteConfirm.openConfirm}
-            />
-          </div>
+
 
           {/* ASSETS GRID VIEW */}
           <div className="flex-1 flex flex-col min-w-0 bg-white/20">

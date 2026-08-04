@@ -61,7 +61,7 @@ export const AdminPageHeader = ({
             </p>
           )}
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 w-full lg:w-auto">
           {headerActions && (
             <div className="flex items-center gap-2 p-1 bg-white/40 backdrop-blur-md border border-white/60 rounded-2xl w-full sm:w-auto overflow-x-auto no-scrollbar">
               {headerActions}
@@ -69,7 +69,7 @@ export const AdminPageHeader = ({
           )}
           
           {handleSearchChange && (
-            <div className="relative group w-full md:w-64">
+            <div className="relative group w-full lg:w-64">
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-sage transition-colors"
                 size={16}
@@ -83,7 +83,7 @@ export const AdminPageHeader = ({
             </div>
           )}
           
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-start lg:justify-end">
             {secondaryActions?.map((action, idx) => (
               <Button
                 key={idx}
