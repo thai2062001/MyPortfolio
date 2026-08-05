@@ -105,7 +105,9 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${
-              canScrollPrev ? "border-sage text-sage bg-white" : "border-gray-100 text-gray-200 opacity-50 cursor-not-allowed"
+              canScrollPrev
+                ? "border-sage text-sage bg-white"
+                : "border-black/10 text-black/20 bg-white cursor-not-allowed"
             }`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -116,7 +118,9 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
             onClick={scrollNext}
             disabled={!canScrollNext}
             className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${
-              canScrollNext ? "border-sage text-sage bg-white" : "border-gray-100 text-gray-200 opacity-50 cursor-not-allowed"
+              canScrollNext
+                ? "border-sage text-sage bg-white"
+                : "border-black/10 text-black/20 bg-white cursor-not-allowed"
             }`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
