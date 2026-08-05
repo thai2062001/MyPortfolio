@@ -485,20 +485,9 @@ const ProjectDetail = () => {
              </div>
           </section>
 
-          {/* Focal Image */}
-          {project.cover_image_url && (
-            <section className="container mx-auto px-6 max-w-6xl relative z-10 mb-24 md:mb-48">
-              {isTabletOrMobile ? (
-                <StaticCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} />
-              ) : (
-                <ParallaxCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} isStatic={isTabletOrMobile} />
-              )}
-            </section>
-          )}
-
           {/* 2. Overview Component */}
           {projectOverview && (
-            <section className="py-20 md:py-40">
+            <section className="pt-16 pb-20 md:pt-16 md:pb-40">
                <div className="container mx-auto px-6 max-w-6xl space-y-16 md:space-y-24">
                  <div className="flex flex-col items-center text-center space-y-8 md:space-y-10 max-w-4xl mx-auto">
                     <motion.div initial={isTabletOrMobile ? { opacity: 1 } : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="space-y-6">
@@ -510,17 +499,21 @@ const ProjectDetail = () => {
                     </motion.div>
                  </div>
 
-                 <motion.div initial={isTabletOrMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="w-full">
-                    {project.project_images?.[0] ? (
-                      <div className="rounded-[2.5rem] md:rounded-[4.5rem] overflow-hidden shadow-2xl aspect-video bg-[#111]">
-                         <img src={optimizeCloudinary(project.project_images[0].image_url, { width: isTabletOrMobile ? 700 : 1400 })} alt="Strategy" className="w-full h-full object-cover scale-[1.01] brightness-[0.98]" />
-                      </div>
-                    ) : (
+                 {project.cover_image_url ? (
+                   <div className="w-full relative z-10">
+                     {isTabletOrMobile ? (
+                       <StaticCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} />
+                     ) : (
+                       <ParallaxCover src={project.cover_image_url} alt={projectTitle} onReady={handleImageReady} isStatic={isTabletOrMobile} />
+                     )}
+                   </div>
+                 ) : (
+                   <motion.div initial={isTabletOrMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="w-full">
                       <div className="rounded-[2.5rem] md:rounded-[4.5rem] bg-[#1a1a1a] aspect-video w-full flex items-center justify-center">
                          <span className="font-artistic text-4xl text-white/5 italic">Creation Flow</span>
                       </div>
-                    )}
-                 </motion.div>
+                   </motion.div>
+                 )}
                </div>
             </section>
           )}
@@ -738,14 +731,14 @@ const ProjectDetail = () => {
           </section>
 
           {/* 6. Visual Gallery */}
-          {project.project_images && project.project_images.length > 2 && (
+          {project.project_images && project.project_images.length > 0 && (
              <section className="bg-[#111] text-white py-24 md:py-64 relative overflow-hidden">
                 <div className="container mx-auto px-6 max-w-[1600px] relative z-10 text-center space-y-16 md:space-y-20">
                    <div className="space-y-4">
                      <span className="font-sans text-[10px] tracking-[0.6em] uppercase font-bold text-white/30 italic">Archive</span>
                      <h2 className="font-display text-5xl md:text-9xl tracking-tighter leading-none text-white italic">Curated <span className="text-vibe-pink">Visuals.</span></h2>
                    </div>
-                   <ProjectGallery images={project.project_images.slice(2)} isMobile={isTabletOrMobile} t={t} />
+                   <ProjectGallery images={project.project_images} isMobile={isTabletOrMobile} t={t} />
                 </div>
              </section>
           )}
