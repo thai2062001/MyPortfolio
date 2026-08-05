@@ -66,6 +66,7 @@ export const en = {
     title: "Title",
     content: "Content",
     imageURL: "Image URL",
+    allResources: "All Resources",
     // Common action translations
     save: "Save",
     cancel: "Cancel",

@@ -66,6 +66,7 @@ export const vi = {
     title: "Tiêu đề",
     content: "Nội dung",
     imageURL: "Đường dẫn ảnh",
+    allResources: "Tất cả tài nguyên",
     // Common action translations
     save: "Lưu",
     cancel: "Hủy",

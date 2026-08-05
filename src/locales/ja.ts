@@ -66,6 +66,7 @@ export const ja = {
     title: "タイトル",
     content: "コンテンツ",
     imageURL: "画像URL",
+    allResources: "すべてのリソース",
     // Common action translations
     save: "保存",
     cancel: "キャンセル",
