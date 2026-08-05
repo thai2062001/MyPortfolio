@@ -39,7 +39,7 @@ export const ProjectMeta = ({ client, duration, role, year, tags = [], lang = "e
       transition={{ duration: 1.2 }}
       className="py-12 md:py-16 border-y border-heading/10"
     >
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 md:gap-12 items-start">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-8 md:gap-12 items-start">
         
         {/* Core Info Items - Now consistent and clean */}
         <ProjectMetaItem label={t("Client", "CLIENT")} value={client} />

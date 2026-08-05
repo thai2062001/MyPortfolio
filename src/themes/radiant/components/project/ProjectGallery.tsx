@@ -4,6 +4,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  e.currentTarget.src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop";
+};
+
 interface ProjectImage {
   id: string;
   image_url: string;
@@ -69,7 +73,7 @@ const MobileGallery = memo(({
       {/* Embla Viewport */}
       <div className="overflow-hidden w-full touch-pan-y rounded-[2rem] bg-[#111]" ref={emblaRef}>
         <div className="flex">
-          {images.map((img) => (
+          {images.map((img, idx) => (
             <div
               key={img.id}
               className="flex-none w-full relative aspect-[4/5] overflow-hidden"
@@ -77,6 +81,8 @@ const MobileGallery = memo(({
               <img
                 src={optimizeCloudinary(img.image_url, { width: 800 })}
                 alt={img.alt_text}
+                loading={idx === 0 ? "eager" : "lazy"}
+                onError={handleImageError}
                 className="w-full h-full object-cover"
               />
               
@@ -273,6 +279,8 @@ export const ProjectGallery = ({
                     ].join(", ") : undefined}
                     sizes="(max-width: 768px) 100vw, 1600px"
                     alt={activeImage.alt_text || "Project Image"}
+                    loading="lazy"
+                    onError={handleImageError}
                     className="w-full h-full object-cover scale-[1.01] transition-transform duration-700 ease-[0.22, 1, 0.36, 1]"
                   />
                   
@@ -321,7 +329,13 @@ export const ProjectGallery = ({
                         }`}
                       >
                         <div className="relative w-20 h-20 rounded-[1.5rem] overflow-hidden border border-white/10 shadow-lg">
-                          <img src={optimizeCloudinary(img.image_url, { width: 200, quality: "auto" })} alt="" className="w-full h-full object-cover" />
+                          <img 
+                            src={optimizeCloudinary(img.image_url, { width: 200, quality: "auto" })} 
+                            alt="" 
+                            loading="lazy"
+                            onError={handleImageError}
+                            className="w-full h-full object-cover" 
+                          />
                           {currentIndex === idx && (
                             <motion.div
                               className="absolute inset-0 bg-black/20 flex items-center justify-center"

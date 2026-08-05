@@ -52,6 +52,11 @@ const BreadcrumbNav = memo(({ title, isMobile }: { title: string; isMobile: bool
 
 BreadcrumbNav.displayName = "BreadcrumbNav";
 
+// Fallback image handler
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  e.currentTarget.src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600&auto=format&fit=crop";
+};
+
 const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt: string; onReady?: () => void; isStatic: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -71,14 +76,17 @@ const ParallaxCover = memo(({ src, alt, onReady, isStatic }: { src: string; alt:
       whileInView={{ opacity: 1, scale: 1 }} 
       viewport={{ once: true }} 
       transition={{ duration: isStatic ? 0.3 : 1.4, ease: [0.22, 1, 0.36, 1] }} 
-      className="relative w-full h-[400px] md:h-[800px] rounded-[2.5rem] md:rounded-[5rem] overflow-hidden bg-[#111] shadow-2xl"
+      className="relative w-full h-[400px] md:h-[800px] rounded-[2.5rem] md:rounded-[5rem] overflow-hidden bg-[#111] shadow-2xl will-change-transform"
     >
       <motion.img 
         style={(!prefersReducedMotion && !isStatic) ? { y, scale } : {}} 
         src={optimizeCloudinary(src, { width: isMobileOrTablet ? 800 : 1600, quality: "best" })} 
         alt={alt} 
         onLoad={onReady} 
-        className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96]" 
+        onError={handleImageError}
+        loading="eager"
+        {...({ fetchPriority: "high" } as any)}
+        className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96] will-change-transform"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
     </motion.div>
@@ -95,6 +103,9 @@ const StaticCover = memo(({ src, alt, onReady }: { src: string; alt: string; onR
         src={optimizeCloudinary(src, { width: isMobileOrTablet ? 800 : 1600, quality: "best" })}
         alt={alt}
         onLoad={onReady}
+        onError={handleImageError}
+        loading="eager"
+        {...({ fetchPriority: "high" } as any)}
         className="absolute inset-0 w-full h-full object-cover scale-[1.01] brightness-[0.96]"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
@@ -480,9 +491,7 @@ const ProjectDetail = () => {
 
           {/* Data Meta */}
           <section className="relative z-20 pb-20 md:pb-24 container mx-auto px-6 max-w-6xl">
-             <div className="border-y border-heading/10">
-                <ProjectMeta client={project.client} duration={project.duration} role={project.role} year={project.year} tags={project.tags} lang={lang} t={t} />
-             </div>
+             <ProjectMeta client={project.client} duration={project.duration} role={project.role} year={project.year} tags={project.tags} lang={lang} t={t} />
           </section>
 
           {/* 2. Overview Component */}
