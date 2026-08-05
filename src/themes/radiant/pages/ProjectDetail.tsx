@@ -445,7 +445,7 @@ const ProjectDetail = () => {
           <ScrollProgress />
 
           {/* 1. Hero Reveal Section */}
-          <section className="pt-12 md:pt-72 pb-16 md:pb-20 relative z-10 overflow-hidden">
+          <section className="pt-12 md:pt-56 pb-16 md:pb-20 relative z-10 overflow-hidden">
             <div className="container mx-auto px-6 max-w-5xl flex flex-col items-center">
               
               {/* Left-Aligned Breadcrumb relative to the 5xl container */}
