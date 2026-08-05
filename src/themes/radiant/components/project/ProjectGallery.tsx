@@ -197,6 +197,22 @@ export const ProjectGallery = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [sortedImages.length, handlePrev, handleNext]);
 
+  // Preload next and previous images to prevent blank/flickering load state when switching
+  useEffect(() => {
+    if (sortedImages.length <= 1) return;
+    const nextIndex = (currentIndex + 1) % sortedImages.length;
+    const prevIndex = (currentIndex - 1 + sortedImages.length) % sortedImages.length;
+
+    [nextIndex, prevIndex].forEach((idx) => {
+      const img = new Image();
+      img.src = optimizeCloudinary(sortedImages[idx].image_url, { width: 1600, quality: "best" });
+      if (sortedImages[idx].image_url.includes("res.cloudinary.com")) {
+        const imgMobile = new Image();
+        imgMobile.src = optimizeCloudinary(sortedImages[idx].image_url, { width: 600 });
+      }
+    });
+  }, [currentIndex, sortedImages]);
+
   if (!images || images.length === 0) return null;
 
   const activeImage = sortedImages[currentIndex];
