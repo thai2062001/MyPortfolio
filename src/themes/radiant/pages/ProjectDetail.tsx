@@ -206,7 +206,13 @@ const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
         </motion.button>
 
         <motion.div initial={!isStatic ? { scale: 1.15 } : { scale: 1 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: isStatic ? 0.3 : 2.5 }} className="absolute inset-0 z-0">
-          <img src={optimizeCloudinary(project.project_images[1].image_url, { width: isStatic ? 960 : 1920, quality: "best" })} alt="" className="w-full h-full object-cover opacity-40 grayscale-[0.3]" />
+          <img 
+            src={optimizeCloudinary(project.project_images[1].image_url, { width: isStatic ? 960 : 1920, quality: "best" })} 
+            alt="" 
+            loading="lazy"
+            onError={handleImageError}
+            className="w-full h-full object-cover opacity-40 grayscale-[0.3]" 
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#111] via-transparent to-[#111] opacity-95" />
           {!isStatic && <div className="absolute inset-0 backdrop-blur-[4px]" />}
         </motion.div>
