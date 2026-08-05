@@ -1,4 +1,4 @@
-import { useState, useEffect, memo, useCallback } from "react";
+import { useState, useEffect, memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { User } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
@@ -21,66 +21,64 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
   });
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const updateButtons = useCallback((api: any) => {
+  // Use Embla's built-in canScrollPrev/Next — more accurate than manual index comparison
+  const updateState = useCallback((api: any) => {
     if (!api) return;
-    const lastSlideIndex = Math.max(0, testimonials.length - 1);
-    const currentIndex = api.selectedScrollSnap();
-
-    setCanScrollPrev(currentIndex > 0);
-    setCanScrollNext(currentIndex < lastSlideIndex);
-  }, [testimonials.length]);
+    setCanScrollPrev(api.canScrollPrev());
+    setCanScrollNext(api.canScrollNext());
+    setSelectedIndex(api.selectedScrollSnap());
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
-
-    const handleStateChange = () => updateButtons(emblaApi);
-    handleStateChange();
-
-    emblaApi.on("select", handleStateChange);
-    emblaApi.on("reInit", handleStateChange);
-
+    updateState(emblaApi);
+    emblaApi.on("select", updateState);
+    emblaApi.on("reInit", updateState);
     return () => {
-      emblaApi.off("select", handleStateChange);
-      emblaApi.off("reInit", handleStateChange);
+      emblaApi.off("select", updateState);
+      emblaApi.off("reInit", updateState);
     };
-  }, [emblaApi, updateButtons]);
+  }, [emblaApi, updateState]);
 
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   return (
     <div className="flex flex-col gap-6">
+      {/* transform-gpu only on the flex container — Embla translates this, not individual slides */}
       <div className="overflow-hidden touch-pan-y" ref={emblaRef}>
         <div className="flex -ml-6 transform-gpu will-change-transform">
           {testimonials.map((testimonial: any) => (
-            <div key={testimonial.id} className="flex-none pl-6 w-full h-full transform-gpu">
-              <div className="bg-white/85 border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group h-full select-none">
+            <div key={testimonial.id} className="flex-none pl-6 w-full">
+              <div className="bg-white border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group h-full select-none">
                 <div className="space-y-6">
-                   <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light">
-                      "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : testimonial.quote_vi || testimonial.quote_en}"
-                   </p>
+                  <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light">
+                    "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : testimonial.quote_vi || testimonial.quote_en}"
+                  </p>
                 </div>
                 <div className="flex items-center gap-4 mt-10">
-                   <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 bg-black/5 flex items-center justify-center">
-                      {testimonial.portrait_url ? (
-                        <img 
-                          src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
-                          alt={testimonial.author_name} 
-                          loading="lazy"
-                          className="w-full h-full object-cover pointer-events-none"
-                        />
-                      ) : (
-                        <User className="w-6 h-6 text-heading/20" strokeWidth={1.5} />
-                      )}
-                   </div>
-                   <div className="flex flex-col">
-                      <span className="font-display text-lg text-heading leading-none mb-1">{testimonial.author_name}</span>
-                      <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30">
-                        {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : testimonial.role_vi || testimonial.role_en}
-                      </span>
-                   </div>
+                  <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 bg-black/5 flex items-center justify-center">
+                    {testimonial.portrait_url ? (
+                      <img
+                        src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })}
+                        alt={testimonial.author_name}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover pointer-events-none"
+                      />
+                    ) : (
+                      <User className="w-6 h-6 text-heading/20" strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-display text-lg text-heading leading-none mb-1">{testimonial.author_name}</span>
+                    <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30">
+                      {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : testimonial.role_vi || testimonial.role_en}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -90,28 +88,36 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
 
       {/* Mobile Navigation Controls */}
       <div className="flex items-center justify-between px-2 mt-2">
+        {/* Active dot indicators */}
         <div className="flex gap-1.5">
           {testimonials.slice(0, 5).map((_: any, i: number) => (
-            <div 
-              key={i} 
-              className="w-1.5 h-1.5 rounded-full bg-sage/20" 
+            <button
+              key={i}
+              onClick={() => emblaApi?.scrollTo(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                selectedIndex === i ? "bg-sage w-3.5" : "bg-sage/20 w-1.5"
+              }`}
             />
           ))}
         </div>
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${canScrollPrev ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
+            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${
+              canScrollPrev ? "border-sage text-sage bg-white" : "border-gray-100 text-gray-200 opacity-50 cursor-not-allowed"
+            }`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m15 18-6-6 6-6"/>
             </svg>
           </button>
-          <button 
+          <button
             onClick={scrollNext}
             disabled={!canScrollNext}
-            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${canScrollNext ? 'border-sage text-sage bg-white' : 'border-gray-100 text-gray-200 opacity-50 cursor-not-allowed'}`}
+            className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-300 ${
+              canScrollNext ? "border-sage text-sage bg-white" : "border-gray-100 text-gray-200 opacity-50 cursor-not-allowed"
+            }`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="m9 18 6-6-6-6"/>
@@ -133,7 +139,8 @@ const TestimonialsSection = memo(() => {
   const { data: personalInfo } = usePersonalInfo();
   const [isTestimonialsModalOpen, setIsTestimonialsModalOpen] = useState(false);
   
-  const testimonials = testimonialsQuery.data || [];
+  // useMemo prevents new array reference on every re-render, so MobileCarousel memo works correctly
+  const testimonials = useMemo(() => testimonialsQuery.data || [], [testimonialsQuery.data]);
   const loading = testimonialsQuery.isLoading;
 
   if (loading) {
@@ -161,14 +168,16 @@ const TestimonialsSection = memo(() => {
 
   return (
     <section className="py-24 md:py-48 bg-background relative overflow-hidden" id="kind-words">
-      {/* Optimized Ambient Background */}
-      <AmbientAccent
-        position="center-left"
-        color="bg-vibe-pink"
-        size={isTablet ? 460 : 1000}
-        opacity={isTablet ? 0.025 : 0.05}
-        blur={isTablet ? 70 : 180}
-      />
+      {/* AmbientAccent: desktop only — blur filter is expensive on mobile GPUs */}
+      {!isTablet && (
+        <AmbientAccent
+          position="center-left"
+          color="bg-vibe-pink"
+          size={1000}
+          opacity={0.05}
+          blur={180}
+        />
+      )}
       
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         {/* Section Header */}
@@ -192,14 +201,14 @@ const TestimonialsSection = memo(() => {
           
           {/* LEFT: PROFESSIONAL MOTTO CARD */}
           <motion.div 
-            className="lg:col-span-4 bg-heading rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between text-white relative overflow-hidden group shadow-2xl min-h-[500px]"
+            className="lg:col-span-4 bg-heading rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between text-white relative overflow-hidden group shadow-lg md:shadow-2xl min-h-[500px]"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Subtle glow effect */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-vibe-pink/10 transition-colors duration-700" />
+            {/* Subtle glow effect — hidden on mobile to reduce paint cost */}
+            <div className="hidden md:block absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-vibe-pink/10 transition-colors duration-700" />
             
             <div className="relative z-10 flex flex-col h-full items-center text-center justify-between py-2">
               {/* Decorative Quote Mark */}
