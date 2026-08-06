@@ -177,13 +177,16 @@ const Navbar = memo(() => {
               <button
                 onClick={() => handleLinkClick("/portfolio#contact")}
                 className={cn(
-                  "px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all duration-500 shadow-xl shadow-black/10",
+                  "group relative px-8 md:px-10 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-black/10",
                   isTransparent 
-                    ? "bg-white text-[#1c1c19] hover:bg-white/90" 
-                    : "bg-[#1c1c19] text-white hover:bg-[#1c1c19]/90"
+                    ? "bg-white text-[#1c1c19]" 
+                    : "bg-[#1c1c19] text-white"
                 )}
               >
-                {t("Contact", "お問い合わせ")}
+                <span className="relative z-10 group-hover:text-white transition-colors duration-500">
+                  {t("Contact", "お問い合わせ")}
+                </span>
+                <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </button>
             </div>
           </div>
@@ -278,9 +281,12 @@ const Navbar = memo(() => {
                       setIsMobileMenuOpen(false);
                       handleLinkClick("/portfolio#contact");
                     }}
-                    className="mt-8 px-12 py-5 rounded-full bg-[#1c1c19] text-[10px] font-bold uppercase tracking-[0.3em] text-white shadow-2xl font-display"
+                    className="group relative mt-8 px-12 py-5 rounded-full bg-[#1c1c19] text-[10px] font-bold uppercase tracking-[0.3em] text-white shadow-2xl font-display hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden"
                   >
-                    {t("Contact", "お問い合わせ", "Liên hệ")}
+                    <span className="relative z-10 group-hover:text-white transition-colors duration-500">
+                      {t("Contact", "お問い合わせ", "Liên hệ")}
+                    </span>
+                    <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                   </button>
                 </div>
               </motion.div>

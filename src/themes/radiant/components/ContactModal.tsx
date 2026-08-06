@@ -212,7 +212,7 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
           >
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 md:top-12 md:right-12 text-heading/20 hover:text-heading hover:bg-black/5 transition-all duration-300 p-2 md:p-4 rounded-full z-50 bg-white/50 backdrop-blur-md"
+              className="absolute top-6 right-6 md:top-12 md:right-12 text-heading/40 hover:text-white hover:bg-sage hover:scale-105 active:scale-95 transition-all duration-300 p-2 md:p-4 rounded-full z-50 bg-white/50 backdrop-blur-md shadow-sm border border-sage/30 hover:border-transparent"
             >
               <X size={20} className="md:w-8 md:h-8" strokeWidth={1.5} />
             </button>
@@ -244,7 +244,7 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
                         { name: "company", label: t("Company", "会社名"), type: "text", placeholder: "Optional" },
                       ].map((field) => (
                         <motion.div key={field.name} variants={fadeIn("up")} className="space-y-1.5">
-                           <label className="font-sans text-[9px] tracking-[0.4em] uppercase text-heading/70 font-bold ml-1">
+                           <label className="font-sans text-[11px] tracking-[0.25em] uppercase text-heading/60 font-semibold ml-1">
                               {field.label}
                            </label>
                            <input
@@ -261,7 +261,7 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
 
                       {formSettings?.is_purpose_enabled && (
                         <motion.div variants={fadeIn("up")} className="space-y-1.5 relative group">
-                          <label className="font-sans text-[9px] tracking-[0.4em] uppercase text-heading/70 font-bold ml-1">
+                          <label className="font-sans text-[11px] tracking-[0.25em] uppercase text-heading/60 font-semibold ml-1">
                             {t("Purpose", "目的")}
                           </label>
                           <CustomPurposeSelect 
@@ -284,7 +284,7 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
                       variants={fadeIn("up")}
                       className="space-y-1.5"
                     >
-                       <label className="font-sans text-[9px] tracking-[0.4em] uppercase text-heading/70 font-bold ml-1">
+                       <label className="font-sans text-[11px] tracking-[0.25em] uppercase text-heading/60 font-semibold ml-1">
                           {t("Message", "メッセージ")}
                        </label>
                        <textarea
@@ -304,16 +304,17 @@ export const ContactModal = memo(({ isOpen, onClose, formSettings, purposeOption
                        <button
                          type="submit"
                          disabled={loading}
-                         className={`relative group w-full py-5 rounded-full bg-heading text-white shadow-2xl transition-all duration-500 disabled:opacity-50 ${
+                         className={`group relative w-full py-5 rounded-full bg-heading text-white shadow-2xl overflow-hidden transition-all duration-500 disabled:opacity-50 ${
                            !isTablet ? "hover:scale-[1.01] active:scale-[0.99]" : "active:scale-[0.98]"
                          }`}
                        >
-                          <span className="relative z-10 flex items-center justify-center gap-6 text-[11px] tracking-[0.5em] uppercase font-black">
+                          <span className="relative z-10 flex items-center justify-center gap-6 text-[11px] tracking-[0.5em] uppercase font-black transition-colors duration-500">
                             {loading ? (
                               <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                             ) : <Send size={18} strokeWidth={2} />}
                             {loading ? "SUMMONING..." : "SEND INQUIRY"}
                           </span>
+                          <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                        </button>
                     </motion.div>
                   </motion.form>
