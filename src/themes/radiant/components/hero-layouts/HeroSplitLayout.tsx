@@ -81,10 +81,10 @@ export const HeroSplitLayout = memo(({
                 </motion.div>
               )}
               
-              <motion.h1 variants={fadeIn("up", 0.2)} className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-display leading-[1.05] text-white will-change-transform tracking-tighter">
+              <motion.h1 variants={fadeIn("up", 0.2)} className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display leading-[1.05] text-white will-change-transform tracking-tighter">
                 {fields.title_line_1}
                 {fields.title_line_2 && (
-                  <span className="block italic opacity-90 mt-1 font-normal lowercase">{fields.title_line_2}</span>
+                  <span className="block italic text-vibe-pink lowercase mt-2 sm:mt-4">{fields.title_line_2}</span>
                 )}
               </motion.h1>
             </div>

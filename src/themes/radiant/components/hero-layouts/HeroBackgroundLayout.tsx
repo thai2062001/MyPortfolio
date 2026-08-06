@@ -111,15 +111,12 @@ export const HeroBackgroundLayout = memo(({
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-4 md:space-y-6 mb-8 will-change-transform"
             >
-              <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light leading-[0.9] text-white tracking-tight">
+              <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[0.95] text-white tracking-tight">
                 {fields.title_line_1}
                 {fields.title_line_2?.trim() && (
-                  <>
-                    <br />
-                    <span className="italic font-normal text-white/90 lowercase">
-                      {fields.title_line_2}
-                    </span>
-                  </>
+                  <span className="block italic text-vibe-pink lowercase mt-2 sm:mt-4">
+                    {fields.title_line_2}
+                  </span>
                 )}
               </h1>
             </motion.div>

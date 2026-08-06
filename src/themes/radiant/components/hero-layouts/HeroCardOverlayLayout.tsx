@@ -89,12 +89,13 @@ export const HeroCardOverlayLayout = memo(({
           </div>
 
           <div className="space-y-8 md:space-y-10">
-            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light leading-[1] text-heading tracking-tight will-change-transform">
+             <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[1.05] text-heading tracking-tight will-change-transform">
               {fields.title_line_1}
-              <br />
-              <span className="italic font-normal text-sage/70 drop-shadow-sm">
-                {fields.title_line_2}
-              </span>
+              {fields.title_line_2?.trim() && (
+                <span className="block italic text-vibe-pink lowercase mt-2 sm:mt-4">
+                  {fields.title_line_2}
+                </span>
+              )}
             </h1>
 
             <p className="font-body text-base md:text-xl text-heading/60 font-light leading-relaxed max-w-2xl">
