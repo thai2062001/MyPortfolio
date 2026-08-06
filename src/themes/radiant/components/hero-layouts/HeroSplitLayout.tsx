@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Star, ArrowRight } from "lucide-react";
-import { useState, useEffect, useMemo, memo } from "react";
+import { useState, useEffect, useMemo, useRef, memo } from "react";
 import type { HeroSectionWithLayout } from "@/types/admin";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { fadeIn, staggerContainer } from "@/lib/animations";
@@ -21,7 +21,14 @@ export const HeroSplitLayout = memo(({
   lang,
 }: HeroSplitLayoutProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const currentLang = lang as SupportedLang;
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setImageLoaded(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (imageLoaded) {
@@ -117,6 +124,7 @@ export const HeroSplitLayout = memo(({
             {content.hero_image_url && (
               <div className="w-full h-full relative overflow-hidden rounded-2xl md:rounded-[2rem] bg-white/5 shadow-inner">
                 <motion.img
+                  ref={imgRef}
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ 
                     opacity: imageLoaded ? 1 : 0,
@@ -125,7 +133,7 @@ export const HeroSplitLayout = memo(({
                   transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                   onLoad={() => setImageLoaded(true)}
                   src={optimizeCloudinary(content.hero_image_url, { 
-                    width: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1200 
+                    width: typeof window !== 'undefined' && window.innerWidth < 768 ? 1080 : 1200 
                   })}
                   alt={fields.hero_image_alt}
                   // @ts-ignore

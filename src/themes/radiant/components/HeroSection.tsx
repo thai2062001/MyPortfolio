@@ -20,8 +20,8 @@ const HeroSection = memo(() => {
     if (hero) {
       if (hero.hero_image_url) {
         const isMobile = window.innerWidth < 768;
-        // Optimization: Mobile devices only need ~800px, while desktop background layouts need 1920px
-        const width = isMobile ? 800 : ((layoutKey === "full-background" || layoutKey === "card-overlay") ? 1920 : 1200);
+        // Optimization: Mobile devices only need ~1080px (for Retina screens), while desktop background layouts need 1920px
+        const width = isMobile ? 1080 : ((layoutKey === "full-background" || layoutKey === "card-overlay") ? 1920 : 1200);
         
         // Synchronize with layout components optimization parameters
         const optimizedUrl = optimizeCloudinary(hero.hero_image_url, { width });
@@ -42,7 +42,7 @@ const HeroSection = memo(() => {
     return () => { 
       document.querySelectorAll('link[data-hero-preload="true"]').forEach(el => el.remove());
     };
-  }, [hero]);
+  }, [hero, layoutKey]);
 
   const handleNavigate = useCallback((to: string) => {
     // If it's hash on same page, don't use curtain

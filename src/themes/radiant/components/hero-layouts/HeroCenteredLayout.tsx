@@ -18,6 +18,7 @@ export const HeroCenteredLayout = memo(({
   lang,
 }: HeroCenteredLayoutProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const currentLang = lang as SupportedLang;
 
   const fields = useMemo(() => getLocalizedFields(content, [
@@ -25,6 +26,12 @@ export const HeroCenteredLayout = memo(({
     'description',
     'primary_button_label'
   ], currentLang), [content, currentLang]);
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setImageLoaded(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (imageLoaded) {
@@ -37,6 +44,7 @@ export const HeroCenteredLayout = memo(({
       {/* Background Image */}
       {content.hero_image_url && (
         <motion.img
+          ref={imgRef}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ 
             opacity: imageLoaded ? 1 : 0,
@@ -45,7 +53,7 @@ export const HeroCenteredLayout = memo(({
           transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           onLoad={() => setImageLoaded(true)}
           src={optimizeCloudinary(content.hero_image_url, { 
-            width: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1920 
+            width: typeof window !== 'undefined' && window.innerWidth < 768 ? 1080 : 1920 
           })}
           alt=""
           className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${

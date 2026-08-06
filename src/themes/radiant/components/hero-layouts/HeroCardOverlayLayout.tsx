@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { memo, useState, useMemo } from "react";
+import { memo, useState, useMemo, useRef, useEffect } from "react";
 import type { HeroSectionWithLayout } from "@/types/admin";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { ScrollIndicator } from "../shared/ScrollIndicator";
@@ -19,7 +19,14 @@ export const HeroCardOverlayLayout = memo(({
   lang,
 }: HeroCardOverlayLayoutProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const currentLang = lang as SupportedLang;
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setImageLoaded(true);
+    }
+  }, []);
   
   const fields = useMemo(() => getLocalizedFields(content, [
     'badge',
@@ -39,12 +46,13 @@ export const HeroCardOverlayLayout = memo(({
       <div className="absolute inset-0 z-0 bg-[#0A0C0B]">
         {content.hero_image_url && (
           <motion.img 
+            ref={imgRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: imageLoaded ? 0.6 : 0 }}
             transition={{ duration: 1.2 }}
             onLoad={() => setImageLoaded(true)}
             src={optimizeCloudinary(content.hero_image_url, { 
-              width: typeof window !== 'undefined' && window.innerWidth < 768 ? 800 : 1920 
+              width: typeof window !== 'undefined' && window.innerWidth < 768 ? 1080 : 1920 
             })} 
             alt="" 
             // @ts-expect-error - fetchpriority is a new attribute
