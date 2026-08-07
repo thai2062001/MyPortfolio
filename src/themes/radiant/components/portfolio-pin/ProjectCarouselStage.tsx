@@ -194,7 +194,7 @@ export const ProjectCarouselStage = memo(
               return (
                 <div
                   key={p.slug || index}
-                  className="flex-[0_0_78%] sm:flex-[0_0_58%] lg:flex-[0_0_44%] min-w-0 px-3 md:px-4"
+                  className="flex-[0_0_78%] sm:flex-[0_0_58%] lg:flex-[0_0_60%] xl:flex-[0_0_44%] min-w-0 px-3 md:px-4"
                 >
                   {/*
                    * .carousel-card: target của tween — KHÔNG đặt CSS transition
