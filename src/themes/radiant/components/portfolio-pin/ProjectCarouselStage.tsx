@@ -102,15 +102,18 @@ export const ProjectCarouselStage = memo(
             const tweenRaw = 1 - Math.abs(diffToTarget * tweenFactor.current);
             const tweenValue = clamp(tweenRaw, 0, 1);
 
-            const scale = 0.82 + tweenValue * 0.18;  // 0.82 → 1.0
-            const opacity = 0.3 + tweenValue * 0.7;  // 0.3 → 1.0
+            // Active (tweenValue=1): scale 1.0, opacity 1.0, blur 0px
+            // Inactive (tweenValue=0): scale 0.70 (30% nhỏ hơn), opacity 0.6, blur 2px
+            const scale   = 0.50 + tweenValue * 0.50;  // 0.50 → 1.0 (50% khi inactive)
+            const opacity = 0.50 + tweenValue * 0.50;  // 0.50 → 1.0
+            const blur    = (1 - tweenValue) * 2;       // 2px → 0px (blur xíu thôi)
             const rotateY = (1 - tweenValue) * (diffToTarget > 0 ? 8 : -8);
 
             const node = cardNodes.current[slideIdx];
             if (node) {
               node.style.transform = `scale(${scale}) perspective(1200px) rotateY(${rotateY}deg)`;
               node.style.opacity = String(opacity);
-              node.style.filter = "none";
+              node.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
             }
           });
         });
@@ -200,7 +203,7 @@ export const ProjectCarouselStage = memo(
                    * khi cần (transform đang thay đổi). Đặt tĩnh lãng phí VRAM.
                    */}
                   <div
-                    className="carousel-card w-full rounded-[1.75rem] overflow-hidden border border-white/10 bg-stone-900 shadow-2xl cursor-pointer"
+                    className="carousel-card relative w-full rounded-[1.75rem] overflow-hidden border border-white/10 bg-stone-900 shadow-2xl cursor-pointer"
                     onClick={() =>
                       isActive
                         ? onNavigate(p.slug)
@@ -218,6 +221,7 @@ export const ProjectCarouselStage = memo(
                       // @ts-expect-error – non-standard fetchpriority attr
                       fetchpriority={index <= 1 ? "high" : "auto"}
                     />
+
                   </div>
                 </div>
               );
@@ -252,18 +256,17 @@ export const ProjectCarouselStage = memo(
               {activeTitle}
             </h3>
 
-            {(activeProject as any).project_tags?.length > 0 && (
+            {(activeProject as any).tags?.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                {(activeProject as any).project_tags.map(
-                  (tagObj: any, tagIdx: number) => {
-                    const tagName = tagObj.tags?.name || tagObj.name;
-                    if (!tagName) return null;
+                {(activeProject as any).tags.map(
+                  (tag: any, tagIdx: number) => {
+                    if (!tag?.name) return null;
                     return (
                       <span
-                        key={`${tagObj.tag_id || tagName}-${tagIdx}`}
-                        className="text-[11px] md:text-xs font-sans tracking-wider uppercase px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10 backdrop-blur-sm"
+                        key={`${tag.id || tag.name}-${tagIdx}`}
+                        className="text-[11px] md:text-xs font-display tracking-wider uppercase px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10 backdrop-blur-sm"
                       >
-                        {tagName}
+                        {tag.name}
                       </span>
                     );
                   }
