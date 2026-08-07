@@ -35,6 +35,7 @@ export const ProjectCarouselStage = memo(
       loop: true,
       skipSnaps: false,
       dragFree: false,
+      watchDrag: false, // Vô hiệu hóa kéo để chuyển slide trên PC
       startIndex: 1, // Mặc định active item 2 (index 1)
     });
 

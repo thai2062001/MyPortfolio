@@ -116,7 +116,7 @@ const Navbar = memo(() => {
         >
           <div 
             className={cn(
-              "mx-auto flex items-center justify-between h-14 md:h-16 px-10 md:px-16 rounded-full transition-all duration-500 gap-20 md:gap-36 w-fit min-w-[320px] md:min-w-[600px]",
+              "mx-auto flex items-center justify-between h-14 md:h-16 px-6 md:px-10 rounded-full transition-all duration-500 gap-4 md:gap-12 w-full max-w-5xl",
               isTransparent
                 ? "bg-transparent border-transparent shadow-none"
                 : "bg-white/80 dark:bg-[#1c1c19]/80 backdrop-blur-xl border border-black/5 dark:border-white/5 shadow-lg shadow-black/5"
