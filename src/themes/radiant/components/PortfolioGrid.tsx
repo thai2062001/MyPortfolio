@@ -73,7 +73,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
   if (isLoading) {
     return (
       <section className="py-20" id="works">
-        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
+        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
           {[1, 2, 3].map(i => (
             <div key={i} className="space-y-6">
               <div className="aspect-[4/5] bg-stone-100 rounded-2xl animate-pulse" />
@@ -117,7 +117,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.05 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto"
+            className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto"
           >
             {visibleProjects.map((p, i) => {
               return (
@@ -138,7 +138,7 @@ const PortfolioGrid = memo(({ onNavigate }: PortfolioGridProps) => {
             })}
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-32 max-w-[1400px] mx-auto">
             {visibleProjects.map((p, i) => {
               return (
                 <div key={p.slug}>

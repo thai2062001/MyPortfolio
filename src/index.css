@@ -395,11 +395,17 @@
 
 @media (max-width: 1023px) {
   .liquid-glass,
-  .ethereal-glass,
   .stitch-glass,
   .glass-card {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+  }
+
+  .ethereal-glass {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.96) !important; /* Lớp nền trắng đục cao giúp hiển thị rõ chữ trên mobile */
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
   }
 
   .light-blob,
