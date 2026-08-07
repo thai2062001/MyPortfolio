@@ -421,3 +421,38 @@
     transition-delay: 0s !important;
   }
 }
+
+/* TỐI ƯU HÓA HIỆU NĂNG MOBILE: Vô hiệu hóa toàn bộ hover trên màn hình md trở xuống (< 768px) */
+@media (max-width: 767px) {
+  /* Vô hiệu hóa chuyển động hover dựa trên tên class chứa tiền tố hover: hoặc group-hover: */
+  [class*="hover:"],
+  [class*="group-hover:"],
+  .group:hover *,
+  .group:hover {
+    transform: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Reset hiệu ứng phóng to của ảnh và đường line bên trong thẻ card */
+  .carousel-card img,
+  .group:hover img,
+  .group:hover [class*="group-hover:"],
+  .group:hover [class*="group-hover/"] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Khôi phục border và shadow nguyên bản cho card */
+  .carousel-card,
+  .carousel-card:hover,
+  .carousel-card.group:hover {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+  }
+
+  /* Reset màu chữ hover */
+  [class*="hover:text-"] {
+    color: inherit !important;
+  }
+}

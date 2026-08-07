@@ -456,7 +456,7 @@ const ProjectDetail = () => {
       {project && (
         <main className="bg-[#fcfaf7] relative overflow-hidden min-h-screen selection:bg-sage/20">
           {(!isTabletOrMobile) && (
-            <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.02] mix-blend-multiply bg-[url('https://res.cloudinary.com/dpdzbuiml/image/upload/v1776056500/grain_texture_lyx1jx.png')] bg-repeat" />
+            <div className="fixed inset-0 pointer-events-none z-[999] opacity-[0.02] mix-blend-multiply bg-[url('https://res.cloudinary.com/dpdzbuiml/image/upload/v1785488719/common/grain-noise.png')] bg-repeat" />
           )}
 
           <ScrollProgress />
