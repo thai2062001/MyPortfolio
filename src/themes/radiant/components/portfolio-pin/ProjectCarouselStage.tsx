@@ -203,13 +203,14 @@ export const ProjectCarouselStage = memo(
                    * khi cần (transform đang thay đổi). Đặt tĩnh lãng phí VRAM.
                    */}
                   <div
-                    className="carousel-card relative w-full rounded-[1.75rem] overflow-hidden border border-white/10 bg-stone-900 shadow-2xl cursor-pointer"
+                    className="carousel-card group relative w-full rounded-[1.75rem] overflow-hidden border border-white/10 hover:border-white/35 bg-stone-900 shadow-2xl cursor-pointer transition-[border-color,box-shadow] duration-300 hover:shadow-[0_0_32px_rgba(255,255,255,0.08)]"
                     onClick={() =>
                       isActive
                         ? onNavigate(p.slug)
                         : emblaApi?.scrollTo(index)
                     }
                   >
+                    {/* Image: zoom nhẹ khi hover — JS không control img, chỉ control .carousel-card */}
                     <img
                       src={optimizeCloudinary(p.cover_image_url || "", {
                         width: 800,
@@ -217,11 +218,10 @@ export const ProjectCarouselStage = memo(
                       alt={localizedTitle}
                       loading={index <= 1 ? "eager" : "lazy"}
                       decoding={index <= 1 ? "sync" : "async"}
-                      className="w-full aspect-[4/3] object-cover"
+                      className="w-full aspect-[4/3] object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                       // @ts-expect-error – non-standard fetchpriority attr
                       fetchpriority={index <= 1 ? "high" : "auto"}
                     />
-
                   </div>
                 </div>
               );
@@ -264,7 +264,7 @@ export const ProjectCarouselStage = memo(
                     return (
                       <span
                         key={`${tag.id || tag.name}-${tagIdx}`}
-                        className="text-[11px] md:text-xs font-display tracking-wider uppercase px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10 backdrop-blur-sm"
+                        className="text-[11px] md:text-xs font-display tracking-wider uppercase px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10 backdrop-blur-sm cursor-default transition-all duration-300 hover:bg-white/20 hover:text-white hover:border-white/30"
                       >
                         {tag.name}
                       </span>
