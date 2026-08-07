@@ -35,10 +35,11 @@ const Portfolio = () => {
       isLoading={isLoading} 
       loaderText={lang === "en" ? "Curating Portfolio" : "ポートフォリオを準備中..."}
       manualReadySignal={false}
+      disableSnap={true}
       seoTitle="Portfolio | Digital Strategy & Growth"
       seoDescription="Explore a collection of high-impact digital projects focusing on performance marketing, brand strategy, and growth."
     >
-      <div className="relative bg-background overflow-hidden min-h-screen pt-20">
+      <div className="relative bg-background overflow-hidden min-h-screen">
         {!isTablet && (
           <>
             <AmbientAccent position="top-right" color="bg-vibe-sky" size={1000} opacity={0.05} />

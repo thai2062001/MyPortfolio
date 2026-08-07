@@ -6,6 +6,7 @@ import type { PageSection } from "@/core/types/sections";
 // Tối ưu Hero: Load ngay lập tức để ưu tiên tài nguyên
 // Highlight: Import directly to ensure it renders first
 import HeroSection from "@/themes/radiant/components/HeroSection.tsx";
+import PortfolioPinSection from "@/themes/radiant/components/portfolio-pin/PortfolioPinSection.tsx";
 
 // Tối ưu hiệu năng: Các section khác load khi cần thiết (Lazy load)
 // Performance: Lazy-load other components only when visible or near viewport
@@ -109,7 +110,7 @@ const sectionComponentMap: Record<string, React.ComponentType<any>> = {
   home_blog: BlogSection,
 
   // Portfolio page sections
-  portfolio_grid: PortfolioGrid,
+  portfolio_grid: PortfolioPinSection,
   portfolio_clients: ClientsSection,
   portfolio_faq: FaqSection,
   portfolio_contact: ContactSection,
@@ -139,11 +140,16 @@ export function renderSectionByKey(section: PageSection, extraProps?: any): Reac
     return null;
   }
 
-  // Hero section được ưu tiên: render trực tiếp, không lazy
-  if (section.section_key === 'home_hero') {
+  // Hero và Portfolio Grid pin section được ưu tiên: render trực tiếp, không lazy
+  if (section.section_key === 'home_hero' || section.section_key === 'portfolio_grid') {
+    const isHero = section.section_key === 'home_hero';
     return (
-      <div key={section.id} id="hero" className="snap-center">
-        <HeroSection {...extraProps} />
+      <div
+        key={section.id}
+        id={isHero ? 'hero' : 'works'}
+        className={isHero ? 'snap-center' : ''}
+      >
+        <Component {...extraProps} />
       </div>
     );
   }
