@@ -2,7 +2,7 @@ import { memo, useMemo } from "react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { useLang } from "@/contexts/LangContext";
 import { getLocalizedField, SupportedLang } from "@/lib/content-utils";
-import { useIsTablet } from "@/hooks/use-mobile";
+import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 
 interface ProjectCardProps {
   slug: string;
@@ -34,6 +34,9 @@ const ProjectCard = memo(({
   const { lang } = useLang();
   const currentLang = lang as SupportedLang;
   const isTablet = useIsTablet();
+  const isMobile = useIsMobile();
+
+  const maxTags = isMobile ? 6 : 3;
 
   const localizedTitle = useMemo(() => {
     return title; 
@@ -104,7 +107,7 @@ const ProjectCard = memo(({
 
                  {tags.length > 0 && (
                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {tags.slice(0, 6).map((tag) => (
+                      {tags.slice(0, maxTags).map((tag) => (
                          <span 
                            key={tag.id} 
                            className="font-display lg:font-sans text-[9px] md:text-[10px] lg:text-[9px] tracking-[0.05em] lg:tracking-[0.1em] uppercase py-0.5 md:py-1 px-2.5 md:px-3 rounded-full bg-white/70 border border-black/10 text-gray-800 font-bold whitespace-nowrap"
@@ -112,8 +115,8 @@ const ProjectCard = memo(({
                             {getLocalizedField(tag, 'name', currentLang)}
                          </span>
                       ))}
-                      {tags.length > 6 && (
-                        <span className="font-display lg:font-sans text-[8px] lg:text-[8px] text-gray-400">+{tags.length - 6}</span>
+                      {tags.length > maxTags && (
+                        <span className="font-display lg:font-sans text-[8px] lg:text-[8px] text-gray-400">+{tags.length - maxTags}</span>
                       )}
                    </div>
                  )}
