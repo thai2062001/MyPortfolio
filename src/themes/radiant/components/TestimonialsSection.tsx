@@ -254,11 +254,11 @@ const TestimonialsSection = memo(() => {
                   onClick={handleOpenTestimonials}
                   whileHover={!isMobile ? { y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" } : undefined}
                   whileTap={!isMobile ? { scale: 0.98, y: 0 } : undefined}
-                  className="group relative w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full transition-all duration-300 overflow-hidden text-center"
+                  className="group/btn relative w-full bg-white/10 backdrop-blur-md border border-white/10 py-5 px-8 rounded-full transition-all duration-300 overflow-hidden text-center"
                 >
                   {/* The Sage Background Fill Layer */}
                   {!isMobile && (
-                    <div className="absolute inset-0 bg-sage translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                    <div className="absolute inset-0 bg-sage translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out" />
                   )}
 
                   {/* Button Text */}
