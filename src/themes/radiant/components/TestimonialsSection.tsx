@@ -55,30 +55,15 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
             <div key={testimonial.id} className="flex-none pl-6 w-full">
               <div className="bg-white border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group h-full select-none">
                 <div className="space-y-6">
-                  <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light">
+                  <p className="text-sm md:text-base text-heading/70 leading-relaxed">
                     "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : testimonial.quote_vi || testimonial.quote_en}"
                   </p>
                 </div>
-                <div className="flex items-center gap-4 mt-10">
-                  <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 bg-black/5 flex items-center justify-center">
-                    {testimonial.portrait_url ? (
-                      <img
-                        src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })}
-                        alt={testimonial.author_name}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover pointer-events-none"
-                      />
-                    ) : (
-                      <User className="w-6 h-6 text-heading/20" strokeWidth={1.5} />
-                    )}
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-display text-lg text-heading leading-none mb-1">{testimonial.author_name}</span>
-                    <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30">
-                      {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : testimonial.role_vi || testimonial.role_en}
-                    </span>
-                  </div>
+                <div className="flex flex-col mt-10">
+                  <span className="font-display font-semibold text-lg text-heading leading-none mb-1">{testimonial.author_name}</span>
+                  <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30">
+                    {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : testimonial.role_vi || testimonial.role_en}
+                  </span>
                 </div>
               </div>
             </div>
@@ -291,30 +276,16 @@ const TestimonialsSection = memo(() => {
                 >
                   <div className="bg-white/50 backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:bg-sage hover:shadow-2xl hover:border-sage transition-all duration-500 group h-full cursor-default select-none">
                     <div className="space-y-6">
-                       <p className="font-body text-sm md:text-base text-heading/70 leading-relaxed italic font-light group-hover:text-white/90 transition-colors duration-500">
+                       <p className="text-sm md:text-base text-heading/70 leading-relaxed group-hover:text-white/90 transition-colors duration-500">
                           "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
                        </p>
                     </div>
 
-                    <div className="flex items-center gap-4 mt-10">
-                       <div className="w-12 h-12 rounded-full overflow-hidden border border-black/5 group-hover:border-white/20 transition-colors duration-500 bg-black/5 flex items-center justify-center">
-                          {testimonial.portrait_url ? (
-                            <img 
-                              src={optimizeCloudinary(testimonial.portrait_url, { width: 96, height: 96, crop: "fill" })} 
-                              alt={testimonial.author_name} 
-                              loading="lazy"
-                              className="w-full h-full object-cover transition-all duration-500 pointer-events-none"
-                            />
-                          ) : (
-                            <User className="w-6 h-6 text-heading/20 group-hover:text-white transition-colors duration-500" strokeWidth={1.5} />
-                          )}
-                       </div>
-                       <div className="flex flex-col">
-                          <span className="font-display text-lg text-heading leading-none mb-1 group-hover:text-white transition-colors duration-500">{testimonial.author_name}</span>
-                          <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30 group-hover:text-white/60 transition-colors duration-500">
-                            {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : (testimonial as any).role_vi || testimonial.role_en}
-                          </span>
-                       </div>
+                    <div className="flex flex-col mt-10">
+                       <span className="font-display font-semibold text-lg text-heading leading-none mb-1 group-hover:text-white transition-colors duration-500">{testimonial.author_name}</span>
+                       <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-black/30 group-hover:text-white/60 transition-colors duration-500">
+                          {lang === "en" ? testimonial.role_en : lang === "ja" ? testimonial.role_ja : (testimonial as any).role_vi || testimonial.role_en}
+                       </span>
                     </div>
                   </div>
                 </motion.div>
