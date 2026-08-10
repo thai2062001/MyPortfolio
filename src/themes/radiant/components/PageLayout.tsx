@@ -53,7 +53,12 @@ const PageLayout = ({
 
   // 1. Immediate Scroll Reset on page change/mount
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const handleScroll = () => {
+      window.scrollTo({ top: 0, behavior: "instant" as any });
+    };
+    requestAnimationFrame(() => {
+      requestAnimationFrame(handleScroll);
+    });
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
