@@ -8,12 +8,11 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "@/themes/radiant/components/Navbar.tsx";
 import { Footer } from "@/themes/radiant/components/Footer.tsx";
 import { useLang } from "@/contexts/LangContext";
-import { useProjectDetails } from "@/core/hooks/usePortfolio";
+import { useProjectDetails, useProjects } from "@/core/hooks/usePortfolio";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { useIsMobile, useIsTablet } from "@/hooks/use-mobile";
 import PremiumLoader from "@/components/ui/PremiumLoader";
 import ScrollProgress from "@/components/ui/ScrollProgress";
-import { supabase } from "@/lib/supabase";
 
 import { ProjectMeta } from "@/themes/radiant/components/project/ProjectMeta";
 import { ProjectGallery } from "@/themes/radiant/components/project/ProjectGallery";
@@ -353,9 +352,10 @@ const ProjectDetail = () => {
   const isTabletOrMobile = useIsTablet(); // < 1024px
   
   const [isReady, setIsReady] = useState(false);
-  const [allProjects, setAllProjects] = useState<any[]>([]);
 
   const { data: project, isLoading: isProjectLoading } = useProjectDetails(slug!);
+  const { data: allProjectsData } = useProjects(false);
+  const allProjects = allProjectsData || [];
 
   const handleNavigate = useCallback((targetSlug: string) => {
     setIsReady(false);
@@ -364,25 +364,21 @@ const ProjectDetail = () => {
     }, 600);
   }, [navigate]);
 
-  // Fetch navigation data only once
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      const { data } = await supabase.from('projects').select('slug, title, is_published').eq('is_published', true).order('year', { ascending: false });
-      if (data && isMounted) setAllProjects(data);
-    })();
-    return () => { isMounted = false; };
-  }, []);
-
   // Performance: Scroll & Readiness
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Scroll asynchronously in a requestAnimationFrame to avoid visual jank during page transitions
+    const handleScroll = () => {
+      window.scrollTo({ top: 0, behavior: "instant" as any });
+    };
+    requestAnimationFrame(() => {
+      requestAnimationFrame(handleScroll);
+    });
     setIsReady(false);
   }, [slug]);
 
   useEffect(() => {
     if (!isProjectLoading) {
-      const timer = setTimeout(() => setIsReady(true), 1200);
+      const timer = setTimeout(() => setIsReady(true), 400);
       return () => clearTimeout(timer);
     }
   }, [isProjectLoading]);
