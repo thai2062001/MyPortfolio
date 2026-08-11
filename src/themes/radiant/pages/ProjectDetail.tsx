@@ -741,6 +741,15 @@ const ProjectDetail = () => {
              </div>
           </section>
 
+          {/* 7. Quote Section */}
+          {testimonial && (
+            <section className="py-20 md:py-64 bg-[#fcfaf7]">
+               <div className="container mx-auto px-6 max-w-5xl text-center">
+                  <ProjectVideoTestimonial testimonial={testimonial} t={t} />
+               </div>
+            </section>
+          )}
+
           {/* 6. Visual Gallery */}
           {project.project_images && project.project_images.length > 0 && (
              <section className="bg-[#111] text-white py-24 md:py-64 relative overflow-hidden">
@@ -752,15 +761,6 @@ const ProjectDetail = () => {
                    <ProjectGallery images={project.project_images} isMobile={isTabletOrMobile} />
                 </div>
              </section>
-          )}
-
-          {/* 7. Quote Section */}
-          {testimonial && (
-            <section className="py-20 md:py-64 bg-[#fcfaf7]">
-               <div className="container mx-auto px-6 max-w-5xl text-center">
-                  <ProjectVideoTestimonial testimonial={testimonial} t={t} />
-               </div>
-            </section>
           )}
 
           {/* Navigation Section */}
