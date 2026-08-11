@@ -577,7 +577,7 @@ const ProjectDetail = () => {
                       
                       {/* BEFORE/AFTER COMPARISON WIDGET */}
                       {results.some(r => r.value?.includes('|') || r.value?.includes('->') || r.value?.includes('→') || r.label?.includes('|') || r.label?.includes('->') || r.label?.includes('→')) ? (
-                        <div className="max-w-4xl mx-auto bg-white border border-black/[0.03] shadow-[0_30px_80px_-25px_rgba(0,0,0,0.08)] rounded-[2.5rem] overflow-hidden grid grid-cols-1 md:grid-cols-2 relative group">
+                        <div className="max-w-4xl mx-auto bg-white border border-black/[0.08] shadow-[0_30px_80px_-25px_rgba(0,0,0,0.08)] rounded-[2.5rem] overflow-hidden grid grid-cols-1 md:grid-cols-2 relative group transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.005] hover:border-vibe-pink/35 hover:shadow-[0_40px_100px_-20px_rgba(255,0,122,0.06)]">
                           {/* Absolute Center Divider for Desktop */}
                           <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-black/[0.05] z-10" />
 
@@ -617,12 +617,12 @@ const ProjectDetail = () => {
                           </div>
                           
                           {/* RIGHT COLUMN: AFTER */}
-                          <div className="p-8 md:p-16 bg-vibe-pink/[0.01] md:bg-vibe-pink/[0.02] border-t md:border-t-0 md:border-l border-black/[0.03] space-y-12 text-left relative">
+                          <div className="p-8 md:p-16 bg-vibe-pink/[0.01] md:bg-vibe-pink/[0.02] border-t md:border-t-0 md:border-l border-black/[0.08] space-y-12 text-left relative">
                             <div className="flex items-center justify-between">
                               <span className="font-display text-2xl md:text-3xl text-vibe-pink font-bold italic block leading-none">
                                 After
                               </span>
-                              <span className="px-3 py-1 rounded-full bg-vibe-pink/10 text-vibe-pink text-[9px] font-sans font-black tracking-widest uppercase">
+                              <span className="px-3 py-1 rounded-full bg-vibe-pink/10 text-vibe-pink text-[11px] font-label font-bold tracking-wider uppercase">
                                 Optimized
                               </span>
                             </div>
@@ -643,7 +643,7 @@ const ProjectDetail = () => {
                                 
                                 return (
                                   <div key={idx} className="space-y-1 md:space-y-2">
-                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading font-black tracking-tight group-hover:scale-[1.01] transition-transform duration-350">
+                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading font-black tracking-tight">
                                       {afterVal || beforeVal}
                                     </p>
                                     <p className="font-body text-[11px] sm:text-xs md:text-sm text-heading/70 font-medium leading-relaxed">
