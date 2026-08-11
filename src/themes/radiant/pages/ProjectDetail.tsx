@@ -23,7 +23,7 @@ import { getLocalizedField, formatLocalizedDate, SupportedLang } from "@/lib/con
 
 // --- Helpers Outside Component for Performance ---
 const cleanNumbering = (text: string) => text.replace(/^\d+[\.\)\s\-\:]+/, '').trim();
-const LABEL_CLASS = "font-display text-[10px] tracking-[0.5em] uppercase font-black not-italic";
+const LABEL_CLASS = "font-artistic text-2xl tracking-normal normal-case font-normal";
 
 // --- Optimized Sub-Components ---
 

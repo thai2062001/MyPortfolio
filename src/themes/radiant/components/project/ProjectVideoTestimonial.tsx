@@ -3,6 +3,8 @@ import { Quote } from "lucide-react";
 import { optimizeCloudinary } from "@/lib/cloudinary";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+const LABEL_CLASS = "font-artistic text-2xl tracking-normal normal-case font-normal";
+
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -99,7 +101,7 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
         <div className="container mx-auto px-6 max-w-3xl relative z-10 text-center space-y-8">
           <div className="space-y-6">
             <div className="flex flex-col items-center gap-4">
-              <span className="font-artistic text-3xl text-vibe-pink/40">Words of Trust</span>
+              <span className={`${LABEL_CLASS} text-vibe-pink/60`}>Words of Trust</span>
               <div className="w-px h-8 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
             </div>
 
@@ -136,7 +138,7 @@ export const ProjectVideoTestimonial = ({ testimonial, t }: ProjectVideoTestimon
         >
           <div className="space-y-6">
             <div className="flex flex-col items-center gap-4">
-               <span className="font-artistic text-4xl text-vibe-pink/40">Words of Trust</span>
+               <span className={`${LABEL_CLASS} text-vibe-pink/60`}>Words of Trust</span>
                <div className="w-px h-8 bg-gradient-to-b from-vibe-pink/40 to-transparent" />
             </div>
             
