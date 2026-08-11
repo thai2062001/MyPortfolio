@@ -55,7 +55,7 @@ const MobileCarousel = memo(({ testimonials, lang }: { testimonials: any[]; lang
             <div key={testimonial.id} className="flex-none pl-6 w-full">
               <div className="bg-white border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group h-full select-none">
                 <div className="space-y-6">
-                  <p className="text-sm md:text-base text-heading/70 leading-relaxed">
+                  <p className="font-display text-base md:text-lg text-heading leading-relaxed italic">
                     "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : testimonial.quote_vi || testimonial.quote_en}"
                   </p>
                 </div>
@@ -276,7 +276,7 @@ const TestimonialsSection = memo(() => {
                 >
                   <div className="bg-white/50 backdrop-blur-sm border border-black/5 rounded-[2rem] p-8 md:p-10 flex flex-col justify-between hover:bg-sage hover:shadow-2xl hover:border-sage transition-all duration-500 group h-full cursor-default select-none">
                     <div className="space-y-6">
-                       <p className="text-sm md:text-base text-heading/70 leading-relaxed group-hover:text-white/90 transition-colors duration-500">
+                       <p className="font-display text-base md:text-lg text-heading leading-relaxed italic group-hover:text-white/95 transition-colors duration-500">
                           "{lang === "en" ? testimonial.quote_en : lang === "ja" ? testimonial.quote_ja : (testimonial as any).quote_vi || testimonial.quote_en}"
                        </p>
                     </div>
