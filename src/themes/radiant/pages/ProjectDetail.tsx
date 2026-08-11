@@ -23,6 +23,7 @@ import { getLocalizedField, formatLocalizedDate, SupportedLang } from "@/lib/con
 
 // --- Helpers Outside Component for Performance ---
 const cleanNumbering = (text: string) => text.replace(/^\d+[\.\)\s\-\:]+/, '').trim();
+const LABEL_CLASS = "font-display text-[10px] tracking-[0.5em] uppercase font-black not-italic";
 
 // --- Optimized Sub-Components ---
 
@@ -114,233 +115,222 @@ const StaticCover = memo(({ src, alt, onReady }: { src: string; alt: string; onR
 
 StaticCover.displayName = "StaticCover";
 
-const ChallengeSection = memo(({ project, lang, t, isStatic }: any) => {
-  const currentLang = lang as SupportedLang;
+const TechStackSection = memo(({ tags, lang, t }: { tags: any[]; lang: string; t: any }) => {
+  if (!tags || tags.length === 0) return null;
   
-  // High-resilience localized field retrieval
+  const currentLang = lang as SupportedLang;
+  const tagDetails: Record<string, { desc: string; descEn: string; cat: string }> = {
+    'kuroco': { desc: 'Headless CMS API-driven quản lý nội dung.', descEn: 'Headless CMS driving data API.', cat: 'CMS / Backend' },
+    'nestjs': { desc: 'Framework Node.js xây dựng API Restful mạnh mẽ.', descEn: 'Robust NestJS Node.js API.', cat: 'Backend API' },
+    'scss': { desc: 'Ngôn ngữ tiền xử lý CSS thiết kế giao diện linh hoạt.', descEn: 'Styling preprocessor.', cat: 'Frontend Styling' },
+    'swagger api': { desc: 'Tài liệu hóa và chuẩn hóa giao tiếp API.', descEn: 'API documentation & standardization.', cat: 'API Specs' },
+    'next.js': { desc: 'Framework React tối ưu hóa SEO và hiệu năng tải trang.', descEn: 'React framework optimized for SEO & speed.', cat: 'Frontend Framework' },
+    'typescript': { desc: 'Siêu tập tĩnh của JS giúp tăng độ tin cậy của code.', descEn: 'Static typing for code reliability.', cat: 'Language' },
+  };
+
+  return (
+    <section className="py-20 bg-white border-t border-black/[0.03] relative z-10">
+      <div className="container mx-auto px-6 max-w-6xl space-y-12">
+        <div className="flex flex-col items-center md:items-start gap-4">
+          <div className="flex items-center gap-4 justify-start">
+             <span className="w-12 h-px bg-sage/30" />
+             <span className={`${LABEL_CLASS} text-sage/60`}>{t("Stack", "TECHNOLOGIES", "Công nghệ")}</span>
+          </div>
+          <h2 className="font-display text-5xl md:text-7xl text-heading tracking-tighter leading-none italic">
+            System <span className="text-sage">Architecture.</span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {tags.map((tag: any, idx: number) => {
+            const tagName = (tag.name_en || tag.name || "").trim().toLowerCase();
+            const matchingDetail = Object.entries(tagDetails).find(([key]) => tagName.includes(key))?.[1];
+            
+            // Get category: priority is database field (if defined in the future) then config file
+            const dbCat = getLocalizedField(tag, 'category', currentLang) || tag.category;
+            const cat = dbCat || matchingDetail?.cat || "Technology";
+            
+            // Get description: priority is database description then config file fallback
+            const dbDesc = getLocalizedField(tag, 'description', currentLang) || tag.description;
+            const desc = dbDesc || (lang === "vi" 
+              ? (matchingDetail?.desc || "Công nghệ lõi tích hợp tối ưu hóa hiệu năng.")
+              : (matchingDetail?.descEn || "Core technology integrated for performance."));
+
+             return (
+              <motion.div
+                key={tag.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.03, duration: 0.4 }}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02, 
+                  borderColor: "rgba(102, 120, 107, 0.4)",
+                  boxShadow: "0 20px 40px -15px rgba(102, 120, 107, 0.12)"
+                }}
+                className="group relative p-8 rounded-[2rem] bg-[#fcfaf7] border border-black/[0.04] cursor-default overflow-hidden transition-colors duration-250"
+              >
+                {/* Subtle Ambient Hover Glow */}
+                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-sage/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                <span className="text-[10px] font-display font-bold tracking-wider text-sage/75 uppercase block mb-4 not-italic relative z-10">
+                  {cat}
+                </span>
+                <h4 className="font-display text-xl text-heading font-black mb-2 tracking-tight group-hover:text-sage transition-colors duration-200 relative z-10">
+                  {tag.name_en || tag.name}
+                </h4>
+                <p className="font-body text-xs text-heading/50 leading-relaxed font-light relative z-10">
+                  {desc}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+});
+TechStackSection.displayName = "TechStackSection";
+
+const ChallengeSolutionSection = memo(({ project, lang, t, isStatic }: any) => {
+  const currentLang = lang as SupportedLang;
+
   const currentChallengeRaw = (
     getLocalizedField(project, 'challenge', currentLang) || 
     project.challenge_en || 
     project.challenge || 
     ""
   ).trim();
-  
-  const currentChallenge = cleanNumbering(currentChallengeRaw);
-  
-  if (!currentChallengeRaw) return null;
 
-  const structuredChallenge = useMemo(() => {
-    try {
-      const trimmed = currentChallengeRaw.trim();
-      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-        const parsed = JSON.parse(trimmed);
-        return Array.isArray(parsed) ? parsed : null;
-      }
-    } catch (e) {}
-    return null;
-  }, [currentChallengeRaw]);
-
-  const scrollToSolution = () => {
-    document.getElementById('solution-section')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Variant A: Structured Grid
-  if (structuredChallenge && structuredChallenge.length > 0) {
-    return (
-      <section id="challenge-section" className="py-20 md:py-32 relative bg-[#141414] overflow-hidden border-y border-white/5">
-        <div className="hidden md:block absolute top-0 right-0 w-[800px] h-[800px] bg-vibe-pink/[0.02] rounded-full blur-[120px] pointer-events-none" />
-        
-        {/* Navigation Portal */}
-        <motion.button 
-          onClick={scrollToSolution}
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 z-50 flex-col items-center gap-8 group cursor-pointer"
-        >
-          <div className="h-32 w-px bg-white/10 group-hover:h-48 group-hover:bg-vibe-pink/50 transition-all duration-700" />
-          <span className="font-sans text-[10px] tracking-[0.8em] font-black uppercase text-white/20 group-hover:text-white transition-colors duration-500 [writing-mode:vertical-lr] rotate-180">
-            {t("To Solution", "解決策へ", "Tới Giải pháp")}
-          </span>
-          <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-vibe-pink/50 group-hover:scale-110 transition-all duration-700">
-             <ChevronDown size={14} className="text-white/20 group-hover:text-vibe-pink group-hover:translate-y-1 transition-all duration-500" />
-          </div>
-        </motion.button>
-
-        <div className="w-full px-6 md:px-12 lg:px-20 mx-auto max-w-[1920px] relative z-10">
-          <div className="mb-16 md:mb-20 space-y-4 text-center md:text-left">
-            <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-bold text-vibe-pink/60">{t("Obstacles", "課題", "Thách thức")}</span>
-            <h2 className="font-display text-5xl md:text-7xl text-white tracking-tighter italic">{t("The Challenge", "課題", "Đề bài")}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10 rounded-[2.5rem] md:rounded-[3rem] overflow-hidden">
-            {structuredChallenge.map((item: any, i: number) => (
-              <div key={i} className={`bg-[#141414] p-8 md:p-12 transition-all duration-700 border-white/5 border ${!isStatic ? 'group hover:bg-white/[0.01]' : ''}`}>
-                <div className="space-y-4">
-                  <span className="font-mono text-[11px] text-vibe-pink/60">0{i+1}</span>
-                  <h4 className="font-serif text-xl md:text-2xl text-white tracking-tight">{cleanNumbering(item.title || "")}</h4>
-                  <p className="font-body text-sm md:text-base text-white/60 leading-relaxed font-light">{cleanNumbering(item.content || "")}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Variant B: Immersive Parallax (if images available)
-  if (project.project_images?.length >= 2) {
-    return (
-      <section id="challenge-section" className="relative py-24 md:py-64 flex items-center justify-center overflow-hidden bg-[#111]">
-        {/* Navigation Portal for Variant B */}
-        <motion.button 
-          onClick={scrollToSolution}
-          className="hidden lg:flex absolute right-12 bottom-24 z-50 items-center gap-6 group cursor-pointer"
-        >
-          <span className="font-sans text-xs tracking-[0.5em] font-black uppercase text-white/40 group-hover:text-white transition-colors duration-500">
-             Discover Solution
-          </span>
-          <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/5 group-hover:border-vibe-pink group-hover:bg-vibe-pink/10 transition-all duration-700">
-             <ChevronDown size={20} className="text-white group-hover:translate-y-1 transition-transform" />
-          </div>
-        </motion.button>
-
-        <motion.div initial={!isStatic ? { scale: 1.15 } : { scale: 1 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: isStatic ? 0.3 : 2.5 }} className="absolute inset-0 z-0">
-          <img 
-            src={optimizeCloudinary(project.project_images[1].image_url, { width: isStatic ? 960 : 1920, quality: "best" })} 
-            alt="" 
-            loading="lazy"
-            onError={handleImageError}
-            className="w-full h-full object-cover opacity-40 grayscale-[0.3]" 
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#111] via-transparent to-[#111] opacity-95" />
-          {!isStatic && <div className="absolute inset-0 backdrop-blur-[4px]" />}
-        </motion.div>
-        <div className="container mx-auto px-6 max-w-4xl relative z-10 text-center space-y-10">
-          <motion.div initial={isStatic ? { opacity: 1 } : { opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: isStatic ? 0.3 : 1.2 }} className="space-y-4">
-            <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-black text-vibe-pink/60">The Friction</span>
-            <h2 className="font-display text-5xl md:text-8xl text-white tracking-tighter italic">{t("The Challenge", "課題", "Đề bài")}</h2>
-          </motion.div>
-          <div className="w-16 h-px bg-white/10 mx-auto" />
-          <p className="font-body text-lg md:text-2xl text-white/70 leading-relaxed font-light italic">{currentChallenge}</p>
-        </div>
-      </section>
-    );
-  }
-
-  // Fallback: Minimalist Core
-  return (
-    <section id="challenge-section" className="py-24 md:py-48 bg-[#161616] text-center border-y border-white/5">
-      <div className="max-w-4xl mx-auto px-6 space-y-12">
-        <h2 className="font-display text-5xl md:text-7xl text-white italic">{t("The Challenge", "課題", "Đề bài")}</h2>
-        <p className="font-body text-xl text-white/70 leading-relaxed italic">{currentChallenge}</p>
-        <button onClick={scrollToSolution} className="font-sans text-[10px] tracking-[0.4em] uppercase text-white/30 hover:text-vibe-pink transition-colors">
-          ↓ Start Synthesis
-        </button>
-      </div>
-    </section>
-  );
-});
-
-ChallengeSection.displayName = "ChallengeSection";
-
-const SolutionSection = memo(({ project, lang, t, isStatic, isTablet }: any) => {
-  const currentLang = lang as SupportedLang;
-  
-  // High-resilience localized field retrieval
   const currentSolutionRaw = (
     getLocalizedField(project, 'solution', currentLang) || 
     project.solution_en || 
     project.solution || 
     ""
   ).trim();
-  
-  const currentSolution = cleanNumbering(currentSolutionRaw);
 
-  if (!currentSolutionRaw) return null;
+  if (!currentChallengeRaw && !currentSolutionRaw) return null;
 
-  const structuredData = useMemo(() => {
+  const structuredChallenge = (() => {
     try {
-      const trimmed = currentSolutionRaw.trim();
-      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-        const parsed = JSON.parse(trimmed);
-        return Array.isArray(parsed) ? parsed : null;
+      if (currentChallengeRaw.startsWith('[') || currentChallengeRaw.startsWith('{')) {
+        return JSON.parse(currentChallengeRaw);
       }
     } catch (e) {}
     return null;
-  }, [currentSolutionRaw]);
+  })();
+
+  const structuredSolution = (() => {
+    try {
+      if (currentSolutionRaw.startsWith('[') || currentSolutionRaw.startsWith('{')) {
+        return JSON.parse(currentSolutionRaw);
+      }
+    } catch (e) {}
+    return null;
+  })();
 
   return (
-    <section id="solution-section" className="py-20 md:py-48 relative bg-vibe-pink/[0.02] border-y border-vibe-pink/10 overflow-hidden">
-      <div className="w-full px-6 md:px-12 lg:px-20 mx-auto max-w-[1920px] relative z-10 text-center md:text-left">
-        <motion.div initial={isStatic ? { opacity: 1 } : { opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="flex flex-col items-center md:items-start gap-6 mb-12 md:mb-16 text-center md:text-left w-full">
-           <div className="w-full flex flex-col items-center gap-6">
-              <span className="font-artistic text-3xl md:text-5xl text-vibe-pink block italic">{t("The Synthesis", "解決策", "Giải pháp Sáng tạo")}</span>
-              <div className="w-px h-16 bg-vibe-pink/20" />
-           </div>
-        </motion.div>
+    <section className="border-y border-black/[0.03] overflow-hidden w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 w-full">
+        {/* CHALLENGE COLUMN - Dark & Dramatic */}
+        <div className="lg:col-span-6 bg-[#141414] text-white py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/5">
+          <div className="hidden lg:block absolute top-0 right-0 w-[400px] h-[400px] bg-vibe-pink/[0.03] rounded-full blur-[100px] pointer-events-none" />
+          
+          <div className="space-y-12">
+            <div className="space-y-4">
+              <span className={`${LABEL_CLASS} text-vibe-pink/60`}>
+                {t("Obstacles", "OBSTACLES", "Thách thức")}
+              </span>
+              <h2 className="font-display text-5xl md:text-7xl text-white tracking-tighter italic">
+                The <span className="text-vibe-pink">Challenge.</span>
+              </h2>
+            </div>
 
-        {structuredData ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
-            {structuredData.map((item: any, i: number) => (
-              <motion.div 
-                key={i} 
-                initial={isStatic ? { opacity: 1 } : { opacity: 0, y: 15 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true, margin: "-20px" }} 
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                whileHover={!isStatic ? "hover" : undefined}
-                className="group relative bg-white/80 md:bg-white/40 md:backdrop-blur-xl border border-vibe-pink/10 p-6 md:p-8 xl:p-10 rounded-[2.5rem] xl:rounded-[3rem] flex flex-col items-center md:items-start text-center md:text-left transition-all duration-500 xl:hover:border-vibe-pink/30 xl:hover:bg-white/60 xl:hover:shadow-2xl xl:hover:shadow-vibe-pink/5"
-              >
-                <div className="absolute inset-0 rounded-[2.5rem] xl:rounded-[3rem] bg-gradient-to-br from-vibe-pink/5 to-transparent opacity-0 xl:group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                
-                <div className="flex items-center gap-4 mb-10 relative z-10">
+            {structuredChallenge && Array.isArray(structuredChallenge) ? (
+              <div className="space-y-6">
+                {structuredChallenge.map((item: any, i: number) => (
                   <motion.div 
-                    variants={{
-                      hover: { scale: 1.1, backgroundColor: "rgba(255, 0, 122, 0.05)", borderColor: "rgba(255, 0, 122, 0.4)" }
-                    }}
-                    className="w-16 h-16 rounded-full border border-vibe-pink/20 flex items-center justify-center text-vibe-pink font-display text-xl transition-colors duration-500"
+                    key={i}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    0{i+1}
+                    <div className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/10 transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-[1.01] hover:border-vibe-pink/30 hover:bg-white/[0.05] hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] group cursor-default shadow-lg shadow-black/10">
+                      <div className="flex gap-6 items-center">
+                        <span className="font-display text-4xl font-light text-vibe-pink/50 select-none">0{i+1}</span>
+                        <div className="space-y-3">
+                          <h4 className="font-display text-lg md:text-xl text-white font-bold tracking-tight">
+                            {cleanNumbering(item.title || "")}
+                          </h4>
+                          <p className="font-body text-xs md:text-sm text-zinc-300 leading-relaxed font-light">
+                            {cleanNumbering(item.content || "")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
-                  
+                ))}
+              </div>
+            ) : (
+              <p className="font-body text-base md:text-lg text-zinc-300 leading-relaxed italic">
+                {cleanNumbering(currentChallengeRaw)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* SOLUTION COLUMN - Bright & Technical */}
+        <div className="lg:col-span-6 bg-[#fcfaf7] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden flex flex-col justify-between">
+          <div className="space-y-12">
+            <div className="space-y-4">
+              <span className={`${LABEL_CLASS} text-sage/60`}>
+                {t("Synthesis", "SYNTHESIS", "Giải pháp")}
+              </span>
+              <h2 className="font-display text-5xl md:text-7xl text-heading tracking-tighter italic">
+                The <span className="text-sage">Solution.</span>
+              </h2>
+            </div>
+
+            {structuredSolution && Array.isArray(structuredSolution) ? (
+              <div className="space-y-6">
+                {structuredSolution.map((item: any, i: number) => (
                   <motion.div 
-                    variants={{
-                      hover: { width: isTablet ? 60 : 120, opacity: 1 }
-                    }}
-                    initial={{ width: 0, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 100, damping: 15 }}
-                    className="h-[1px] bg-gradient-to-r from-vibe-pink to-transparent relative"
+                    key={i}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    <div className="absolute right-0 -top-[2px] w-1.5 h-1.5 rounded-full bg-vibe-pink shadow-[0_0_10px_rgba(255,0,122,0.5)]" />
+                    <div className="p-8 rounded-[2rem] bg-white border border-black/[0.06] transition-all duration-200 ease-out hover:-translate-y-1 hover:scale-[1.01] hover:bg-sage/[0.03] hover:border-sage/35 hover:shadow-[0_20px_40px_rgba(102,120,107,0.08)] group cursor-default shadow-sm">
+                      <div className="flex gap-6 items-center">
+                        <span className="font-display text-4xl font-light text-sage/40 select-none">0{i+1}</span>
+                        <div className="space-y-3">
+                          <h4 className="font-display text-lg md:text-xl text-heading font-bold tracking-tight">
+                            {cleanNumbering(item.title || "")}
+                          </h4>
+                          <p className="font-body text-xs md:text-sm text-[#555] leading-relaxed font-light">
+                            {cleanNumbering(item.content || "")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
-                </div>
-                
-                <motion.h4 
-                  variants={{
-                    hover: { y: -5 }
-                  }}
-                  className="font-serif text-xl md:text-2xl xl:text-3xl text-heading mb-6 relative z-10 transition-transform duration-500"
-                >
-                  {cleanNumbering(item.title || "")}
-                </motion.h4>
-                
-                <p className="font-body text-sm md:text-base xl:text-lg text-heading/70 leading-relaxed font-light relative z-10 xl:group-hover:text-heading transition-colors duration-500">
-                  {cleanNumbering(item.content || "")}
-                </p>
-              </motion.div>
-            ))}
+                ))}
+              </div>
+            ) : (
+              <p className="font-body text-base md:text-lg text-heading/70 leading-relaxed italic">
+                {cleanNumbering(currentSolutionRaw)}
+              </p>
+            )}
           </div>
-        ) : (
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="font-display text-2xl md:text-6xl text-heading italic leading-tight">{currentSolution}</h3>
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
 });
-
-SolutionSection.displayName = "SolutionSection";
+ChallengeSolutionSection.displayName = "ChallengeSolutionSection";
 
 // --- Main Optimized Component ---
 
@@ -502,7 +492,7 @@ const ProjectDetail = () => {
                <div className="container mx-auto px-6 max-w-6xl space-y-16 md:space-y-24">
                  <div className="flex flex-col items-center text-center space-y-8 md:space-y-10 max-w-4xl mx-auto">
                     <motion.div initial={isTabletOrMobile ? { opacity: 1 } : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="space-y-6">
-                       <span className="font-sans text-[10px] tracking-[0.5em] uppercase font-bold text-heading/30 italic">Perspective</span>
+                       <span className={`${LABEL_CLASS} text-heading/40`}>Perspective</span>
                        <h2 className="font-display text-4xl md:text-7xl text-heading tracking-tighter italic">{t("Project Overview", "プロジェクト概要", "Tổng quan")}</h2>
                        <p className="font-body text-lg md:text-xl text-heading/70 leading-relaxed font-light whitespace-pre-wrap italic">
                          {projectOverview}
@@ -529,11 +519,11 @@ const ProjectDetail = () => {
             </section>
           )}
 
-          {/* 3. The Challenge Section */}
-          <ChallengeSection project={project} lang={lang} t={t} isStatic={isTabletOrMobile} />
+          {/* Tech Stack Section */}
+          <TechStackSection tags={project.tags} lang={lang} t={t} />
 
-          {/* 4. The Solution Section */}
-          <SolutionSection project={project} lang={lang} t={t} isStatic={isTabletOrMobile} isTablet={isTabletOrMobile} />
+          {/* 3. Challenge & Solution Section */}
+          <ChallengeSolutionSection project={project} lang={lang} t={t} isStatic={isTabletOrMobile} />
 
           {/* 5. Strategy & Impact Section */}
           <section className="py-24 md:py-32 bg-white">
@@ -543,7 +533,7 @@ const ProjectDetail = () => {
                      <div className="space-y-6 text-left">
                         <div className="flex items-center gap-4 justify-start">
                            <span className="w-12 h-px bg-sage/30" />
-                           <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-sage/60">{t("Methodology", "手法", "Phương pháp luận")}</span>
+                           <span className={`${LABEL_CLASS} text-sage/60`}>{t("Methodology", "手法", "Phương pháp luận")}</span>
                         </div>
                         <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
                           {t("The", "その", "Những")} <span className="text-sage">Approach.</span>
@@ -578,7 +568,7 @@ const ProjectDetail = () => {
                       <div className="space-y-6 text-left">
                          <div className="flex items-center gap-4 justify-start">
                             <span className="w-12 h-px bg-vibe-pink/30" />
-                            <span className="font-sans text-[10px] tracking-[0.4em] uppercase font-black text-vibe-pink/60">{t("Outcome", "成果", "Thành quả")}</span>
+                            <span className={`${LABEL_CLASS} text-vibe-pink/60`}>{t("Outcome", "成果", "Thành quả")}</span>
                          </div>
                          <h2 className="font-display text-6xl md:text-8xl text-heading tracking-tighter leading-[0.9] italic">
                            {t("The", "その", "Những")} <span className="text-vibe-pink">Results.</span>
@@ -587,13 +577,18 @@ const ProjectDetail = () => {
                       
                       {/* BEFORE/AFTER COMPARISON WIDGET */}
                       {results.some(r => r.value?.includes('|') || r.value?.includes('->') || r.value?.includes('→') || r.label?.includes('|') || r.label?.includes('->') || r.label?.includes('→')) ? (
-                        <div className="max-w-4xl mx-auto bg-white border border-black/[0.03] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.06)] rounded-[2rem] overflow-hidden grid grid-cols-2">
-                          
+                        <div className="max-w-4xl mx-auto bg-white border border-black/[0.03] shadow-[0_30px_80px_-25px_rgba(0,0,0,0.08)] rounded-[2.5rem] overflow-hidden grid grid-cols-1 md:grid-cols-2 relative group">
+                          {/* Absolute Center Divider for Desktop */}
+                          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-black/[0.05] z-10" />
+
                           {/* LEFT COLUMN: BEFORE */}
-                          <div className="p-6 md:p-16 space-y-12 bg-white text-left">
-                            <span className="font-display text-3xl md:text-4xl text-heading/60 italic block leading-none">
-                              Before
-                            </span>
+                          <div className="p-8 md:p-16 space-y-12 bg-[#faf9f6]/50 text-left relative">
+                            <div className="flex items-center justify-between">
+                              <span className="font-display text-2xl md:text-3xl text-heading/40 italic block leading-none">
+                                Before
+                              </span>
+                              <span className="w-2.5 h-2.5 rounded-full bg-heading/20 animate-pulse" />
+                            </div>
                             
                             <div className="space-y-10 md:space-y-12">
                               {results.map((r: any, idx: number) => {
@@ -608,11 +603,11 @@ const ProjectDetail = () => {
                                 const [beforeLbl] = splitBeforeAfter(r.label);
                                 
                                 return (
-                                  <div key={idx} className="space-y-1 md:space-y-2">
-                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading font-light tracking-tight">
+                                  <div key={idx} className="space-y-1 md:space-y-2 group/item">
+                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading/60 font-light tracking-tight transition-all duration-300">
                                       {beforeVal}
                                     </p>
-                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-heading/45 font-light leading-relaxed">
+                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-heading/40 font-light leading-relaxed">
                                       {beforeLbl}
                                     </p>
                                   </div>
@@ -622,10 +617,15 @@ const ProjectDetail = () => {
                           </div>
                           
                           {/* RIGHT COLUMN: AFTER */}
-                          <div className="p-6 md:p-16 bg-vibe-pink/[0.04] border-l border-vibe-pink/10 space-y-12 text-left">
-                            <span className="font-display text-3xl md:text-4xl text-vibe-pink italic block leading-none">
-                              After
-                            </span>
+                          <div className="p-8 md:p-16 bg-vibe-pink/[0.01] md:bg-vibe-pink/[0.02] border-t md:border-t-0 md:border-l border-black/[0.03] space-y-12 text-left relative">
+                            <div className="flex items-center justify-between">
+                              <span className="font-display text-2xl md:text-3xl text-vibe-pink font-bold italic block leading-none">
+                                After
+                              </span>
+                              <span className="px-3 py-1 rounded-full bg-vibe-pink/10 text-vibe-pink text-[9px] font-sans font-black tracking-widest uppercase">
+                                Optimized
+                              </span>
+                            </div>
                             
                             <div className="space-y-10 md:space-y-12">
                               {results.map((r: any, idx: number) => {
@@ -643,10 +643,10 @@ const ProjectDetail = () => {
                                 
                                 return (
                                   <div key={idx} className="space-y-1 md:space-y-2">
-                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#3b1c21] font-light tracking-tight">
+                                    <p className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-heading font-black tracking-tight group-hover:scale-[1.01] transition-transform duration-350">
                                       {afterVal || beforeVal}
                                     </p>
-                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-[#70494f] font-light leading-relaxed">
+                                    <p className="font-body text-[11px] sm:text-xs md:text-sm text-heading/70 font-medium leading-relaxed">
                                       {afterLbl || beforeLbl}
                                     </p>
                                   </div>
@@ -746,7 +746,7 @@ const ProjectDetail = () => {
              <section className="bg-[#111] text-white py-24 md:py-64 relative overflow-hidden">
                 <div className="container mx-auto px-6 max-w-[1600px] relative z-10 text-center space-y-16 md:space-y-20">
                    <div className="space-y-4">
-                     <span className="font-sans text-[10px] tracking-[0.6em] uppercase font-bold text-white/30 italic">Archive</span>
+                      <span className={`${LABEL_CLASS} text-white/40`}>Archive</span>
                      <h2 className="font-display text-5xl md:text-9xl tracking-tighter leading-none text-white italic">Curated <span className="text-vibe-pink">Visuals.</span></h2>
                    </div>
                    <ProjectGallery images={project.project_images} isMobile={isTabletOrMobile} />
